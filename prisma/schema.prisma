@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Article {
+  id        Int      @id @default(autoincrement())
+  title     String
+  slug      String?  @unique
+  category  String?
+  idea      String
+  content   String
+
+  status    String   @default("Entwurf")
+seoScore  Int      @default(0)
+
+  createdAt DateTime @default(now())
+}
+
+model AffiliateLink {
+  id          Int      @id @default(autoincrement())
+  name        String
+  url         String
+  category    String
+
+  logo        String?
+  rating      Float    @default(5)
+  price       String?
+  badge       String?
+  buttonText  String?  @default("Jetzt ansehen")
+
+  description String?
+  pros        String?
+  cons        String?
+
+  clicks      Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+model ContentIdea {
+  id            Int      @id @default(autoincrement())
+  title         String
+  category      String
+  priority      Int      @default(50)
+  searchVolume  Int?
+  difficulty    Int?
+  affiliateTool String?
+  status        String   @default("offen")
+  createdAt     DateTime @default(now())
+}
+
+model AffiliateClick {
+  id            Int      @id @default(autoincrement())
+  affiliateLinkId Int
+  articleSlug   String?
+  userId        String?  // IP or session ID
+  userAgent     String?
+  referrer      String?
+  revenue       Float?   @default(0)
+  status        String   @default("pending") // pending, confirmed, rejected
+  createdAt     DateTime @default(now())
+}
+
+model NewsletterSubscriber {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  status    String   @default("subscribed")
+  createdAt DateTime @default(now())
+}
+
+model AdImpression {
+  id        Int      @id @default(autoincrement())
+  articleSlug String?
+  adType    String   // "display", "banner", "sidebar"
+  clicks    Int      @default(0)
+  impressions Int     @default(0)
+  revenue   Float    @default(0)
+  createdAt DateTime @default(now())
+}
+
+model EarningsLog {
+  id            Int      @id @default(autoincrement())
+  date          DateTime
+  affiliateRevenue Float   @default(0)
+  adRevenue     Float    @default(0)
+  sponsorRevenue Float   @default(0)
+  totalRevenue  Float    @default(0)
+  createdAt     DateTime @default(now())
+}
