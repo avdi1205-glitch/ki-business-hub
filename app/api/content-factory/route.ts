@@ -103,7 +103,7 @@ Artikel-Regeln:
     const createdArticles: {
       id: number;
       title: string;
-      slug: string;
+      slug: string | null;
       category: string | null;
     }[] = [];
 
@@ -137,8 +137,8 @@ Artikel-Regeln:
       createdArticles.push({
         id: savedArticle.id,
         title: savedArticle.title,
-        slug: savedArticle.slug,
-        category: savedArticle.category,
+        slug: savedArticle.slug ?? slug,
+        category: savedArticle.category ?? category,
       });
     }
 
