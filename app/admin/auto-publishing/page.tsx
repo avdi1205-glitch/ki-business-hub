@@ -31,12 +31,12 @@ export default function AutoPublishingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen p-8" style={{ background: "var(--background)" }}>
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">📅 Auto-Publishing</h1>
-          <p className="text-gray-600">Automatische Veröffentlichung deiner Artikel nach Zeitplan</p>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>📅 Auto-Publishing</h1>
+          <p style={{ color: "var(--text-light)" }}>Automatische Veröffentlichung deiner Artikel nach Zeitplan</p>
         </div>
 
         {/* Stats */}

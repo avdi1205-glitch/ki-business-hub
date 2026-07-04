@@ -14,12 +14,12 @@ export default function AffiliateMatchPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen p-8" style={{ background: "var(--background)" }}>
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">🎯 Affiliate-Match Engine</h1>
-          <p className="text-gray-600">Intelligente Tool-Vorschläge für maximale Affiliate-Einnahmen</p>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>🎯 Affiliate-Match Engine</h1>
+          <p style={{ color: "var(--text-light)" }}>Intelligente Tool-Vorschläge für maximale Affiliate-Einnahmen</p>
         </div>
 
         {/* Stats */}

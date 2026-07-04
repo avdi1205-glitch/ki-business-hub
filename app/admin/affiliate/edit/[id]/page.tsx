@@ -51,59 +51,68 @@ export default async function EditAffiliatePage({
 
   return (
     <main style={{ background: "var(--background)", minHeight: "100vh" }} className="p-10">
-      <h1 className="text-4xl font-bold mb-8">
+      <h1 className="text-4xl font-bold mb-8" style={{ color: "var(--text-dark)" }}>
         ✏️ Affiliate bearbeiten
       </h1>
 
       <form
         action={updateAffiliate}
-        className="bg-white/10 p-8 rounded-xl space-y-5"
+        className="p-8 rounded-xl space-y-5"
+        style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}
       >
         <input
           name="name"
           defaultValue={affiliate.name}
-          className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600"
+          className="w-full p-3 rounded-xl text-white"
+          style={{ background: "rgba(59, 130, 246, 0.05)", border: "1px solid rgba(59, 130, 246, 0.2)" }}
         />
 
         <input
           name="url"
           defaultValue={affiliate.url}
-          className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600"
+          className="w-full p-3 rounded-xl text-white"
+          style={{ background: "rgba(59, 130, 246, 0.05)", border: "1px solid rgba(59, 130, 246, 0.2)" }}
         />
 
         <input
           name="category"
           defaultValue={affiliate.category}
-          className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600"
+          className="w-full p-3 rounded-xl text-white"
+          style={{ background: "rgba(59, 130, 246, 0.05)", border: "1px solid rgba(59, 130, 246, 0.2)" }}
         />
 
         <input
           name="rating"
           defaultValue={affiliate.rating}
-          className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600"
+          className="w-full p-3 rounded-xl text-white"
+          style={{ background: "rgba(59, 130, 246, 0.05)", border: "1px solid rgba(59, 130, 246, 0.2)" }}
         />
 
         <textarea
           name="description"
           defaultValue={affiliate.description || ""}
-          className="w-full h-24 p-3 rounded-xl bg-slate-800 text-white border border-slate-600"
+          className="w-full h-24 p-3 rounded-xl text-white"
+          style={{ background: "rgba(59, 130, 246, 0.05)", border: "1px solid rgba(59, 130, 246, 0.2)" }}
         />
 
         <textarea
           name="pros"
           defaultValue={affiliate.pros || ""}
-          className="w-full h-24 p-3 rounded-xl bg-slate-800 text-white border border-slate-600"
+          className="w-full h-24 p-3 rounded-xl text-white"
+          style={{ background: "rgba(59, 130, 246, 0.05)", border: "1px solid rgba(59, 130, 246, 0.2)" }}
         />
 
         <textarea
           name="cons"
           defaultValue={affiliate.cons || ""}
-          className="w-full h-24 p-3 rounded-xl bg-slate-800 text-white border border-slate-600"
+          className="w-full h-24 p-3 rounded-xl text-white"
+          style={{ background: "rgba(59, 130, 246, 0.05)", border: "1px solid rgba(59, 130, 246, 0.2)" }}
         />
 
         <button
           type="submit"
-          className="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-xl"
+          className="px-6 py-3 rounded-xl"
+          style={{ background: "var(--success)", color: "white" }}
         >
           Änderungen speichern
         </button>

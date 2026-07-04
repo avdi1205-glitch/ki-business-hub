@@ -21,12 +21,12 @@ export default function SEOAnalyzerPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen p-8" style={{ background: "var(--background)" }}>
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">🔍 SEO-Analyzer</h1>
-          <p className="text-gray-600">Optimiere deine Artikel für bessere Rankings</p>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>🔍 SEO-Analyzer</h1>
+          <p style={{ color: "var(--text-light)" }}>Optimiere deine Artikel für bessere Rankings</p>
         </div>
 
         {/* Quick Stats */}
@@ -78,8 +78,8 @@ export default function SEOAnalyzerPage() {
         </div>
 
         {/* Top Performers */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">⭐ Top Artikel</h2>
+        <div className="rounded-lg p-6 mb-8" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
+          <h2 className="text-xl font-semibold mb-4" style={{ color: "var(--text-dark)" }}>⭐ Top Artikel</h2>
           
           <div className="space-y-3">
             {[
@@ -87,10 +87,10 @@ export default function SEOAnalyzerPage() {
               { title: "Affiliate Marketing Guide", score: 91, words: "2.120", keywords: 6 },
               { title: "Content Factory Automation", score: 88, words: "1.890", keywords: 5 },
             ].map((article, idx) => (
-              <div key={idx} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-blue-50 transition-colors cursor-pointer">
+              <div key={idx} className="flex items-center justify-between p-4 rounded-lg transition-colors cursor-pointer" style={{ background: "rgba(59, 130, 246, 0.05)", border: "1px solid rgba(59, 130, 246, 0.2)" }}>
                 <div className="flex-1">
-                  <p className="font-medium text-gray-900">{article.title}</p>
-                  <p className="text-sm text-gray-600">{article.words} Wörter • {article.keywords} Keywords</p>
+                  <p className="font-medium" style={{ color: "var(--text-dark)" }}>{article.title}</p>
+                  <p className="text-sm" style={{ color: "var(--text-light)" }}>{article.words} Wörter • {article.keywords} Keywords</p>
                 </div>
                 <div className="text-right">
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-blue-500">
@@ -103,21 +103,21 @@ export default function SEOAnalyzerPage() {
         </div>
 
         {/* Recommendations */}
-        <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200 p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">💡 Empfehlungen</h2>
+        <div className="rounded-lg p-6" style={{ background: "rgba(59, 130, 246, 0.08)", border: "1px solid rgba(59, 130, 246, 0.3)" }}>
+          <h2 className="text-xl font-semibold mb-4" style={{ color: "var(--text-dark)" }}>💡 Empfehlungen</h2>
           
           <ul className="space-y-2">
             <li className="flex items-start gap-3">
-              <span className="text-green-600 font-bold">✓</span>
-              <span className="text-gray-700">Alle Artikel haben 1.500+ Wörter (Best Practice erfüllt)</span>
+              <span className="font-bold" style={{ color: "var(--success)" }}>✓</span>
+              <span style={{ color: "var(--text-light)" }}>Alle Artikel haben 1.500+ Wörter (Best Practice erfüllt)</span>
             </li>
             <li className="flex items-start gap-3">
-              <span className="text-yellow-600 font-bold">⚠</span>
-              <span className="text-gray-700">3 Artikel könnten mit H2-Überschriften optimiert werden</span>
+              <span className="font-bold" style={{ color: "var(--accent)" }}>⚠</span>
+              <span style={{ color: "var(--text-light)" }}>3 Artikel könnten mit H2-Überschriften optimiert werden</span>
             </li>
             <li className="flex items-start gap-3">
-              <span className="text-yellow-600 font-bold">⚠</span>
-              <span className="text-gray-700">Fokus-Keyword-Dichte bei 5 Artikeln optimierbar</span>
+              <span className="font-bold" style={{ color: "var(--accent)" }}>⚠</span>
+              <span style={{ color: "var(--text-light)" }}>Fokus-Keyword-Dichte bei 5 Artikeln optimierbar</span>
             </li>
           </ul>
 

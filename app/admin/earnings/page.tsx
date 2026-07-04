@@ -38,64 +38,65 @@ export default async function EarningsDashboard() {
   });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-8" style={{ background: "var(--background)", minHeight: "100vh" }}>
+      <div className="max-w-7xl mx-auto">
       {/* KPI Cards */}
       <div className="grid gap-6 md:grid-cols-4">
         {/* Today Revenue */}
-        <div className="rounded-2xl border border-green-500/30 bg-green-500/10 p-6">
-          <p className="text-sm text-green-400">Heute Verdient</p>
-          <p className="mt-2 text-4xl font-bold">
+        <div className="rounded-2xl border p-6" style={{ background: "rgba(16, 185, 129, 0.1)", borderColor: "rgba(16, 185, 129, 0.3)" }}>
+          <p className="text-sm" style={{ color: "var(--success-light)" }}>Heute Verdient</p>
+          <p className="mt-2 text-4xl font-bold" style={{ color: "var(--text-dark)" }}>
             €{todayRevenue.toFixed(2)}
           </p>
-          <p className="mt-2 text-xs text-gray-400">
+          <p className="mt-2 text-xs" style={{ color: "var(--text-muted)" }}>
             {todayClicks.length} Klicks
           </p>
         </div>
 
         {/* Monthly Projection */}
-        <div className="rounded-2xl border border-cyan-500/30 bg-cyan-500/10 p-6">
-          <p className="text-sm text-cyan-400">Monatliche Projektion</p>
-          <p className="mt-2 text-4xl font-bold">
+        <div className="rounded-2xl border p-6" style={{ background: "rgba(6, 182, 212, 0.1)", borderColor: "rgba(6, 182, 212, 0.3)" }}>
+          <p className="text-sm" style={{ color: "#22d3ee" }}>Monatliche Projektion</p>
+          <p className="mt-2 text-4xl font-bold" style={{ color: "var(--text-dark)" }}>
             €{(todayRevenue * 30).toFixed(2)}
           </p>
-          <p className="mt-2 text-xs text-gray-400">Basierend auf heute</p>
+          <p className="mt-2 text-xs" style={{ color: "var(--text-muted)" }}>Basierend auf heute</p>
         </div>
 
         {/* All Time Revenue */}
-        <div className="rounded-2xl border border-purple-500/30 bg-purple-500/10 p-6">
-          <p className="text-sm text-purple-400">Gesamte Einnahmen</p>
-          <p className="mt-2 text-4xl font-bold">
+        <div className="rounded-2xl border p-6" style={{ background: "rgba(139, 92, 246, 0.1)", borderColor: "rgba(139, 92, 246, 0.3)" }}>
+          <p className="text-sm" style={{ color: "var(--premium-light)" }}>Gesamte Einnahmen</p>
+          <p className="mt-2 text-4xl font-bold" style={{ color: "var(--text-dark)" }}>
             €{allRevenue.toFixed(2)}
           </p>
-          <p className="mt-2 text-xs text-gray-400">
+          <p className="mt-2 text-xs" style={{ color: "var(--text-muted)" }}>
             {allClicks.length} Klicks gesamt
           </p>
         </div>
 
         {/* Newsletter */}
-        <div className="rounded-2xl border border-orange-500/30 bg-orange-500/10 p-6">
-          <p className="text-sm text-orange-400">Newsletter Abos</p>
-          <p className="mt-2 text-4xl font-bold">{subscriberCount}</p>
-          <p className="mt-2 text-xs text-gray-400">Aktive Abonnenten</p>
+        <div className="rounded-2xl border p-6" style={{ background: "rgba(245, 158, 11, 0.1)", borderColor: "rgba(245, 158, 11, 0.3)" }}>
+          <p className="text-sm" style={{ color: "var(--accent-light)" }}>Newsletter Abos</p>
+          <p className="mt-2 text-4xl font-bold" style={{ color: "var(--text-dark)" }}>{subscriberCount}</p>
+          <p className="mt-2 text-xs" style={{ color: "var(--text-muted)" }}>Aktive Abonnenten</p>
         </div>
       </div>
 
       {/* Top Performing Affiliates */}
-      <div className="rounded-2xl border border-white/10 bg-white/10 p-6">
-        <h2 className="mb-6 text-2xl font-bold">🏆 Top Affiliate Links</h2>
+      <div className="rounded-2xl border p-6" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
+        <h2 className="mb-6 text-2xl font-bold" style={{ color: "var(--text-dark)" }}>🏆 Top Affiliate Links</h2>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-white/20">
+            <thead style={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
               <tr>
-                <th className="pb-3 text-gray-400">Tool Name</th>
-                <th className="pb-3 text-gray-400">Kategorie</th>
-                <th className="pb-3 text-gray-400">Klicks</th>
-                <th className="pb-3 text-gray-400">Geschätzter Umsatz</th>
-                <th className="pb-3 text-gray-400">Rating</th>
+                <th className="pb-3" style={{ color: "var(--text-light)" }}>Tool Name</th>
+                <th className="pb-3" style={{ color: "var(--text-light)" }}>Kategorie</th>
+                <th className="pb-3" style={{ color: "var(--text-light)" }}>Klicks</th>
+                <th className="pb-3" style={{ color: "var(--text-light)" }}>Geschätzter Umsatz</th>
+                <th className="pb-3" style={{ color: "var(--text-light)" }}>Rating</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/10">
+            <tbody style={{ borderColor: "rgba(255,255,255,0.05)" }}>
               {topAffiliates.map((affiliate, index) => {
                 const affiliateClicks = allClicks.filter(
                   (click) => click.affiliateLinkId === affiliate.id
@@ -106,17 +107,17 @@ export default async function EarningsDashboard() {
                 );
 
                 return (
-                  <tr key={affiliate.id} className="hover:bg-white/5">
-                    <td className="py-4 font-bold">
+                  <tr key={affiliate.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                    <td className="py-4 font-bold" style={{ color: "var(--text-dark)" }}>
                       #{index + 1} {affiliate.name}
                     </td>
-                    <td className="py-4 text-gray-400">{affiliate.category}</td>
+                    <td className="py-4" style={{ color: "var(--text-light)" }}>{affiliate.category}</td>
                     <td className="py-4">
-                      <span className="rounded-lg bg-cyan-500/20 px-3 py-1 text-cyan-300">
+                      <span className="rounded-lg px-3 py-1" style={{ background: "rgba(6, 182, 212, 0.2)", color: "#22d3ee" }}>
                         {affiliate.clicks}
                       </span>
                     </td>
-                    <td className="py-4 font-bold text-green-400">
+                    <td className="py-4 font-bold" style={{ color: "var(--success-light)" }}>
                       €{affiliateRevenue.toFixed(2)}
                     </td>
                     <td className="py-4">⭐ {affiliate.rating.toFixed(1)}</td>
@@ -129,43 +130,44 @@ export default async function EarningsDashboard() {
 
         <Link
           href="/admin/affiliate"
-          className="mt-6 inline-block rounded-lg border border-white/20 bg-white/10 px-4 py-2 font-bold hover:bg-white/20"
+          className="mt-6 inline-block rounded-lg border px-4 py-2 font-bold"
+          style={{ background: "var(--primary)", borderColor: "var(--primary)", color: "white" }}
         >
           → Alle Affiliates verwalten
         </Link>
       </div>
 
       {/* Recent Clicks */}
-      <div className="rounded-2xl border border-white/10 bg-white/10 p-6">
-        <h2 className="mb-6 text-2xl font-bold">📊 Letzte Clicks (heute)</h2>
+      <div className="rounded-2xl border p-6" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
+        <h2 className="mb-6 text-2xl font-bold" style={{ color: "var(--text-dark)" }}>📊 Letzte Clicks (heute)</h2>
 
         {todayClicks.length === 0 ? (
-          <p className="text-gray-400">Noch keine Klicks heute</p>
+          <p style={{ color: "var(--text-light)" }}>Noch keine Klicks heute</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-white/20">
+              <thead style={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
                 <tr>
-                  <th className="pb-3 text-gray-400">Uhrzeit</th>
-                  <th className="pb-3 text-gray-400">Tool</th>
-                  <th className="pb-3 text-gray-400">Artikel</th>
-                  <th className="pb-3 text-gray-400">Geschätzte Revenue</th>
+                  <th className="pb-3" style={{ color: "var(--text-light)" }}>Uhrzeit</th>
+                  <th className="pb-3" style={{ color: "var(--text-light)" }}>Tool</th>
+                  <th className="pb-3" style={{ color: "var(--text-light)" }}>Artikel</th>
+                  <th className="pb-3" style={{ color: "var(--text-light)" }}>Geschätzte Revenue</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/10">
+              <tbody style={{ borderColor: "rgba(255,255,255,0.05)" }}>
                 {todayClicks.slice(-10).map((click) => (
-                  <tr key={click.id} className="hover:bg-white/5">
-                    <td className="py-4 text-gray-400">
+                  <tr key={click.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                    <td className="py-4" style={{ color: "var(--text-light)" }}>
                       {click.createdAt.toLocaleTimeString("de-DE")}
                     </td>
-                    <td className="py-4 font-bold">
+                    <td className="py-4 font-bold" style={{ color: "var(--text-dark)" }}>
                       {topAffiliates.find((a) => a.id === click.affiliateLinkId)
                         ?.name || "Unbekannt"}
                     </td>
-                    <td className="py-4 text-gray-400">
+                    <td className="py-4" style={{ color: "var(--text-light)" }}>
                       {click.articleSlug || "-"}
                     </td>
-                    <td className="py-4 text-green-400">
+                    <td className="py-4" style={{ color: "var(--success-light)" }}>
                       €{(click.revenue || 0).toFixed(2)}
                     </td>
                   </tr>
@@ -174,6 +176,7 @@ export default async function EarningsDashboard() {
             </table>
           </div>
         )}
+      </div>
       </div>
     </div>
   );

@@ -40,12 +40,12 @@ export default function ABTestingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen p-8" style={{ background: "var(--background)" }}>
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">🧪 A/B-Testing</h1>
-          <p className="text-gray-600">Optimiere deine Call-to-Action Texte für maximale Konversion</p>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>🧪 A/B-Testing</h1>
+          <p style={{ color: "var(--text-light)" }}>Optimiere deine Call-to-Action Texte für maximale Konversion</p>
         </div>
 
         {/* Stats */}

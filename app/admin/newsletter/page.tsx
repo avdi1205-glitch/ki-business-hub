@@ -32,12 +32,12 @@ export default function NewsletterAutomationPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen p-8" style={{ background: "var(--background)" }}>
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">📧 Newsletter-Automatisierung</h1>
-          <p className="text-gray-600">Verwalte automatisierte Email-Kampagnen an deine Subscriber</p>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>📧 Newsletter-Automatisierung</h1>
+          <p style={{ color: "var(--text-light)" }}>Verwalte automatisierte Email-Kampagnen an deine Subscriber</p>
         </div>
 
         {/* Stats */}
@@ -66,22 +66,23 @@ export default function NewsletterAutomationPage() {
         </div>
 
         {/* Campaign Manager */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">📤 Kampagne versenden</h2>
+        <div className="rounded-lg border p-6 mb-8" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
+          <h2 className="text-xl font-semibold mb-4" style={{ color: "var(--text-dark)" }}>📤 Kampagne versenden</h2>
           
           <div className="space-y-4 mb-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Betreff</label>
+              <label className="block text-sm font-medium mb-2" style={{ color: "var(--text-light)" }}>Betreff</label>
               <input
                 type="text"
                 defaultValue="Weekly AI Business Tips 🚀"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 rounded-lg"
+                style={{ background: "rgba(59, 130, 246, 0.05)", border: "1px solid rgba(59, 130, 246, 0.2)", color: "var(--text-dark)" }}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Template</label>
-              <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <label className="block text-sm font-medium mb-2" style={{ color: "var(--text-light)" }}>Template</label>
+              <select className="w-full px-4 py-2 rounded-lg" style={{ background: "rgba(59, 130, 246, 0.05)", border: "1px solid rgba(59, 130, 246, 0.2)", color: "var(--text-dark)" }}>
                 <option>Weekly Digest</option>
                 <option>Promotional</option>
                 <option>Welcome</option>
@@ -89,8 +90,8 @@ export default function NewsletterAutomationPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Segment</label>
-              <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <label className="block text-sm font-medium mb-2" style={{ color: "var(--text-light)" }}>Segment</label>
+              <select className="w-full px-4 py-2 rounded-lg" style={{ background: "rgba(59, 130, 246, 0.05)", border: "1px solid rgba(59, 130, 246, 0.2)", color: "var(--text-dark)" }}>
                 <option>Alle (1.250)</option>
                 <option>Aktive Nutzer (892)</option>
                 <option>Neue (358)</option>
@@ -106,8 +107,8 @@ export default function NewsletterAutomationPage() {
         </div>
 
         {/* Recent Campaigns */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">📊 Letzte Kampagnen</h2>
+        <div className="rounded-lg border p-6" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
+          <h2 className="text-xl font-semibold mb-4" style={{ color: "var(--text-dark)" }}>📊 Letzte Kampagnen</h2>
           
           <div className="space-y-3">
             {[
@@ -115,14 +116,14 @@ export default function NewsletterAutomationPage() {
               { subject: "ChatGPT Tipps", sent: 1180, opens: 412, rate: "35%" },
               { subject: "Business Automation", sent: 1150, opens: 398, rate: "35%" },
             ].map((campaign, idx) => (
-              <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+              <div key={idx} className="flex items-center justify-between p-3 rounded-lg transition-colors" style={{ background: "rgba(59, 130, 246, 0.05)", border: "1px solid rgba(59, 130, 246, 0.2)" }}>
                 <div>
-                  <p className="font-medium text-gray-900">{campaign.subject}</p>
-                  <p className="text-sm text-gray-600">{campaign.sent} versendet</p>
+                  <p className="font-medium" style={{ color: "var(--text-dark)" }}>{campaign.subject}</p>
+                  <p className="text-sm" style={{ color: "var(--text-light)" }}>{campaign.sent} versendet</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-medium text-gray-900">{campaign.opens} Öffnungen</p>
-                  <p className="text-sm text-green-600">{campaign.rate} Öffnungsrate</p>
+                  <p className="font-medium" style={{ color: "var(--text-dark)" }}>{campaign.opens} Öffnungen</p>
+                  <p className="text-sm" style={{ color: "var(--success-light)" }}>{campaign.rate} Öffnungsrate</p>
                 </div>
               </div>
             ))}

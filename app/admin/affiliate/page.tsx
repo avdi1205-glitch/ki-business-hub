@@ -46,7 +46,7 @@ export default async function AffiliateAdminPage() {
 
   return (
     <main style={{ background: "var(--background)", minHeight: "100vh" }} className="p-10">
-      <h1 className="text-4xl font-bold mb-8">💰 Affiliate Manager</h1>
+      <h1 className="text-4xl font-bold mb-8" style={{ color: "var(--text-dark)" }}>💰 Affiliate Manager</h1>
 
       <form
         action={createAffiliateLink}
