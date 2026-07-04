@@ -3,6 +3,8 @@ import { prisma } from "../lib/prisma";
 import TopTools from "./components/TopTools";
 import ConversionHero from "./components/ConversionHero";
 import { FeaturesSection } from "./components/FeaturesSection";
+import { PricingSection } from "./components/PricingSection";
+import { FAQSection } from "./components/FAQSection";
 
 export default async function Home() {
   const tools = await prisma.affiliateLink.findMany({
@@ -112,6 +114,12 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* Pricing Section */}
+      <PricingSection />
+
+      {/* FAQ Section */}
+      <FAQSection />
 
       {/* Final CTA */}
       <section className="py-24 bg-gradient-to-r from-slate-900 to-slate-800 text-white">
