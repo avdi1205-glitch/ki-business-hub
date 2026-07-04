@@ -12,7 +12,7 @@ const faqs = [
   {
     question: "💡 Ist das wirklich kostenlos?",
     answer:
-      "Ja! Sie können kostenlos starten mit 5 Artikeln/Monat und Basis-Affiliate Links. Upgrade zur Pro Version für €29/Monat wenn Sie mehr verdienen möchten. Keine Kreditkarte erforderlich.",
+      "Ja! Sie können kostenlos starten mit 5 Artikeln/Monat und Basis-Affiliate Links. Upgrade zur Pro Version für €39/Monat wenn Sie mehr verdienen möchten. Keine Kreditkarte erforderlich.",
     color: "#10b981",
   },
   {

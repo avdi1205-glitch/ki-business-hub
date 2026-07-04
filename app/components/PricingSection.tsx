@@ -26,7 +26,7 @@ const pricingPlans = [
   {
     name: "Pro",
     emoji: "💎",
-    price: "€29",
+    price: "€39",
     period: "pro Monat",
     description: "Für ernsthaft Verdienende",
     features: [
@@ -46,7 +46,7 @@ const pricingPlans = [
   {
     name: "Agency",
     emoji: "👑",
-    price: "€99",
+    price: "€149",
     period: "pro Monat",
     description: "Für Agenturen & Teams",
     features: [

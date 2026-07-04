@@ -21,7 +21,7 @@ export default async function BlogPage() {
             Artikel, Tests und Vergleiche
           </h1>
 
-          <p className="mb-10 max-w-3xl text-xl" style={{ color: "var(--text-light)" }}>
+          <p className="mb-10 max-w-3xl text-xl leading-8" style={{ color: "#e2e8f0" }}>
             Lerne mehr über KI-Tools, Hosting, VPN, Automatisierung und
             digitale Geschäftsmodelle.
           </p>
@@ -37,6 +37,10 @@ export default async function BlogPage() {
               href={`/blog/${article.slug}`}
               className="card hover:shadow-lg transition-all"
             >
+              <p className="mb-3 inline-flex items-center rounded-full border border-cyan-400/20 bg-cyan-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-cyan-200">
+                KI erstellt
+              </p>
+
               <p className="mb-3 text-sm font-bold badge-primary" style={{
                 background: "var(--primary)",
                 color: "white",
@@ -51,7 +55,7 @@ export default async function BlogPage() {
                 {article.title}
               </h2>
 
-              <p className="mt-4" style={{ color: "var(--text-light)" }}>
+              <p className="mb-4 leading-7" style={{ color: "#e2e8f0" }}>
                 {article.idea}
               </p>
 

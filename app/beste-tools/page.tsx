@@ -42,7 +42,7 @@ export default async function BesteToolsPage() {
             Die besten Tools für dein Online-Business
           </h1>
 
-          <p className="mb-10 max-w-3xl text-xl" style={{ color: "var(--text-light)" }}>
+          <p className="mb-10 max-w-3xl text-xl leading-8" style={{ color: "#e2e8f0" }}>
             Vergleiche Software für KI, Hosting, VPN, Automation und Affiliate-Marketing.
             Schnell, klar und auf den Punkt.
           </p>
@@ -79,13 +79,13 @@ export default async function BesteToolsPage() {
                     {tool.price || "Keine Angabe"}
                   </td>
 
-                  <td className="p-4 text-gray-300">{tool.category}</td>
+                  <td className="p-4 text-slate-300">{tool.category}</td>
 
                   <td className="p-4">
                     <div className="flex flex-col gap-2">
                       <Link
                         href={`/tools/${createSlug(tool.name)}`}
-                        className="rounded-lg bg-blue-600 px-4 py-2 text-center font-bold hover:bg-blue-700"
+                        className="rounded-lg border border-blue-400/30 bg-blue-600 px-4 py-3 text-center font-bold text-white shadow-sm hover:bg-blue-700"
                       >
                         Mehr erfahren
                       </Link>
@@ -107,7 +107,7 @@ export default async function BesteToolsPage() {
         <section className="mt-14 rounded-2xl border border-white/10 bg-white/10 p-8">
           <h2 className="mb-6 text-3xl font-bold">❓ Häufige Fragen</h2>
 
-          <div className="space-y-6 text-gray-300">
+          <div className="space-y-6 text-slate-100">
             <div>
               <h3 className="text-xl font-bold text-white">
                 Welches Tool ist die beste Wahl?

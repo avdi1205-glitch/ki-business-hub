@@ -33,7 +33,7 @@ export default async function ToolsPage() {
             Tools für dein Online-Business
           </h1>
 
-          <p className="mb-10 max-w-3xl text-xl text-gray-300">
+          <p className="mb-10 max-w-3xl text-xl leading-8 text-slate-100">
             Entdecke KI-Tools, Hosting-Lösungen, VPNs und Automatisierungs-Tools
             für dein digitales Business.
           </p>
@@ -66,13 +66,13 @@ export default async function ToolsPage() {
                 </p>
               )}
 
-              <p className="mt-2 text-gray-400">{tool.category}</p>
+              <p className="mt-2 text-slate-300">{tool.category}</p>
 
               {tool.description && (
-                <p className="mt-4 text-gray-300">{tool.description}</p>
+                <p className="mt-4 leading-7 text-slate-100">{tool.description}</p>
               )}
 
-              <p className="mt-6 font-bold text-cyan-300">
+              <p className="mt-6 inline-flex rounded-full bg-cyan-500/10 px-3 py-2 font-bold text-cyan-200">
                 Mehr erfahren →
               </p>
             </Link>

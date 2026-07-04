@@ -63,7 +63,7 @@ export default async function ToolDetailPage({
             </p>
           )}
 
-          <p className="text-gray-400">Kategorie: {tool.category}</p>
+          <p className="text-slate-300">Kategorie: {tool.category}</p>
         </div>
       </section>
 
@@ -71,7 +71,7 @@ export default async function ToolDetailPage({
         {tool.description && (
           <div className="mb-8 rounded-2xl border border-white/10 bg-white/10 p-8">
             <h2 className="mb-3 text-3xl font-bold">Kurzfazit</h2>
-            <p className="text-gray-300">{tool.description}</p>
+            <p className="leading-7 text-slate-100">{tool.description}</p>
           </div>
         )}
 
@@ -82,7 +82,7 @@ export default async function ToolDetailPage({
                 ✅ Vorteile
               </h2>
 
-              <ul className="ml-6 list-disc space-y-2 text-gray-300">
+              <ul className="ml-6 list-disc space-y-2 text-slate-100">
                 {tool.pros.split("\n").map((pro, index) => (
                   <li key={index}>{pro}</li>
                 ))}
@@ -96,7 +96,7 @@ export default async function ToolDetailPage({
                 ❌ Nachteile
               </h2>
 
-              <ul className="ml-6 list-disc space-y-2 text-gray-300">
+              <ul className="ml-6 list-disc space-y-2 text-slate-100">
                 {tool.cons.split("\n").map((con, index) => (
                   <li key={index}>{con}</li>
                 ))}
@@ -110,7 +110,7 @@ export default async function ToolDetailPage({
             Lohnt sich {tool.name}?
           </h2>
 
-          <p className="mb-6 text-gray-300">
+          <p className="mb-6 leading-7 text-slate-100">
             {tool.name} ist besonders interessant, wenn du eine Lösung aus der
             Kategorie <strong>{tool.category}</strong> suchst und schnell eine
             passende Empfehlung finden möchtest.
@@ -127,7 +127,7 @@ export default async function ToolDetailPage({
         <div className="rounded-2xl border border-white/10 bg-white/10 p-8">
           <h2 className="mb-6 text-3xl font-bold">Häufige Fragen</h2>
 
-          <div className="space-y-5 text-gray-300">
+          <div className="space-y-5 text-slate-100">
             <div>
               <h3 className="font-bold text-white">
                 Für wen ist {tool.name} geeignet?

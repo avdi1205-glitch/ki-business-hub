@@ -64,14 +64,15 @@ export default function TopTools({ tools }: { tools: Tool[] }) {
               </p>
             )}
 
-            <p className="text-gray-400 mt-2">
+            <p className="mt-2 leading-7" style={{ color: "#cbd5e1" }}>
               {tool.category}
             </p>
 
             <div className="mt-5 space-y-3">
               <Link
                 href={`/tools/${createSlug(tool.name)}`}
-                className="block bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-center font-bold"
+                className="block rounded-lg border border-blue-400/30 bg-blue-600 px-4 py-3 text-center font-bold text-white hover:bg-blue-700"
+                style={{ color: "#f8fafc", textShadow: "0 1px 1px rgba(0,0,0,0.25)" }}
               >
                 Mehr erfahren
               </Link>

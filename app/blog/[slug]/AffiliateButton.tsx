@@ -93,6 +93,7 @@ export default function AffiliateButton({
       className={`block w-full rounded-xl px-6 py-3 text-center font-bold transition ${
         clicked ? "bg-green-500/30 text-green-300" : "bg-green-600 hover:bg-green-700 text-white"
       }`}
+      style={{ color: clicked ? "#bbf7d0" : "#f8fafc", textShadow: clicked ? "none" : "0 1px 1px rgba(0,0,0,0.25)" }}
     >
       {clicked ? "✅ Wird geöffnet..." : activeText}
     </a>

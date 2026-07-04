@@ -34,7 +34,7 @@ export default async function AffiliatePage() {
             Empfohlene Tools für dein Online-Business
           </h1>
 
-          <p className="mb-10 max-w-3xl text-xl text-gray-300">
+          <p className="mb-10 max-w-3xl text-xl leading-8 text-slate-100">
             Hier findest du ausgewählte Tools für KI, Hosting, VPN,
             Automatisierung und Affiliate-Marketing.
           </p>
@@ -66,16 +66,16 @@ export default async function AffiliatePage() {
                 </p>
               )}
 
-              <p className="mt-2 text-gray-400">{link.category}</p>
+              <p className="mt-2 text-slate-300">{link.category}</p>
 
               {link.description && (
-                <p className="mt-4 text-gray-300">{link.description}</p>
+                <p className="mt-4 leading-7 text-slate-100">{link.description}</p>
               )}
 
               <div className="mt-6 space-y-3">
                 <Link
                   href={`/tools/${createSlug(link.name)}`}
-                  className="block rounded-xl bg-blue-600 px-4 py-3 text-center font-bold hover:bg-blue-700"
+                  className="block rounded-xl border border-blue-400/30 bg-blue-600 px-4 py-3 text-center font-bold text-white shadow-sm hover:bg-blue-700"
                 >
                   Mehr erfahren
                 </Link>

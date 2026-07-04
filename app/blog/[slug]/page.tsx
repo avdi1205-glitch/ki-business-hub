@@ -61,6 +61,10 @@ export default async function BlogArticlePage({
       {/* Hero Section */}
       <section className="relative overflow-hidden px-6 py-20" style={{ background: "linear-gradient(135deg, var(--background) 0%, var(--background-alt) 100%)" }}>
         <div className="relative mx-auto max-w-4xl">
+          <p className="mb-4 inline-flex items-center rounded-full border border-cyan-400/20 bg-cyan-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-cyan-200">
+            KI erstellt
+          </p>
+
           <p className="mb-4 font-bold" style={{ color: "var(--primary)" }}>
             {article.category || "Blog"} • SEO Score: {article.seoScore || "0"}
           </p>
@@ -69,7 +73,7 @@ export default async function BlogArticlePage({
             {article.title}
           </h1>
 
-          <p className="text-xl text-gray-300">
+          <p className="text-xl leading-8 text-slate-100">
             {article.idea}
           </p>
 
@@ -109,7 +113,7 @@ export default async function BlogArticlePage({
                 <h3 className="mb-4 text-2xl font-bold">
                   ⚡ Weiter geht's: {mainTools[1].name}
                 </h3>
-                <p className="mb-6 text-gray-300">
+                <p className="mb-6 leading-7 text-slate-100">
                   {mainTools[1].description || "Eines der besten Tools in dieser Kategorie"}
                 </p>
                 <OptimizedAffiliateButton
@@ -149,7 +153,7 @@ export default async function BlogArticlePage({
                         </p>
                       )}
 
-                      <p className="mb-4 text-gray-300">
+                      <p className="mb-4 leading-7 text-slate-100">
                         {tool.description || tool.category}
                       </p>
 
@@ -178,7 +182,7 @@ export default async function BlogArticlePage({
               <h3 className="mb-2 text-2xl font-bold">
                 📬 Mehr Tipps wie diese?
               </h3>
-              <p className="mb-6 text-gray-300">
+              <p className="mb-6 leading-7 text-slate-100">
                 Melde dich zu unserem Newsletter an und erhalte wöchentlich die
                 besten Tools & Tricks für dein Business!
               </p>
@@ -201,7 +205,7 @@ export default async function BlogArticlePage({
                       className="rounded-lg border border-white/10 bg-white/5 p-4 hover:bg-white/10"
                     >
                       <p className="font-bold text-white">{tool.name}</p>
-                      <p className="text-xs text-gray-400">{tool.category}</p>
+                      <p className="text-xs text-slate-300">{tool.category}</p>
                       <p className="mt-2 text-sm text-yellow-400">
                         ⭐ {tool.rating.toFixed(1)}/10 ({tool.clicks} Klicks)
                       </p>
@@ -222,7 +226,7 @@ export default async function BlogArticlePage({
                             console.error(e);
                           }
                         }}
-                        className="mt-3 inline-block text-xs font-bold text-cyan-400 hover:text-cyan-300"
+                        className="mt-3 inline-block rounded-full bg-cyan-500/10 px-3 py-2 text-xs font-bold text-cyan-200 hover:bg-cyan-500/20 hover:text-cyan-100"
                       >
                         Besuchen →
                       </a>
@@ -235,7 +239,8 @@ export default async function BlogArticlePage({
             {/* Article Info Box */}
             <div className="rounded-2xl border border-white/10 bg-white/10 p-6">
               <h4 className="mb-4 font-bold">📊 Artikel Info</h4>
-              <div className="space-y-2 text-sm text-gray-400">
+              <div className="space-y-2 text-sm text-slate-300">
+                <p>🤖 Kennzeichnung: KI erstellt</p>
                 <p>📁 Kategorie: {article.category || "Allgemein"}</p>
                 <p>📅 Veröffentlicht: {new Date(article.createdAt).toLocaleDateString("de-DE")}</p>
                 <p>🎯 SEO Score: {article.seoScore || 0}%</p>

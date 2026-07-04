@@ -61,8 +61,8 @@ const comparisonData = [
   {
     feature: "💳 Kosten",
     starter: "€0",
-    pro: "€29/Monat",
-    agency: "€99/Monat",
+    pro: "€39/Monat",
+    agency: "€149/Monat",
   },
 ];
 
@@ -96,12 +96,12 @@ export function ComparisonTable() {
                 <th className="px-6 py-4 text-center" style={{ background: "rgba(139, 92, 246, 0.12)", borderLeft: "2px solid rgba(139, 92, 246, 0.3)", borderRight: "2px solid rgba(139, 92, 246, 0.3)" }}>
                   <div className="text-2xl mb-2">💎</div>
                   <div className="font-bold" style={{ color: "#c4b5fd" }}>Pro</div>
-                  <div className="text-sm" style={{ color: "#ddd6fe" }}>€29/Monat</div>
+                  <div className="text-sm" style={{ color: "#ddd6fe" }}>€39/Monat</div>
                 </th>
                 <th className="px-6 py-4 text-center">
                   <div className="text-2xl mb-2">👑</div>
                   <div className="font-bold" style={{ color: "var(--text-dark)" }}>Agency</div>
-                  <div className="text-sm" style={{ color: "var(--text-light)" }}>€99/Monat</div>
+                  <div className="text-sm" style={{ color: "var(--text-light)" }}>€149/Monat</div>
                 </th>
               </tr>
             </thead>
@@ -142,12 +142,12 @@ export function ComparisonTable() {
             },
             {
               title: "💎 Pro",
-              price: "€29/Monat",
+              price: "€39/Monat",
               color: "#8b5cf6",
             },
             {
               title: "👑 Agency",
-              price: "€99/Monat",
+              price: "€149/Monat",
               color: "#f59e0b",
             },
           ].map((plan, idx) => (

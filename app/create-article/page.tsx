@@ -41,9 +41,16 @@ export default function CreateArticle() {
           🚀 KI Artikel erstellen
         </h1>
 
-        <p className="mb-8" style={{ color: "var(--text-light)" }}>
+        <p className="mb-4 leading-7" style={{ color: "#e2e8f0" }}>
           Erstelle neue Inhalte für deinen Business Blog.
         </p>
+
+        <div className="mb-8 rounded-xl border border-cyan-400/20 bg-cyan-500/10 p-4">
+          <p className="text-sm font-semibold uppercase tracking-wide text-cyan-200">KI erstellt</p>
+          <p className="mt-1 text-sm" style={{ color: "#e2e8f0" }}>
+            Alle Inhalte, die du hier generierst, sollten ab August sichtbar als KI-generiert markiert werden.
+          </p>
+        </div>
 
         <div className="space-y-6">
           <div>
@@ -54,7 +61,7 @@ export default function CreateArticle() {
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full p-3 rounded-lg font-medium"
+              className="w-full rounded-lg p-3 font-medium"
               style={{
                 borderColor: "var(--border)",
                 color: "var(--text-dark)",
@@ -72,7 +79,7 @@ export default function CreateArticle() {
             <textarea
               value={idea}
               onChange={(e) => setIdea(e.target.value)}
-              className="w-full p-3 rounded-lg font-medium h-40"
+              className="w-full h-40 rounded-lg p-3 font-medium"
               style={{
                 borderColor: "var(--border)",
                 color: "var(--text-dark)",
@@ -90,7 +97,7 @@ export default function CreateArticle() {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full p-3 rounded-lg font-medium"
+              className="w-full rounded-lg p-3 font-medium"
               style={{
                 borderColor: "var(--border)",
                 color: "var(--text-dark)",
@@ -107,7 +114,7 @@ export default function CreateArticle() {
 
           <button
             onClick={generateArticle}
-            className="btn-primary font-bold rounded-lg"
+              className="btn-primary rounded-lg font-bold"
             style={{
               background: "linear-gradient(135deg, var(--success) 0%, var(--success-light) 100%)",
             }}
@@ -121,7 +128,7 @@ export default function CreateArticle() {
             <h2 className="text-2xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
               📄 Generierter Artikel
             </h2>
-            <div style={{ color: "var(--text-light)" }}>
+            <div style={{ color: "#e2e8f0" }}>
               <ReactMarkdown>
                 {article}
               </ReactMarkdown>

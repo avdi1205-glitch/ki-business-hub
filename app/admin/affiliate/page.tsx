@@ -66,7 +66,7 @@ export default async function AffiliateAdminPage() {
         <textarea name="pros" placeholder="Vorteile, eine Zeile pro Vorteil" className="w-full h-24 p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
         <textarea name="cons" placeholder="Nachteile, eine Zeile pro Nachteil" className="w-full h-24 p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
 
-        <button type="submit" className="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-xl font-bold">
+        <button type="submit" className="rounded-xl border border-green-400/30 bg-green-600 px-6 py-3 font-bold text-white shadow-sm hover:bg-green-700">
           Affiliate Link speichern
         </button>
       </form>
@@ -94,7 +94,7 @@ export default async function AffiliateAdminPage() {
             )}
 
             <h2 className="text-2xl font-bold" style={{ color: "var(--text-dark)" }}>{link.name}</h2>
-            <p style={{ color: "var(--text-light)" }}>{link.category}</p>
+            <p style={{ color: "#cbd5e1" }}>{link.category}</p>
 
             {link.price && (
               <p className="text-green-400 font-bold mt-2">💰 {link.price}</p>
@@ -109,15 +109,15 @@ export default async function AffiliateAdminPage() {
             </p>
 
             {link.description && (
-              <p className="mt-4" style={{ color: "var(--text-light)" }}>{link.description}</p>
+              <p className="mt-4 leading-7" style={{ color: "#e2e8f0" }}>{link.description}</p>
             )}
 
             <div className="mt-6 flex flex-wrap gap-3">
-              <Link href={`/admin/affiliate/edit/${link.id}`} className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg">
+              <Link href={`/admin/affiliate/edit/${link.id}`} className="rounded-lg border border-blue-400/30 bg-blue-600 px-4 py-2 font-bold text-white shadow-sm hover:bg-blue-700">
                 Bearbeiten
               </Link>
 
-              <a href={link.url} target="_blank" rel="noopener noreferrer" className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg">
+              <a href={link.url} target="_blank" rel="noopener noreferrer" className="rounded-lg border border-green-400/30 bg-green-600 px-4 py-2 font-bold text-white shadow-sm hover:bg-green-700">
                 Link öffnen
               </a>
 
