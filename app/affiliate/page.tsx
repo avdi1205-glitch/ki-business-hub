@@ -21,7 +21,7 @@ export default async function AffiliatePage() {
   });
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
+    <main style={{ background: "var(--background)" }}>
       <section className="relative overflow-hidden px-6 py-20">
         <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-cyan-500/10 to-transparent" />
 

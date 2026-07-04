@@ -14,7 +14,7 @@ export default async function EditorPage() {
   });
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-16 text-white">
+    <main className="min-h-screen px-6 py-16" style={{ background: "var(--background)", color: "var(--text-dark)" }}>
       <section className="mx-auto max-w-6xl">
         <h1 className="mb-10 text-5xl font-bold">📚 KI Redaktion</h1>
 

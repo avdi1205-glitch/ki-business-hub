@@ -122,7 +122,7 @@ gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
           strategy="afterInteractive"
         />
       </head>
-      <body className="min-h-full bg-slate-950 text-white">
+      <body className="min-h-full" style={{ background: "var(--background)", color: "var(--text-dark)" }}>
         <Navbar />
         {children}
         <ExitIntentPopup />

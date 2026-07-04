@@ -57,17 +57,15 @@ export default async function BlogArticlePage({
   const sidebarTools = relatedTools.slice(0, 4);
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
+    <main style={{ background: "var(--background)" }}>
       {/* Hero Section */}
-      <section className="relative overflow-hidden px-6 py-20">
-        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-purple-500/10 to-transparent" />
-
+      <section className="relative overflow-hidden px-6 py-20" style={{ background: "linear-gradient(135deg, var(--background) 0%, var(--background-alt) 100%)" }}>
         <div className="relative mx-auto max-w-4xl">
-          <p className="mb-4 font-bold text-cyan-300">
+          <p className="mb-4 font-bold" style={{ color: "var(--primary)" }}>
             {article.category || "Blog"} • SEO Score: {article.seoScore || "0"}
           </p>
 
-          <h1 className="mb-6 text-5xl font-bold tracking-tight md:text-6xl">
+          <h1 className="mb-6 text-5xl font-bold tracking-tight md:text-6xl" style={{ color: "var(--text-dark)" }}>
             {article.title}
           </h1>
 

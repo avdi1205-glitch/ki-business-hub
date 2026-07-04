@@ -32,7 +32,7 @@ export default async function DashboardPage() {
   });
 
   return (
-    <main className="min-h-screen bg-slate-900 text-white p-10">
+    <div style={{ background: "var(--background)", minHeight: "100vh" }} className="py-10 px-6">
       <h1 className="text-5xl font-bold mb-10">📊 Admin Dashboard</h1>
 
       {/* KPI Cards */}
@@ -130,6 +130,6 @@ export default async function DashboardPage() {
           🤖 Content Factory
         </Link>
       </div>
-    </main>
+    </div>
   );
 }

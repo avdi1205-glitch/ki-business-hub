@@ -142,7 +142,7 @@ export default function ContentFactoryPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
+    <main style={{ background: "var(--background)" }}>
       <section className="mx-auto max-w-6xl px-6 py-16">
         <h1 className="mb-10 text-5xl font-bold">🤖 Content Factory</h1>
 
