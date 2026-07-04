@@ -5,6 +5,7 @@ import ConversionHero from "./components/ConversionHero";
 import { FeaturesSection } from "./components/FeaturesSection";
 import { PricingSection } from "./components/PricingSection";
 import { FAQSection } from "./components/FAQSection";
+import { TestimonialsSection } from "./components/TestimonialsSection";
 
 export default async function Home() {
   const tools = await prisma.affiliateLink.findMany({
@@ -24,6 +25,9 @@ export default async function Home() {
 
       {/* Features Section */}
       <FeaturesSection />
+
+      {/* Testimonials Section */}
+      <TestimonialsSection />
 
       {/* Top Tools Section */}
       <section className="py-24 bg-slate-50">
