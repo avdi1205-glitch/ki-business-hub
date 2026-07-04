@@ -20,7 +20,7 @@ export default async function Home() {
   });
 
   return (
-    <main className="min-h-screen bg-white">
+    <main style={{ background: "var(--background)", minHeight: "100vh" }}>
       {/* Conversion Hero */}
       <ConversionHero />
 
@@ -31,13 +31,13 @@ export default async function Home() {
       <TestimonialsSection />
 
       {/* Top Tools Section */}
-      <section className="py-24 bg-slate-50">
+      <section className="py-24" style={{ background: "linear-gradient(135deg, var(--background) 0%, var(--background-alt) 100%)" }}>
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
               🏆 Beste Tools 2026
             </h2>
-            <p className="text-xl text-slate-600">
+            <p className="text-xl" style={{ color: "var(--text-light)" }}>
               Die Top-Affiliate-Tools für maximale Konversion
             </p>
           </div>
@@ -46,31 +46,36 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="py-24 bg-white">
+      {/* Unique Value Proposition - Einzigartig */}
+      <section className="py-24" style={{ background: "var(--background)" }}>
         <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
+              🚀 Was uns EINZIGARTIG macht
+            </h2>
+          </div>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="p-8 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-200">
+            <div className="p-8 rounded-xl" style={{ background: "rgba(59, 130, 246, 0.1)", border: "1px solid rgba(59, 130, 246, 0.3)", backdropFilter: "blur(10px)" }}>
               <div className="text-4xl mb-4">🤖</div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-2">AI-Powered</h3>
-              <p className="text-slate-600">
-                50+ Artikel/Monat automatisch generiert mit KI
+              <h3 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>Live AI Demo</h3>
+              <p style={{ color: "var(--text-light)" }}>
+                Sieh LIVE wie die KI einen Artikel in 8 Sekunden schreibt
               </p>
             </div>
 
-            <div className="p-8 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200">
-              <div className="text-4xl mb-4">💰</div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-2">High Revenue</h3>
-              <p className="text-slate-600">
-                €6.250+/Monat mit Affiliate-Links verdienen
+            <div className="p-8 rounded-xl" style={{ background: "rgba(16, 185, 129, 0.1)", border: "1px solid rgba(16, 185, 129, 0.3)", backdropFilter: "blur(10px)" }}>
+              <div className="text-4xl mb-4">📊</div>
+              <h3 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>Personalisierter ROI</h3>
+              <p style={{ color: "var(--text-light)" }}>
+                Kalkulator zeigt DEIN Potential - nicht 0815 Durchschnitte
               </p>
             </div>
 
-            <div className="p-8 rounded-xl bg-gradient-to-br from-purple-50 to-violet-50 border border-purple-200">
+            <div className="p-8 rounded-xl" style={{ background: "rgba(139, 92, 246, 0.1)", border: "1px solid rgba(139, 92, 246, 0.3)", backdropFilter: "blur(10px)" }}>
               <div className="text-4xl mb-4">⚡</div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-2">Automation</h3>
-              <p className="text-slate-600">
-                Newsletter, Publishing, SEO - alles automatisch
+              <h3 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>Full Automation</h3>
+              <p style={{ color: "var(--text-light)" }}>
+                Von KI → SEO → Affiliate → Newsletter → Geld
               </p>
             </div>
           </div>
@@ -78,11 +83,11 @@ export default async function Home() {
       </section>
 
       {/* Latest Articles */}
-      <section className="py-24 bg-slate-50">
+      <section className="py-24" style={{ background: "linear-gradient(135deg, var(--background) 0%, var(--background-alt) 100%)" }}>
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">
-              📝 Neueste Artikel
+            <h2 className="text-4xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
+              📝 Neueste AI-Artikel
             </h2>
           </div>
 
@@ -91,17 +96,18 @@ export default async function Home() {
               <Link
                 key={article.id}
                 href={article.slug ? `/blog/${article.slug}` : "#"}
-                className="group rounded-xl overflow-hidden border border-gray-200 hover:border-blue-400 transition-all duration-300 hover:shadow-lg bg-white"
+                className="group rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl"
+                style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}
               >
                 <div className="h-2 bg-gradient-to-r from-blue-500 to-green-500" />
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600">
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-blue-400 transition-colors" style={{ color: "var(--text-dark)" }}>
                     {article.title}
                   </h3>
-                  <p className="text-slate-600 mb-4">
+                  <p className="mb-4" style={{ color: "var(--text-light)" }}>
                     {article.content.substring(0, 100)}...
                   </p>
-                  <div className="flex items-center gap-2 text-blue-600 font-semibold group-hover:translate-x-1 transition-transform">
+                  <div className="flex items-center gap-2 text-blue-400 font-semibold group-hover:translate-x-1 transition-transform">
                     Lesen →
                   </div>
                 </div>
@@ -112,7 +118,8 @@ export default async function Home() {
           <div className="text-center mt-12">
             <Link
               href="/blog"
-              className="px-8 py-4 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 inline-block"
+              className="px-8 py-4 font-bold rounded-lg transition-all duration-300 transform hover:scale-105 inline-block"
+              style={{ background: "var(--primary)", color: "white" }}
             >
               Alle Artikel anschauen
             </Link>
