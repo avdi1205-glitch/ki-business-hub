@@ -1,14 +1,25 @@
 import { prisma } from "@/lib/prisma";
 
 /**
- * DEVELOPMENT ONLY: Seed endpoint to populate test data
- * Access: http://localhost:3000/api/seed-test-data
+ * Seed endpoint to populate bootstrap data.
+ * Local: always available.
+ * Production: only allowed one time while the database is still empty.
  */
 
 export async function GET(request: Request) {
-  // Security: Only allow in development
   if (process.env.NODE_ENV === "production") {
-    return Response.json({ error: "Not available in production" }, { status: 403 });
+    const [affiliateCount, articleCount, subscriberCount] = await Promise.all([
+      prisma.affiliateLink.count(),
+      prisma.article.count(),
+      prisma.newsletterSubscriber.count(),
+    ]);
+
+    if (affiliateCount > 0 || articleCount > 0 || subscriberCount > 1) {
+      return Response.json(
+        { error: "Production bootstrap already used or database is no longer empty" },
+        { status: 403 }
+      );
+    }
   }
 
   try {
