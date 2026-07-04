@@ -4,6 +4,7 @@ import TopTools from "./components/TopTools";
 import ConversionHero from "./components/ConversionHero";
 import { FeaturesSection } from "./components/FeaturesSection";
 import { PricingSection } from "./components/PricingSection";
+import { ComparisonTable } from "./components/ComparisonTable";
 import { FAQSection } from "./components/FAQSection";
 import { TestimonialsSection } from "./components/TestimonialsSection";
 
@@ -121,6 +122,9 @@ export default async function Home() {
 
       {/* Pricing Section */}
       <PricingSection />
+
+      {/* Comparison Table */}
+      <ComparisonTable />
 
       {/* FAQ Section */}
       <FAQSection />
