@@ -10,18 +10,27 @@ interface StatCardProps {
 
 export function StatCard({ title, value, change, icon, trend }: StatCardProps) {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow">
+    <div
+      className="rounded-lg p-6 transition-shadow hover:shadow-md"
+      style={{
+        background: "var(--background-elevated)",
+        border: "1px solid rgba(255,255,255,0.1)",
+      }}
+    >
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <p className="text-sm font-medium text-gray-600 mb-2">{title}</p>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
+          <p className="mb-2 text-sm font-medium" style={{ color: "var(--text-light)" }}>{title}</p>
+          <p className="text-2xl font-bold" style={{ color: "var(--text-dark)" }}>{value}</p>
           {change && (
-            <p className={`text-sm mt-2 ${trend === "up" ? "text-green-600" : "text-red-600"}`}>
+            <p
+              className="mt-2 text-sm"
+              style={{ color: trend === "up" ? "var(--success-light)" : "var(--danger-light)" }}
+            >
               {trend === "up" ? "↑" : "↓"} {change}
             </p>
           )}
         </div>
-        <div className="text-gray-400">{icon}</div>
+        <div style={{ color: "var(--text-muted)" }}>{icon}</div>
       </div>
     </div>
   );
@@ -36,16 +45,22 @@ export function SimpleChart({ title, data }: ChartProps) {
   const max = Math.max(...data.map(d => d.value));
   
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
-      <h3 className="font-semibold text-gray-900 mb-4">{title}</h3>
+    <div
+      className="rounded-lg p-6"
+      style={{
+        background: "var(--background-elevated)",
+        border: "1px solid rgba(255,255,255,0.1)",
+      }}
+    >
+      <h3 className="mb-4 font-semibold" style={{ color: "var(--text-dark)" }}>{title}</h3>
       <div className="space-y-4">
         {data.map((item, idx) => (
           <div key={idx}>
             <div className="flex justify-between mb-1">
-              <span className="text-sm text-gray-600">{item.label}</span>
-              <span className="text-sm font-medium text-gray-900">{item.value}</span>
+              <span className="text-sm" style={{ color: "var(--text-light)" }}>{item.label}</span>
+              <span className="text-sm font-medium" style={{ color: "var(--text-dark)" }}>{item.value}</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="h-2 w-full rounded-full" style={{ background: "rgba(255,255,255,0.12)" }}>
               <div
                 className="bg-blue-600 h-2 rounded-full"
                 style={{ width: `${(item.value / max) * 100}%` }}
@@ -69,7 +84,7 @@ export function ActionButton({ label, onClick, variant = "primary", disabled }: 
   const baseStyles = "px-4 py-2 rounded-lg font-medium transition-all";
   const variants = {
     primary: "bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-400",
-    secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300 disabled:bg-gray-300",
+    secondary: "text-white disabled:opacity-50",
     danger: "bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-400",
   };
 
@@ -78,6 +93,11 @@ export function ActionButton({ label, onClick, variant = "primary", disabled }: 
       onClick={onClick}
       disabled={disabled}
       className={`${baseStyles} ${variants[variant]}`}
+      style={
+        variant === "secondary"
+          ? { background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.14)" }
+          : undefined
+      }
     >
       {label}
     </button>

@@ -16,7 +16,9 @@ model Article {
   content   String
 
   status    String   @default("Entwurf")
-seoScore  Int      @default(0)
+  seoScore  Int      @default(0)
+  publishAt DateTime?
+  recurring Boolean  @default(false)
 
   createdAt DateTime @default(now())
 }
@@ -39,6 +41,24 @@ model AffiliateLink {
 
   clicks      Int      @default(0)
   createdAt   DateTime @default(now())
+  abTests     ABTest[]
+}
+
+model ABTest {
+  id              Int           @id @default(autoincrement())
+  affiliateLinkId Int
+  affiliateLink   AffiliateLink @relation(fields: [affiliateLinkId], references: [id], onDelete: Cascade)
+  variantA        String
+  variantB        String
+  impressionsA    Int           @default(0)
+  impressionsB    Int           @default(0)
+  clicksA         Int           @default(0)
+  clicksB         Int           @default(0)
+  winner          String?
+  confidence      Float         @default(0)
+  status          String        @default("active")
+  appliedAt       DateTime?
+  createdAt       DateTime      @default(now())
 }
 model ContentIdea {
   id            Int      @id @default(autoincrement())
@@ -56,6 +76,7 @@ model AffiliateClick {
   id            Int      @id @default(autoincrement())
   affiliateLinkId Int
   articleSlug   String?
+  source        String?
   userId        String?  // IP or session ID
   userAgent     String?
   referrer      String?
@@ -68,6 +89,7 @@ model NewsletterSubscriber {
   id        Int      @id @default(autoincrement())
   email     String   @unique
   name      String?
+  source    String?
   status    String   @default("subscribed")
   createdAt DateTime @default(now())
 }

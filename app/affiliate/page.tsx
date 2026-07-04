@@ -84,6 +84,7 @@ export default async function AffiliatePage() {
                   id={link.id}
                   url={link.url}
                   text={link.buttonText || "🚀 Angebot ansehen"}
+                  clickSource="affiliate-directory"
                 />
               </div>
             </div>

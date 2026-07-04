@@ -7,6 +7,7 @@ import { PricingSection } from "./components/PricingSection";
 import { ComparisonTable } from "./components/ComparisonTable";
 import { FAQSection } from "./components/FAQSection";
 import { TestimonialsSection } from "./components/TestimonialsSection";
+import NewsletterForm from "./components/NewsletterForm";
 
 export default async function Home() {
   const tools = await prisma.affiliateLink.findMany({
@@ -145,9 +146,18 @@ export default async function Home() {
           <p className="text-xl text-gray-300 mb-8">
             Schließe dich 1.247+ erfolgreichen Membern an und verdiene dein erstes Geld
           </p>
-          <button className="px-10 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105">
-            🚀 Kostenlos Starten
-          </button>
+          <div className="flex flex-col items-center gap-4">
+            <Link
+              href="/content-factory"
+              className="px-10 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105"
+            >
+              🚀 Kostenlos Starten
+            </Link>
+            <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-5 text-left">
+              <p className="mb-3 text-sm font-semibold text-cyan-300">📧 Hol dir wöchentliche Conversion- und Tool-Updates</p>
+              <NewsletterForm source="homepage-final-cta" />
+            </div>
+          </div>
         </div>
       </section>
     </main>

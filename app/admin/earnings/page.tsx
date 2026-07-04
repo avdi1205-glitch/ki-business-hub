@@ -26,6 +26,8 @@ export default async function EarningsDashboard() {
     0
   );
 
+  const revenuePerClick = allClicks.length ? allRevenue / allClicks.length : 0;
+
   // Top affiliates
   const topAffiliates = await prisma.affiliateLink.findMany({
     orderBy: { clicks: "desc" },
@@ -36,6 +38,57 @@ export default async function EarningsDashboard() {
   const subscriberCount = await prisma.newsletterSubscriber.count({
     where: { status: "subscribed" },
   });
+
+  const sourcePerformance = Array.from(
+    allClicks.reduce((map, click) => {
+      const key = click.source || click.articleSlug || "unknown";
+      const current = map.get(key) || { source: key, clicks: 0, revenue: 0 };
+      current.clicks += 1;
+      current.revenue += click.revenue || 0;
+      map.set(key, current);
+      return map;
+    }, new Map<string, { source: string; clicks: number; revenue: number }>())
+      .values()
+  )
+    .map((item) => ({
+      ...item,
+      epc: item.clicks ? item.revenue / item.clicks : 0,
+    }))
+    .sort((left, right) => right.revenue - left.revenue)
+    .slice(0, 6);
+
+  const affiliatePerformance = topAffiliates.map((affiliate) => {
+    const affiliateClicks = allClicks.filter(
+      (click) => click.affiliateLinkId === affiliate.id
+    );
+    const affiliateRevenue = affiliateClicks.reduce(
+      (sum, click) => sum + (click.revenue || 0),
+      0
+    );
+
+    return {
+      ...affiliate,
+      revenue: affiliateRevenue,
+      epc: affiliateClicks.length ? affiliateRevenue / affiliateClicks.length : 0,
+    };
+  });
+
+  const bestEpcAffiliates = [...affiliatePerformance]
+    .sort((left, right) => right.epc - left.epc)
+    .slice(0, 5);
+
+  function prettifySource(source: string) {
+    if (source === "homepage-top-tools") return "Homepage Top Tools";
+    if (source === "homepage-final-cta") return "Homepage Final CTA";
+    if (source === "exit-intent-popup") return "Exit Intent Popup";
+    if (source === "affiliate-directory") return "Affiliate Verzeichnis";
+    if (source === "best-tools-table") return "Beste Tools Tabelle";
+    if (source.startsWith("tool-detail-")) return `Tool Detail: ${source.replace("tool-detail-", "")}`;
+    if (source.startsWith("blog-") && source.endsWith("-hero")) return `Blog Hero: ${source.replace("blog-", "").replace("-hero", "")}`;
+    if (source.startsWith("blog-") && source.endsWith("-mid")) return `Blog Mid CTA: ${source.replace("blog-", "").replace("-mid", "")}`;
+    if (source.startsWith("blog-") && source.endsWith("-grid")) return `Blog Tool Grid: ${source.replace("blog-", "").replace("-grid", "")}`;
+    return source;
+  }
 
   return (
     <div className="space-y-8 p-8" style={{ background: "var(--background)", minHeight: "100vh" }}>
@@ -79,6 +132,14 @@ export default async function EarningsDashboard() {
           <p className="mt-2 text-4xl font-bold" style={{ color: "var(--text-dark)" }}>{subscriberCount}</p>
           <p className="mt-2 text-xs" style={{ color: "var(--text-muted)" }}>Aktive Abonnenten</p>
         </div>
+
+        <div className="rounded-2xl border p-6" style={{ background: "rgba(59, 130, 246, 0.1)", borderColor: "rgba(59, 130, 246, 0.3)" }}>
+          <p className="text-sm" style={{ color: "var(--primary-light)" }}>Durchschn. EPC</p>
+          <p className="mt-2 text-4xl font-bold" style={{ color: "var(--text-dark)" }}>
+            €{revenuePerClick.toFixed(2)}
+          </p>
+          <p className="mt-2 text-xs" style={{ color: "var(--text-muted)" }}>Umsatz pro Klick gesamt</p>
+        </div>
       </div>
 
       {/* Top Performing Affiliates */}
@@ -97,15 +158,7 @@ export default async function EarningsDashboard() {
               </tr>
             </thead>
             <tbody style={{ borderColor: "rgba(255,255,255,0.05)" }}>
-              {topAffiliates.map((affiliate, index) => {
-                const affiliateClicks = allClicks.filter(
-                  (click) => click.affiliateLinkId === affiliate.id
-                );
-                const affiliateRevenue = affiliateClicks.reduce(
-                  (sum, click) => sum + (click.revenue || 0),
-                  0
-                );
-
+              {affiliatePerformance.map((affiliate, index) => {
                 return (
                   <tr key={affiliate.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
                     <td className="py-4 font-bold" style={{ color: "var(--text-dark)" }}>
@@ -118,7 +171,7 @@ export default async function EarningsDashboard() {
                       </span>
                     </td>
                     <td className="py-4 font-bold" style={{ color: "var(--success-light)" }}>
-                      €{affiliateRevenue.toFixed(2)}
+                      €{affiliate.revenue.toFixed(2)}
                     </td>
                     <td className="py-4">⭐ {affiliate.rating.toFixed(1)}</td>
                   </tr>
@@ -137,6 +190,50 @@ export default async function EarningsDashboard() {
         </Link>
       </div>
 
+      <div className="grid gap-8 lg:grid-cols-2">
+        <div className="rounded-2xl border p-6" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
+          <h2 className="mb-6 text-2xl font-bold" style={{ color: "var(--text-dark)" }}>💸 Stärkste CTA-Quellen</h2>
+          <div className="space-y-4">
+            {sourcePerformance.length === 0 ? (
+              <p style={{ color: "var(--text-light)" }}>Noch keine Quellen-Daten vorhanden.</p>
+            ) : (
+              sourcePerformance.map((item) => (
+                <div key={item.source} className="rounded-xl p-4" style={{ background: "rgba(245, 158, 11, 0.06)", border: "1px solid rgba(245, 158, 11, 0.18)" }}>
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="font-bold" style={{ color: "var(--text-dark)" }}>{prettifySource(item.source)}</p>
+                      <p style={{ color: "var(--text-light)" }}>{item.clicks} Klicks • EPC €{item.epc.toFixed(2)}</p>
+                    </div>
+                    <p className="font-bold" style={{ color: "var(--accent-light)" }}>€{item.revenue.toFixed(2)}</p>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border p-6" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
+          <h2 className="mb-6 text-2xl font-bold" style={{ color: "var(--text-dark)" }}>⚡ Höchster EPC pro Tool</h2>
+          <div className="space-y-4">
+            {bestEpcAffiliates.length === 0 ? (
+              <p style={{ color: "var(--text-light)" }}>Noch keine Tool-Daten vorhanden.</p>
+            ) : (
+              bestEpcAffiliates.map((affiliate) => (
+                <div key={affiliate.id} className="rounded-xl p-4" style={{ background: "rgba(59, 130, 246, 0.06)", border: "1px solid rgba(59, 130, 246, 0.18)" }}>
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="font-bold" style={{ color: "var(--text-dark)" }}>{affiliate.name}</p>
+                      <p style={{ color: "var(--text-light)" }}>{affiliate.clicks} Klicks • Revenue €{affiliate.revenue.toFixed(2)}</p>
+                    </div>
+                    <p className="font-bold" style={{ color: "var(--primary-light)" }}>EPC €{affiliate.epc.toFixed(2)}</p>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+
       {/* Recent Clicks */}
       <div className="rounded-2xl border p-6" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
         <h2 className="mb-6 text-2xl font-bold" style={{ color: "var(--text-dark)" }}>📊 Letzte Clicks (heute)</h2>
@@ -150,7 +247,7 @@ export default async function EarningsDashboard() {
                 <tr>
                   <th className="pb-3" style={{ color: "var(--text-light)" }}>Uhrzeit</th>
                   <th className="pb-3" style={{ color: "var(--text-light)" }}>Tool</th>
-                  <th className="pb-3" style={{ color: "var(--text-light)" }}>Artikel</th>
+                  <th className="pb-3" style={{ color: "var(--text-light)" }}>Quelle</th>
                   <th className="pb-3" style={{ color: "var(--text-light)" }}>Geschätzte Revenue</th>
                 </tr>
               </thead>
@@ -165,7 +262,7 @@ export default async function EarningsDashboard() {
                         ?.name || "Unbekannt"}
                     </td>
                     <td className="py-4" style={{ color: "var(--text-light)" }}>
-                      {click.articleSlug || "-"}
+                      {prettifySource(click.source || click.articleSlug || "-")}
                     </td>
                     <td className="py-4" style={{ color: "var(--success-light)" }}>
                       €{(click.revenue || 0).toFixed(2)}

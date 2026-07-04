@@ -94,6 +94,7 @@ export default async function BesteToolsPage() {
                         id={tool.id}
                         url={tool.url}
                         text={tool.buttonText || "🚀 Angebot ansehen"}
+                        clickSource="best-tools-table"
                       />
                     </div>
                   </td>

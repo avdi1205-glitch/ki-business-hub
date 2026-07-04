@@ -80,6 +80,7 @@ export default function TopTools({ tools }: { tools: Tool[] }) {
                 id={tool.id}
                 url={tool.url}
                 text={tool.buttonText || "🚀 Angebot ansehen"}
+                clickSource="homepage-top-tools"
               />
             </div>
           </div>

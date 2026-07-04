@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { openai } from "@/lib/openai";
+import { getOpenAI } from "@/lib/openai";
 
 export async function POST(req: NextRequest) {
   try {
     const { action, articleId, keywords } = await req.json();
 
     if (action === "suggest-affiliates") {
+      const openai = getOpenAI();
+
       const article = await prisma.article.findUnique({
         where: { id: articleId },
       });

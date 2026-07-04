@@ -2,7 +2,8 @@ import Link from "next/link";
 import { prisma } from "../../lib/prisma";
 
 function statusColor(status: string) {
-  if (status === "Veröffentlicht") return "text-green-400";
+  if (status === "Veröffentlicht" || status === "published") return "text-green-400";
+  if (status === "Geplant" || status === "scheduled") return "text-blue-400";
   if (status === "SEO geprüft") return "text-cyan-300";
   if (status === "Affiliate geprüft") return "text-yellow-400";
   return "text-gray-300";

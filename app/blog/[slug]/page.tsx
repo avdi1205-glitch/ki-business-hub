@@ -84,6 +84,7 @@ export default async function BlogArticlePage({
                 toolName={mainTools[0].name}
                 toolUrl={mainTools[0].url}
                 articleSlug={slug}
+                clickSource={`blog-${slug}-hero`}
                 buttonText={mainTools[0].buttonText || "Ausprobieren"}
               />
             )}
@@ -116,6 +117,7 @@ export default async function BlogArticlePage({
                   toolName={mainTools[1].name}
                   toolUrl={mainTools[1].url}
                   articleSlug={slug}
+                  clickSource={`blog-${slug}-mid`}
                   buttonText="Jetzt vergleichen"
                 />
               </div>
@@ -162,6 +164,7 @@ export default async function BlogArticlePage({
                         toolName={tool.name}
                         toolUrl={tool.url}
                         articleSlug={slug}
+                        clickSource={`blog-${slug}-grid`}
                         buttonText={tool.buttonText || "Besuchen"}
                       />
                     </div>
@@ -179,7 +182,7 @@ export default async function BlogArticlePage({
                 Melde dich zu unserem Newsletter an und erhalte wöchentlich die
                 besten Tools & Tricks für dein Business!
               </p>
-              <NewsletterForm />
+              <NewsletterForm source={`blog-${slug}`} />
             </section>
           </div>
 

@@ -1,10 +1,6 @@
-import OpenAI from "openai";
 import { NextResponse } from "next/server";
 import { prisma } from "../../../../lib/prisma";
-
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+import { getOpenAI } from "@/lib/openai";
 
 function cleanJson(text: string) {
   const cleaned = text.replace(/```json/g, "").replace(/```/g, "").trim();
@@ -20,6 +16,8 @@ function cleanJson(text: string) {
 
 export async function POST() {
   try {
+    const client = getOpenAI();
+
     const response = await client.responses.create({
       model: "gpt-4o-mini",
       input: `

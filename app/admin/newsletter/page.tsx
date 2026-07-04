@@ -5,14 +5,37 @@ import { StatCard, ActionButton } from "@/app/components/ProUIComponents";
 
 export default function NewsletterAutomationPage() {
   const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<string | null>(null);
+  const [sources, setSources] = useState<Record<string, number>>({});
   const [metrics, setMetrics] = useState({
     totalSubscribers: 1250,
     weeklyGrowth: 45,
     estimatedRevenue: 625,
   });
 
+  React.useEffect(() => {
+    const loadNewsletterMetrics = async () => {
+      try {
+        const response = await fetch("/api/subscribe-newsletter");
+        const data = await response.json();
+        if (!response.ok) return;
+
+        setMetrics((current) => ({
+          ...current,
+          totalSubscribers: data.subscriberCount ?? current.totalSubscribers,
+        }));
+        setSources(data.sourceBreakdown || {});
+      } catch {
+        // Non-blocking dashboard enrichment.
+      }
+    };
+
+    loadNewsletterMetrics();
+  }, []);
+
   const handleSendNewsletter = async () => {
     setLoading(true);
+    setStatus(null);
     try {
       const response = await fetch("/api/newsletter-automation", {
         method: "POST",
@@ -25,7 +48,12 @@ export default function NewsletterAutomationPage() {
         }),
       });
       const data = await response.json();
-      if (data.success) alert(`✅ Newsletter an ${data.sent} Abos versendet!`);
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || "Newsletter-Versand fehlgeschlagen");
+      }
+      setStatus(`Newsletter an ${data.sent} Abos versendet.`);
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "Newsletter-Versand fehlgeschlagen");
     } finally {
       setLoading(false);
     }
@@ -104,6 +132,11 @@ export default function NewsletterAutomationPage() {
             onClick={handleSendNewsletter}
             disabled={loading}
           />
+          {status && (
+            <p className="mt-3 text-sm" style={{ color: "var(--text-light)" }}>
+              {status}
+            </p>
+          )}
         </div>
 
         {/* Recent Campaigns */}
@@ -127,6 +160,24 @@ export default function NewsletterAutomationPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+
+        <div className="mt-8 rounded-lg border p-6" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
+          <h2 className="mb-4 text-xl font-semibold" style={{ color: "var(--text-dark)" }}>🎯 Lead-Quellen</h2>
+          <div className="space-y-3">
+            {Object.keys(sources).length === 0 ? (
+              <p style={{ color: "var(--text-light)" }}>Noch keine Quell-Daten vorhanden.</p>
+            ) : (
+              Object.entries(sources)
+                .sort((left, right) => right[1] - left[1])
+                .map(([source, count]) => (
+                  <div key={source} className="flex items-center justify-between rounded-lg p-3" style={{ background: "rgba(59, 130, 246, 0.05)", border: "1px solid rgba(59, 130, 246, 0.2)" }}>
+                    <span style={{ color: "var(--text-light)" }}>{source}</span>
+                    <span className="font-semibold" style={{ color: "var(--text-dark)" }}>{count}</span>
+                  </div>
+                ))
+            )}
           </div>
         </div>
       </div>

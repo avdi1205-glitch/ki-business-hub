@@ -2,12 +2,19 @@
 
 import React, { useState, useEffect } from "react";
 
+const EXIT_INTENT_STORAGE_KEY = "kihub-exit-intent-dismissed";
+
 export function ExitIntentPopup() {
   const [shown, setShown] = useState(false);
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [messageType, setMessageType] = useState<"success" | "error" | null>(null);
 
   useEffect(() => {
+    const dismissed = window.localStorage.getItem(EXIT_INTENT_STORAGE_KEY);
+    if (dismissed) return;
+
     const handleMouseLeave = (e: MouseEvent) => {
       // Nur wenn Maus oben den Bildschirm verlässt
       if (e.clientY <= 0 && !shown) {
@@ -23,21 +30,37 @@ export function ExitIntentPopup() {
     if (!email) return;
     
     setLoading(true);
+    setMessage(null);
     try {
       const response = await fetch("/api/subscribe-newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, source: "exit-intent-popup" }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        alert("✅ Danke für deine Anmeldung!");
-        setShown(false);
+        setMessage("✅ Danke! Dein Bonus ist unterwegs.");
+        setMessageType("success");
+        window.localStorage.setItem(EXIT_INTENT_STORAGE_KEY, "subscribed");
         setEmail("");
+        window.setTimeout(() => setShown(false), 1400);
+      } else {
+        setMessage(data.error || "Anmeldung fehlgeschlagen");
+        setMessageType("error");
       }
+    } catch {
+      setMessage("Verbindungsfehler. Bitte später erneut versuchen.");
+      setMessageType("error");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDismiss = () => {
+    window.localStorage.setItem(EXIT_INTENT_STORAGE_KEY, "dismissed");
+    setShown(false);
   };
 
   if (!shown) return null;
@@ -47,7 +70,7 @@ export function ExitIntentPopup() {
       <div className="rounded-2xl p-8 max-w-md mx-4 shadow-2xl animate-in fade-in scale-95 duration-200" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
         {/* Close Button */}
         <button
-          onClick={() => setShown(false)}
+          onClick={handleDismiss}
           className="absolute top-4 right-4 transition-colors"
           style={{ color: "var(--text-muted)" }}
         >
@@ -95,9 +118,18 @@ export function ExitIntentPopup() {
             </button>
           </div>
 
+          {message && (
+            <p
+              className="mb-4 text-sm"
+              style={{ color: messageType === "success" ? "var(--success-light)" : "var(--danger-light)" }}
+            >
+              {message}
+            </p>
+          )}
+
           {/* Close CTA */}
           <button
-            onClick={() => setShown(false)}
+            onClick={handleDismiss}
             className="text-sm w-full py-2 transition-colors"
             style={{ color: "var(--text-muted)" }}
           >

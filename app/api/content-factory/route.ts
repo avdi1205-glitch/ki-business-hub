@@ -1,10 +1,6 @@
-import OpenAI from "openai";
 import { NextResponse } from "next/server";
 import { prisma } from "../../../lib/prisma";
-
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+import { getOpenAI } from "@/lib/openai";
 
 function createSlug(title: string) {
   return title
@@ -54,6 +50,8 @@ export async function POST(req: Request) {
       seoStrength,
       articleType,
     } = await req.json();
+
+    const client = getOpenAI();
 
     const safeCount = Math.min(Number(count) || 1, 5);
 

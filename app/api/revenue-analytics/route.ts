@@ -29,18 +29,42 @@ export async function GET(req: NextRequest) {
     const newsletterRevenue = newsletterSubs.length * 0.5; // €0.50 per subscriber
     const totalRevenue = affiliateRevenue + adRevenue + newsletterRevenue;
 
-    // Top performing articles
-    const topArticles = await prisma.article.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 10,
+    const articles = await prisma.article.findMany({
+      select: { id: true, title: true, slug: true },
     });
 
-    const topPerforming = topArticles.map(article => ({
-      id: article.id,
-      title: article.title,
-      clicks: Math.floor(Math.random() * 50),
-      revenue: Math.floor(Math.random() * 100),
-    })).sort((a, b) => b.revenue - a.revenue);
+    const articleMap = new Map(
+      articles
+        .filter((article) => article.slug)
+        .map((article) => [article.slug as string, article])
+    );
+
+    const byArticle = new Map<string, { id: number; title: string; clicks: number; revenue: number }>();
+
+    for (const click of clicks) {
+      const slug = click.articleSlug || "unknown";
+      const article = articleMap.get(slug);
+      const current = byArticle.get(slug) || {
+        id: article?.id || 0,
+        title: article?.title || (slug === "unknown" ? "Direkte Klicks" : slug),
+        clicks: 0,
+        revenue: 0,
+      };
+
+      current.clicks += 1;
+      current.revenue += click.revenue || 0;
+      byArticle.set(slug, current);
+    }
+
+    const topPerforming = Array.from(byArticle.values())
+      .sort((a, b) => b.revenue - a.revenue)
+      .slice(0, 5)
+      .map((item) => ({
+        ...item,
+        revenue: parseFloat(item.revenue.toFixed(2)),
+      }));
+
+    const safeTotalRevenue = totalRevenue || 1;
 
     return NextResponse.json({
       success: true,
@@ -56,11 +80,11 @@ export async function GET(req: NextRequest) {
           newSubscribers: newsletterSubs.length,
         },
       },
-      topPerforming: topPerforming.slice(0, 5),
+      topPerforming,
       breakdown: {
-        affiliate: ((affiliateRevenue / totalRevenue) * 100).toFixed(1),
-        ads: ((adRevenue / totalRevenue) * 100).toFixed(1),
-        newsletter: ((newsletterRevenue / totalRevenue) * 100).toFixed(1),
+        affiliate: ((affiliateRevenue / safeTotalRevenue) * 100).toFixed(1),
+        ads: ((adRevenue / safeTotalRevenue) * 100).toFixed(1),
+        newsletter: ((newsletterRevenue / safeTotalRevenue) * 100).toFixed(1),
       },
       projection: {
         daily: totalRevenue / getDayCount(period),

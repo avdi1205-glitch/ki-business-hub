@@ -50,7 +50,8 @@ export default async function AffiliateAdminPage() {
 
       <form
         action={createAffiliateLink}
-        className="bg-white/10 p-8 rounded-xl space-y-4 mb-8"
+        className="mb-8 space-y-4 rounded-xl p-8"
+        style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}
       >
         <input name="name" placeholder="Produktname" className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
         <input name="url" placeholder="Affiliate Link" className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
@@ -72,9 +73,18 @@ export default async function AffiliateAdminPage() {
 
       <div className="space-y-4">
         {links.map((link) => (
-          <div key={link.id} className="bg-white/10 p-6 rounded-xl">
+          <div
+            key={link.id}
+            className="rounded-xl p-6"
+            style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}
+          >
             {link.logo && (
-              <img src={link.logo} alt={link.name} className="h-12 mb-4 rounded bg-white p-1" />
+              <img
+                src={link.logo}
+                alt={link.name}
+                className="mb-4 h-12 rounded p-1"
+                style={{ background: "rgba(255,255,255,0.9)" }}
+              />
             )}
 
             {link.badge && (
@@ -83,8 +93,8 @@ export default async function AffiliateAdminPage() {
               </p>
             )}
 
-            <h2 className="text-2xl font-bold">{link.name}</h2>
-            <p className="text-gray-400">{link.category}</p>
+            <h2 className="text-2xl font-bold" style={{ color: "var(--text-dark)" }}>{link.name}</h2>
+            <p style={{ color: "var(--text-light)" }}>{link.category}</p>
 
             {link.price && (
               <p className="text-green-400 font-bold mt-2">💰 {link.price}</p>
@@ -99,7 +109,7 @@ export default async function AffiliateAdminPage() {
             </p>
 
             {link.description && (
-              <p className="mt-4 text-gray-300">{link.description}</p>
+              <p className="mt-4" style={{ color: "var(--text-light)" }}>{link.description}</p>
             )}
 
             <div className="mt-6 flex flex-wrap gap-3">

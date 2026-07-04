@@ -2,7 +2,11 @@
 
 import { useState } from "react";
 
-export default function NewsletterForm() {
+type NewsletterFormProps = {
+  source?: string;
+};
+
+export default function NewsletterForm({ source = "newsletter-form" }: NewsletterFormProps) {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -16,7 +20,7 @@ export default function NewsletterForm() {
       const response = await fetch("/api/subscribe-newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, name }),
+        body: JSON.stringify({ email, name, source }),
       });
 
       const data = await response.json();

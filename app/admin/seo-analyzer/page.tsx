@@ -5,16 +5,24 @@ import { StatCard, SimpleChart, ActionButton } from "@/app/components/ProUICompo
 
 export default function SEOAnalyzerPage() {
   const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<string | null>(null);
 
   const handleAnalyze = async () => {
     setLoading(true);
+    setStatus(null);
     try {
       const response = await fetch("/api/seo-analyzer", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "bulk-analyze" }),
       });
       const data = await response.json();
-      console.log(data);
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || "Analyse fehlgeschlagen");
+      }
+      setStatus(`${data.results.length} Artikel analysiert. Neuer Durchschnitt: ${data.average} Punkte.`);
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "Analyse fehlgeschlagen");
     } finally {
       setLoading(false);
     }
@@ -127,6 +135,11 @@ export default function SEOAnalyzerPage() {
               onClick={handleAnalyze}
               disabled={loading}
             />
+            {status && (
+              <p className="mt-3 text-sm" style={{ color: "var(--text-light)" }}>
+                {status}
+              </p>
+            )}
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
 export default function ConversionHero() {
@@ -48,17 +49,23 @@ export default function ConversionHero() {
         {/* CTA Section */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
           {/* Primary CTA */}
-          <button className="group relative px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105 active:scale-95">
+          <Link
+            href="/content-factory"
+            className="group relative px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105 active:scale-95"
+          >
             <span className="relative z-10 flex items-center justify-center gap-2">
               🚀 Jetzt Starten (Kostenlos)
             </span>
             <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-emerald-700 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          </button>
+          </Link>
 
           {/* Secondary CTA */}
-          <button className="px-8 py-4 bg-blue-500/20 border-2 border-blue-400 text-blue-300 font-bold text-lg rounded-lg hover:bg-blue-500/30 transition-all duration-300">
+          <Link
+            href="/stats"
+            className="px-8 py-4 bg-blue-500/20 border-2 border-blue-400 text-blue-300 font-bold text-lg rounded-lg hover:bg-blue-500/30 transition-all duration-300"
+          >
             📊 Ergebnisse anschauen
-          </button>
+          </Link>
         </div>
 
         {/* Countdown Timer (Urgency) */}

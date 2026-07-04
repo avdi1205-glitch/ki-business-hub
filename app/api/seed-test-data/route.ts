@@ -14,75 +14,89 @@ export async function GET(request: Request) {
   try {
     console.log("🌱 Seeding test data...");
 
-    // 1. Create affiliate links
-    const affiliates = await Promise.all([
-      prisma.affiliateLink.create({
-        data: {
-          name: "ChatGPT Pro",
-          url: "https://openai.com/chatgpt",
-          category: "AI Tools",
-          rating: 9.5,
-          price: "$20/month",
-          badge: "Most Popular",
-          buttonText: "Jetzt starten",
-          description: "Die beste KI für Texterstellung",
-          pros: "Schnell, präzise, GPT-4",
-          cons: "Kostenpflichtig",
-        },
-      }),
-      prisma.affiliateLink.create({
-        data: {
-          name: "Midjourney",
-          url: "https://midjourney.com",
-          category: "AI Tools",
-          rating: 9.0,
-          price: "$10/month",
-          badge: "Best for Images",
-          buttonText: "Kostenlos testen",
-          description: "KI-Bildgenerator",
-          pros: "Großartige Qualität",
-          cons: "Discord-Konto nötig",
-        },
-      }),
-      prisma.affiliateLink.create({
-        data: {
-          name: "Runway ML",
-          url: "https://runwayml.com",
-          category: "AI Tools",
-          rating: 8.5,
-          price: "$12.50/month",
-          buttonText: "Kostenlos starten",
-          description: "Video-Generierung",
-          pros: "Intuitive UI",
-          cons: "Rendering kann langsam sein",
-        },
-      }),
-    ]);
+    // 1. Create or reuse affiliate links
+    const affiliateSeeds = [
+      {
+        name: "ChatGPT Pro",
+        url: "https://openai.com/chatgpt",
+        category: "AI Tools",
+        rating: 9.5,
+        price: "$20/month",
+        badge: "Most Popular",
+        buttonText: "Jetzt starten",
+        description: "Die beste KI für Texterstellung",
+        pros: "Schnell, präzise, GPT-4",
+        cons: "Kostenpflichtig",
+      },
+      {
+        name: "Midjourney",
+        url: "https://midjourney.com",
+        category: "AI Tools",
+        rating: 9.0,
+        price: "$10/month",
+        badge: "Best for Images",
+        buttonText: "Kostenlos testen",
+        description: "KI-Bildgenerator",
+        pros: "Großartige Qualität",
+        cons: "Discord-Konto nötig",
+      },
+      {
+        name: "Runway ML",
+        url: "https://runwayml.com",
+        category: "AI Tools",
+        rating: 8.5,
+        price: "$12.50/month",
+        buttonText: "Kostenlos starten",
+        description: "Video-Generierung",
+        pros: "Intuitive UI",
+        cons: "Rendering kann langsam sein",
+      },
+    ];
 
-    // 2. Create newsletter subscribers
-    const subscribers = await Promise.all([
-      prisma.newsletterSubscriber.create({
-        data: {
-          email: "test1@example.com",
-          name: "Max Mustermann",
+    const affiliates = [];
+    for (const seed of affiliateSeeds) {
+      const existing = await prisma.affiliateLink.findFirst({
+        where: { url: seed.url },
+      });
+
+      if (existing) {
+        const updated = await prisma.affiliateLink.update({
+          where: { id: existing.id },
+          data: seed,
+        });
+        affiliates.push(updated);
+      } else {
+        const created = await prisma.affiliateLink.create({ data: seed });
+        affiliates.push(created);
+      }
+    }
+
+    // 2. Create or update newsletter subscribers with realistic sources
+    const subscriberSeeds = [
+      { email: "test1@example.com", name: "Max Mustermann", source: "homepage-final-cta" },
+      { email: "test2@example.com", name: "Anna Schmidt", source: "exit-intent-popup" },
+      { email: "test3@example.com", name: "Peter Koch", source: "blog-best-ai-tools-hero" },
+      { email: "test4@example.com", name: "Julia Weber", source: "blog-best-ai-tools-grid" },
+    ];
+
+    const subscribers = [];
+    for (const seed of subscriberSeeds) {
+      const subscriber = await prisma.newsletterSubscriber.upsert({
+        where: { email: seed.email },
+        update: {
+          name: seed.name,
+          source: seed.source,
           status: "subscribed",
         },
-      }),
-      prisma.newsletterSubscriber.create({
-        data: {
-          email: "test2@example.com",
-          name: "Anna Schmidt",
+        create: {
+          email: seed.email,
+          name: seed.name,
+          source: seed.source,
           status: "subscribed",
         },
-      }),
-      prisma.newsletterSubscriber.create({
-        data: {
-          email: "test3@example.com",
-          name: "Peter Koch",
-          status: "subscribed",
-        },
-      }),
-    ]);
+      });
+      subscribers.push(subscriber);
+    }
 
     // 3. Create affiliate clicks for today
     const today = new Date();
@@ -93,6 +107,7 @@ export async function GET(request: Request) {
         data: {
           affiliateLinkId: affiliates[0].id,
           articleSlug: "best-ai-tools",
+          source: "blog-best-ai-tools-hero",
           userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
           referrer: "https://google.com",
           revenue: 1.5,
@@ -104,6 +119,7 @@ export async function GET(request: Request) {
         data: {
           affiliateLinkId: affiliates[1].id,
           articleSlug: "best-ai-tools",
+          source: "blog-best-ai-tools-grid",
           userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
           referrer: "https://google.com",
           revenue: 1.8,
@@ -115,6 +131,7 @@ export async function GET(request: Request) {
         data: {
           affiliateLinkId: affiliates[0].id,
           articleSlug: "content-creation-tools",
+          source: "homepage-top-tools",
           userAgent: "Mozilla/5.0 (iPhone)",
           referrer: "https://twitter.com",
           revenue: 1.2,
@@ -126,6 +143,7 @@ export async function GET(request: Request) {
         data: {
           affiliateLinkId: affiliates[2].id,
           articleSlug: "video-editing-tools",
+          source: "tool-detail-video-editing-tools",
           userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
           referrer: "https://reddit.com",
           revenue: 0.9,
@@ -137,6 +155,7 @@ export async function GET(request: Request) {
         data: {
           affiliateLinkId: affiliates[1].id,
           articleSlug: "best-ai-tools",
+          source: "best-tools-table",
           userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
           referrer: "https://linkedin.com",
           revenue: 1.6,
@@ -144,7 +163,79 @@ export async function GET(request: Request) {
           createdAt: new Date(today.getTime() + 15 * 60 * 60 * 1000),
         },
       }),
+      prisma.affiliateClick.create({
+        data: {
+          affiliateLinkId: affiliates[0].id,
+          articleSlug: "best-ai-tools",
+          source: "blog-best-ai-tools-mid",
+          userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
+          referrer: "https://bing.com",
+          revenue: 2.1,
+          status: "confirmed",
+          createdAt: new Date(today.getTime() + 18 * 60 * 60 * 1000),
+        },
+      }),
     ]);
+
+    // 3b. Create month-over-month comparison data
+    await prisma.affiliateClick.createMany({
+      data: [
+        {
+          affiliateLinkId: affiliates[0].id,
+          articleSlug: "best-ai-tools",
+          source: "homepage-top-tools",
+          userAgent: "Mozilla/5.0",
+          referrer: "https://google.com",
+          revenue: 1.1,
+          status: "confirmed",
+          createdAt: new Date(today.getFullYear(), today.getMonth() - 1, 12, 10),
+        },
+        {
+          affiliateLinkId: affiliates[1].id,
+          articleSlug: "best-ai-tools",
+          source: "best-tools-table",
+          userAgent: "Mozilla/5.0",
+          referrer: "https://google.com",
+          revenue: 1.4,
+          status: "confirmed",
+          createdAt: new Date(today.getFullYear(), today.getMonth() - 1, 14, 15),
+        },
+      ],
+    });
+
+    // 3c. Create A/B test fixtures if none exist
+    const existingTests = await prisma.aBTest.count();
+    if (existingTests === 0) {
+      await prisma.aBTest.createMany({
+        data: [
+          {
+            affiliateLinkId: affiliates[0].id,
+            variantA: "Kostenlos testen",
+            variantB: "Jetzt starten",
+            impressionsA: 180,
+            impressionsB: 172,
+            clicksA: 15,
+            clicksB: 24,
+            winner: "B",
+            confidence: 93.2,
+            status: "active",
+          },
+          {
+            affiliateLinkId: affiliates[1].id,
+            variantA: "Tool ansehen",
+            variantB: "Deal sichern",
+            impressionsA: 140,
+            impressionsB: 145,
+            clicksA: 12,
+            clicksB: 19,
+            winner: "B",
+            confidence: 95.4,
+            status: "complete",
+            appliedAt: new Date(),
+          },
+        ],
+      });
+    }
 
     // 4. Create earnings log
     const totalRevenue = clicks.reduce(
@@ -169,6 +260,7 @@ export async function GET(request: Request) {
         affiliatesCreated: affiliates.length,
         subscribersCreated: subscribers.length,
         clicksCreated: clicks.length,
+        abTestsSeeded: existingTests === 0 ? 2 : existingTests,
         totalTodayRevenue: (totalRevenue + 1.8).toFixed(2),
       },
     });

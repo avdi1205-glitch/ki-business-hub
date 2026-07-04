@@ -120,6 +120,7 @@ export default async function ToolDetailPage({
             id={tool.id}
             url={tool.url}
             text={tool.buttonText || "🚀 Angebot ansehen"}
+            clickSource={`tool-detail-${slug}`}
           />
         </div>
 

@@ -5,6 +5,7 @@ import { StatCard, ActionButton } from "@/app/components/ProUIComponents";
 
 export default function AffiliateMatchPage() {
   const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<string | null>(null);
 
   const suggestions = [
     { tool: "OpenAI API", description: "KI-API für Entwickler", relevance: 95, url: "https://openai.com" },
@@ -53,30 +54,32 @@ export default function AffiliateMatchPage() {
         </div>
 
         {/* Suggestions */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">🎁 Beste Affiliate-Matches</h2>
+        <div className="mb-8 rounded-lg p-6" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
+          <h2 className="mb-4 text-xl font-semibold" style={{ color: "var(--text-dark)" }}>🎁 Beste Affiliate-Matches</h2>
           
           <div className="space-y-3">
             {suggestions.map((item, idx) => (
               <div
                 key={idx}
-                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-colors group"
+                className="group flex items-center justify-between rounded-lg p-4 transition-colors"
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
               >
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <p className="font-medium text-gray-900">{item.tool}</p>
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    <p className="font-medium" style={{ color: "var(--text-dark)" }}>{item.tool}</p>
+                    <span className="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium" style={{ background: "rgba(16, 185, 129, 0.18)", color: "#86efac" }}>
                       {item.relevance}% Match
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600">{item.description}</p>
+                  <p className="text-sm" style={{ color: "var(--text-light)" }}>{item.description}</p>
                 </div>
                 <div className="flex gap-2">
                   <a
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors font-medium text-sm"
+                    className="rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+                    style={{ background: "rgba(59, 130, 246, 0.18)", color: "#93c5fd" }}
                   >
                     Besuchen
                   </a>
@@ -90,33 +93,51 @@ export default function AffiliateMatchPage() {
         </div>
 
         {/* Auto-Linking */}
-        <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200 p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">🔄 Auto-Linking</h2>
+        <div className="rounded-lg p-6" style={{ background: "rgba(139, 92, 246, 0.08)", border: "1px solid rgba(139, 92, 246, 0.28)" }}>
+          <h2 className="mb-4 text-xl font-semibold" style={{ color: "var(--text-dark)" }}>🔄 Auto-Linking</h2>
           
-          <p className="text-gray-700 mb-4">
+          <p className="mb-4" style={{ color: "var(--text-light)" }}>
             Automatisch passende Affiliate-Links zu bestehenden Artikeln hinzufügen
           </p>
 
           <div className="grid grid-cols-3 gap-4 mb-6">
-            <div className="bg-white p-4 rounded-lg">
-              <p className="text-sm text-gray-600 mb-1">Artikel ohne Links</p>
-              <p className="text-2xl font-bold text-gray-900">5</p>
+            <div className="rounded-lg p-4" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}>
+              <p className="mb-1 text-sm" style={{ color: "var(--text-light)" }}>Artikel ohne Links</p>
+              <p className="text-2xl font-bold" style={{ color: "var(--text-dark)" }}>5</p>
             </div>
-            <div className="bg-white p-4 rounded-lg">
-              <p className="text-sm text-gray-600 mb-1">Verfügbare Matches</p>
-              <p className="text-2xl font-bold text-gray-900">23</p>
+            <div className="rounded-lg p-4" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}>
+              <p className="mb-1 text-sm" style={{ color: "var(--text-light)" }}>Verfügbare Matches</p>
+              <p className="text-2xl font-bold" style={{ color: "var(--text-dark)" }}>23</p>
             </div>
-            <div className="bg-white p-4 rounded-lg">
-              <p className="text-sm text-gray-600 mb-1">Est. zusätzliche Revenue</p>
-              <p className="text-2xl font-bold text-green-600">€285/Mo</p>
+            <div className="rounded-lg p-4" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}>
+              <p className="mb-1 text-sm" style={{ color: "var(--text-light)" }}>Est. zusätzliche Revenue</p>
+              <p className="text-2xl font-bold" style={{ color: "var(--success-light)" }}>€285/Mo</p>
             </div>
           </div>
 
           <ActionButton
             label={loading ? "Verlinke..." : "Jetzt Auto-Linking starten"}
-            onClick={() => setLoading(!loading)}
+            onClick={async () => {
+              setLoading(true);
+              setStatus(null);
+              try {
+                const response = await fetch("/api/affiliate-match", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ action: "auto-link" }),
+                });
+                const data = await response.json();
+                if (!response.ok || !data.success) throw new Error(data.error || "Auto-Linking fehlgeschlagen");
+                setStatus(`${data.articlesNeedingLinks} Artikel gescannt, ${data.updates.length} Link-Kandidaten erzeugt.`);
+              } catch (error) {
+                setStatus(error instanceof Error ? error.message : "Auto-Linking fehlgeschlagen");
+              } finally {
+                setLoading(false);
+              }
+            }}
             disabled={loading}
           />
+          {status && <p className="mt-3 text-sm" style={{ color: "var(--text-light)" }}>{status}</p>}
         </div>
       </div>
     </div>
