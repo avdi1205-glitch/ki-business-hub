@@ -139,12 +139,14 @@ export default async function BlogArticlePage({
     take: 5,
   });
 
-  // Get related tools by category
-  const relatedTools = await prisma.affiliateLink.findMany({
-    where: { category: article.category || undefined },
-    orderBy: { clicks: "desc" },
-    take: 3,
-  });
+  // Query related tools only when a valid category exists.
+  const relatedTools = article.category
+    ? await prisma.affiliateLink.findMany({
+      where: { category: article.category },
+      orderBy: { clicks: "desc" },
+      take: 3,
+    })
+    : [];
 
   const mainTools = topTools.slice(0, 3);
   const sidebarTools = relatedTools.slice(0, 4);
