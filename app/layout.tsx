@@ -116,11 +116,6 @@ gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
           </>
         )}
 
-        {/* Vercel Web Analytics */}
-        <Script
-          src="/_vercel/insights/script.js"
-          strategy="afterInteractive"
-        />
       </head>
       <body className="min-h-full" style={{ background: "var(--background)", color: "var(--text-dark)" }}>
         <Navbar />
