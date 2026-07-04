@@ -38,7 +38,7 @@ export default async function Home() {
             <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
               🏆 Beste Tools 2026
             </h2>
-            <p className="text-xl" style={{ color: "var(--text-light)" }}>
+            <p className="text-xl leading-8" style={{ color: "#e2e8f0" }}>
               Die Top-Affiliate-Tools für maximale Konversion
             </p>
           </div>
@@ -59,7 +59,7 @@ export default async function Home() {
             <div className="p-8 rounded-xl" style={{ background: "rgba(59, 130, 246, 0.1)", border: "1px solid rgba(59, 130, 246, 0.3)", backdropFilter: "blur(10px)" }}>
               <div className="text-4xl mb-4">🤖</div>
               <h3 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>Live AI Demo</h3>
-              <p style={{ color: "var(--text-light)" }}>
+              <p className="leading-7" style={{ color: "#e2e8f0" }}>
                 Sieh LIVE wie die KI einen Artikel in 8 Sekunden schreibt
               </p>
             </div>
@@ -67,7 +67,7 @@ export default async function Home() {
             <div className="p-8 rounded-xl" style={{ background: "rgba(16, 185, 129, 0.1)", border: "1px solid rgba(16, 185, 129, 0.3)", backdropFilter: "blur(10px)" }}>
               <div className="text-4xl mb-4">📊</div>
               <h3 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>Personalisierter ROI</h3>
-              <p style={{ color: "var(--text-light)" }}>
+              <p className="leading-7" style={{ color: "#e2e8f0" }}>
                 Kalkulator zeigt DEIN Potential - nicht 0815 Durchschnitte
               </p>
             </div>
@@ -75,7 +75,7 @@ export default async function Home() {
             <div className="p-8 rounded-xl" style={{ background: "rgba(139, 92, 246, 0.1)", border: "1px solid rgba(139, 92, 246, 0.3)", backdropFilter: "blur(10px)" }}>
               <div className="text-4xl mb-4">⚡</div>
               <h3 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>Full Automation</h3>
-              <p style={{ color: "var(--text-light)" }}>
+              <p className="leading-7" style={{ color: "#e2e8f0" }}>
                 Von KI → SEO → Affiliate → Newsletter → Geld
               </p>
             </div>
@@ -105,7 +105,7 @@ export default async function Home() {
                   <h3 className="text-xl font-bold mb-2 group-hover:text-blue-400 transition-colors" style={{ color: "var(--text-dark)" }}>
                     {article.title}
                   </h3>
-                  <p className="mb-4" style={{ color: "var(--text-light)" }}>
+                  <p className="mb-4 leading-7" style={{ color: "#e2e8f0" }}>
                     {article.content.substring(0, 100)}...
                   </p>
                   <div className="flex items-center gap-2 text-blue-400 font-semibold group-hover:translate-x-1 transition-transform">
@@ -143,7 +143,7 @@ export default async function Home() {
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Bereit zum Starten?
           </h2>
-          <p className="text-xl text-gray-300 mb-8">
+          <p className="text-xl leading-8 mb-8" style={{ color: "#e2e8f0" }}>
             Schließe dich 1.247+ erfolgreichen Membern an und verdiene dein erstes Geld
           </p>
           <div className="flex flex-col items-center gap-4">
