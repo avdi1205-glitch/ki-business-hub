@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { prisma } from "../../lib/prisma";
+import GoogleAd from "../components/GoogleAd";
 
 export const metadata: Metadata = {
   title: "KI Business Hub Blog | KI-Tools, Vergleiche und Praxisguides",
@@ -12,6 +13,9 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
+  const blogTopAdSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_TOP;
+  const blogGridAdSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_GRID;
+
   const articles = await prisma.article.findMany({
     orderBy: {
       createdAt: "desc",
@@ -40,6 +44,12 @@ export default async function BlogPage() {
 
       {/* Articles Grid */}
       <section className="mx-auto max-w-6xl px-6 py-20">
+        {blogTopAdSlot && (
+          <div className="mb-8 rounded-xl border border-white/10 bg-white/5 p-4">
+            <GoogleAd slot={blogTopAdSlot} size="responsive" />
+          </div>
+        )}
+
         <div className="grid gap-6 md:grid-cols-3">
           {articles.map((article) => (
             <Link
@@ -75,6 +85,12 @@ export default async function BlogPage() {
             </Link>
           ))}
         </div>
+
+        {blogGridAdSlot && (
+          <div className="mt-10 rounded-xl border border-white/10 bg-white/5 p-4">
+            <GoogleAd slot={blogGridAdSlot} size="responsive" />
+          </div>
+        )}
       </section>
     </main>
   );

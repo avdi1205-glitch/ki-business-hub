@@ -3,6 +3,7 @@ import Link from "next/link";
 import Script from "next/script";
 import { prisma } from "../../../lib/prisma";
 import { getSiteUrl } from "../../../lib/site-url";
+import GoogleAd from "../../components/GoogleAd";
 import NewsletterForm from "@/app/components/NewsletterForm";
 import OptimizedAffiliateButton from "@/app/components/OptimizedAffiliateButton";
 import { Metadata } from "next";
@@ -67,6 +68,9 @@ export default async function BlogArticlePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  const articleTopAdSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE_TOP;
+  const articleInlineAdSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE_INLINE;
+  const articleSidebarAdSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE_SIDEBAR;
 
   const article = await prisma.article.findUnique({
     where: { slug },
@@ -208,11 +212,23 @@ export default async function BlogArticlePage({
         <div className="grid gap-8 lg:grid-cols-3">
           {/* Main Article Content */}
           <div className="lg:col-span-2">
+            {articleTopAdSlot && (
+              <div className="mb-6 rounded-xl border border-white/10 bg-white/5 p-4">
+                <GoogleAd slot={articleTopAdSlot} size="responsive" />
+              </div>
+            )}
+
             <article className="rounded-2xl border border-white/10 bg-white/10 p-8">
               <div className="whitespace-pre-line leading-8 text-gray-200">
                 {article.content}
               </div>
             </article>
+
+            {articleInlineAdSlot && (
+              <div className="mt-8 rounded-xl border border-white/10 bg-white/5 p-4">
+                <GoogleAd slot={articleInlineAdSlot} size="responsive" />
+              </div>
+            )}
 
             {/* Mid-Article CTA */}
             {mainTools[1] && (
@@ -299,6 +315,12 @@ export default async function BlogArticlePage({
 
           {/* Sidebar - Additional Tools & Info */}
           <div className="space-y-6 lg:col-span-1">
+            {articleSidebarAdSlot && (
+              <div className="rounded-2xl border border-white/10 bg-white/10 p-4">
+                <GoogleAd slot={articleSidebarAdSlot} size="300x600" />
+              </div>
+            )}
+
             {/* Related Tools Sidebar */}
             {sidebarTools.length > 0 && (
               <div className="rounded-2xl border border-white/10 bg-white/10 p-6">

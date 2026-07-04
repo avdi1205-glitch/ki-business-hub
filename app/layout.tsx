@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar";
 import { ExitIntentPopup } from "./components/ExitIntentPopup";
 import { SocialProof } from "./components/SocialProof";
 import { getSiteUrl } from "../lib/site-url";
+import { toAdClientId } from "../lib/adsense";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,6 +19,9 @@ const geistMono = Geist_Mono({
 });
 
 const siteUrl = getSiteUrl();
+const adClient = toAdClientId(
+  process.env.GOOGLE_ADSENSE_ID || process.env.NEXT_PUBLIC_ADSENSE_ID,
+);
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -116,10 +120,10 @@ export default function RootLayout({
         />
 
         {/* Google AdSense */}
-        {process.env.GOOGLE_ADSENSE_ID && (
+        {adClient && (
           <Script
             async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-${process.env.GOOGLE_ADSENSE_ID}`}
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClient}`}
             crossOrigin="anonymous"
             strategy="afterInteractive"
           />

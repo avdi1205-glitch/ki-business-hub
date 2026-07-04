@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { isAdSenseEnabled, toAdClientId } from "../../lib/adsense";
 
 type AdSize = "responsive" | "728x90" | "300x250" | "160x600" | "300x600";
 
@@ -15,7 +16,12 @@ export default function GoogleAd({
   size = "responsive",
   className = "",
 }: GoogleAdProps) {
+  const adClientId = toAdClientId(process.env.NEXT_PUBLIC_ADSENSE_ID);
+  const adsEnabled = isAdSenseEnabled(process.env.NEXT_PUBLIC_ADSENSE_ENABLED);
+
   useEffect(() => {
+    if (!adsEnabled || !adClientId) return;
+
     try {
       // Push ads config
       (window as any).adsbygoogle = (window as any).adsbygoogle || [];
@@ -23,9 +29,9 @@ export default function GoogleAd({
     } catch (error) {
       console.error("AdSense error:", error);
     }
-  }, [slot]);
+  }, [adsEnabled, adClientId, slot]);
 
-  if (!process.env.NEXT_PUBLIC_ADSENSE_ENABLED) {
+  if (!adsEnabled || !adClientId) {
     return null;
   }
 
@@ -50,7 +56,7 @@ export default function GoogleAd({
           display: "block",
           ...styleSize,
         }}
-        data-ad-client={`ca-${process.env.NEXT_PUBLIC_ADSENSE_ID}`}
+        data-ad-client={adClientId}
         data-ad-slot={slot}
         data-ad-format="auto"
         data-full-width-responsive="true"
