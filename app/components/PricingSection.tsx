@@ -73,7 +73,7 @@ export function PricingSection() {
           <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
             💰 Einfache, transparente Preise
           </h2>
-          <p className="text-xl max-w-2xl mx-auto" style={{ color: "var(--text-light)" }}>
+          <p className="text-xl max-w-2xl mx-auto" style={{ color: "#cbd5e1" }}>
             Starte kostenlos. Upgrade jederzeit. Kein Vertrag erforderlich.
           </p>
         </div>
@@ -103,7 +103,7 @@ export function PricingSection() {
                 <div className="mb-6">
                   <div className="text-5xl mb-3">{plan.emoji}</div>
                   <h3 className="text-2xl font-bold" style={{ color: "var(--text-dark)" }}>{plan.name}</h3>
-                  <p className="text-sm" style={{ color: "var(--text-light)" }}>{plan.description}</p>
+                  <p className="text-sm" style={{ color: "#cbd5e1" }}>{plan.description}</p>
                 </div>
 
                 {/* Price */}
@@ -111,7 +111,7 @@ export function PricingSection() {
                   <div className="text-4xl font-bold" style={{ color: plan.color }}>
                     {plan.price}
                   </div>
-                  <p className="text-sm" style={{ color: "var(--text-muted)" }}>{plan.period}</p>
+                  <p className="text-sm" style={{ color: "#94a3b8" }}>{plan.period}</p>
                 </div>
 
                 {/* Features */}
@@ -119,7 +119,7 @@ export function PricingSection() {
                   {plan.features.map((feature, fidx) => (
                     <div key={fidx} className="flex items-start gap-2">
                       <span className="text-lg mt-1">{feature.includes("✅") ? "✅" : "❌"}</span>
-                      <span style={{ color: feature.includes("✅") ? "var(--text-light)" : "#cbd5e1" }}>
+                        <span style={{ color: feature.includes("✅") ? "#e2e8f0" : "#cbd5e1" }}>
                         {feature.replace("✅ ", "").replace("❌ ", "")}
                       </span>
                     </div>
@@ -144,7 +144,7 @@ export function PricingSection() {
           <h3 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>
             🛡️ 30-Tage Geld-zurück-Garantie
           </h3>
-          <p style={{ color: "var(--text-light)" }}>
+          <p style={{ color: "#e2e8f0" }}>
             Nicht zufrieden? Volle Rückerstattung. Keine Fragen gestellt.
           </p>
           <p className="mt-4 text-sm" style={{ color: "var(--text-muted)" }}>

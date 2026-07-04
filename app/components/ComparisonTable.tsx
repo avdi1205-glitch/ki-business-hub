@@ -75,7 +75,7 @@ export function ComparisonTable() {
           <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
             📊 Vergleich der Plans
           </h2>
-          <p className="text-xl" style={{ color: "var(--text-light)" }}>
+          <p className="text-xl" style={{ color: "#cbd5e1" }}>
             Finde den perfekten Plan für deine Bedürfnisse
           </p>
         </div>
@@ -91,7 +91,7 @@ export function ComparisonTable() {
                 <th className="px-6 py-4 text-center">
                   <div className="text-2xl mb-2">🚀</div>
                   <div className="font-bold" style={{ color: "var(--text-dark)" }}>Starter</div>
-                  <div className="text-sm" style={{ color: "var(--text-light)" }}>Kostenlos</div>
+                  <div className="text-sm" style={{ color: "#cbd5e1" }}>Kostenlos</div>
                 </th>
                 <th className="px-6 py-4 text-center" style={{ background: "rgba(139, 92, 246, 0.12)", borderLeft: "2px solid rgba(139, 92, 246, 0.3)", borderRight: "2px solid rgba(139, 92, 246, 0.3)" }}>
                   <div className="text-2xl mb-2">💎</div>
@@ -117,13 +117,13 @@ export function ComparisonTable() {
                   <td className="px-6 py-4 font-semibold" style={{ color: "var(--text-dark)" }}>
                     {row.feature}
                   </td>
-                  <td className="px-6 py-4 text-center" style={{ color: "var(--text-light)" }}>
+                  <td className="px-6 py-4 text-center" style={{ color: "#e2e8f0" }}>
                     {row.starter}
                   </td>
                   <td className="px-6 py-4 text-center font-bold" style={{ background: "rgba(139, 92, 246, 0.12)", color: "#e9d5ff" }}>
                     {row.pro}
                   </td>
-                  <td className="px-6 py-4 text-center" style={{ color: "var(--text-light)" }}>
+                  <td className="px-6 py-4 text-center" style={{ color: "#e2e8f0" }}>
                     {row.agency}
                   </td>
                 </tr>
@@ -165,7 +165,7 @@ export function ComparisonTable() {
               <p className="text-lg font-bold mb-4" style={{ color: plan.color }}>
                 {plan.price}
               </p>
-              <div className="space-y-2 text-sm" style={{ color: "var(--text-light)" }}>
+              <div className="space-y-2 text-sm" style={{ color: "#e2e8f0" }}>
                 {comparisonData.map((row, jdx) => (
                   <div key={jdx} className="flex justify-between">
                     <span>{row.feature}</span>
@@ -183,7 +183,7 @@ export function ComparisonTable() {
 
         {/* Bottom CTA */}
         <div className="mt-16 text-center">
-          <p className="text-lg mb-8" style={{ color: "var(--text-light)" }}>
+          <p className="text-lg mb-8" style={{ color: "#cbd5e1" }}>
             Alle Plans haben 30 Tage Geld-Zurück-Garantie 🛡️
           </p>
           <Link href="/api/checkout?plan=pro&source=comparison-table" className="inline-block px-10 py-4 text-white font-bold text-lg rounded-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105" style={{ background: "var(--success)" }}>

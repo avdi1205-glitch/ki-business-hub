@@ -52,7 +52,7 @@ export function FAQSection() {
           <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
             ❓ Häufig Gestellte Fragen
           </h2>
-          <p className="text-xl" style={{ color: "var(--text-light)" }}>
+          <p className="text-xl" style={{ color: "#cbd5e1" }}>
             Alles was Sie wissen müssen um zu starten
           </p>
         </div>
@@ -93,7 +93,7 @@ export function FAQSection() {
               {/* Answer */}
               {openIdx === idx && (
                 <div className="p-6 border-t-2" style={{ borderColor: `${faq.color}40`, background: `${faq.color}08` }}>
-                  <p className="text-lg leading-relaxed" style={{ color: "var(--text-light)" }}>
+                  <p className="text-lg leading-relaxed" style={{ color: "#e2e8f0" }}>
                     {faq.answer}
                   </p>
                   <div className="mt-4 inline-block">
@@ -112,7 +112,7 @@ export function FAQSection() {
           <h3 className="text-2xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
             Immer noch Fragen?
           </h3>
-          <p className="mb-6" style={{ color: "var(--text-light)" }}>
+          <p className="mb-6" style={{ color: "#cbd5e1" }}>
             Unser Team antwortet innerhalb von 24 Stunden. Kostenlos.
           </p>
           <button className="px-8 py-4 text-white font-bold rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105" style={{ background: "var(--primary)" }}>

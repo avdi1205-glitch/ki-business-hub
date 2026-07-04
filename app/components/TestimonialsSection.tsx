@@ -63,7 +63,7 @@ export function TestimonialsSection() {
           <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
             ⭐ Echte Erfolgsgeschichten von echten Menschen
           </h2>
-          <p className="text-xl" style={{ color: "var(--text-light)" }}>
+          <p className="text-xl" style={{ color: "#cbd5e1" }}>
             1.247+ Mitglieder verdienen bereits passives Einkommen
           </p>
         </div>
@@ -152,7 +152,7 @@ export function TestimonialsSection() {
 
         {/* Bottom CTA */}
         <div className="mt-16 text-center">
-          <p className="text-xl text-slate-600 mb-8">
+          <p className="text-xl mb-8" style={{ color: "#cbd5e1" }}>
             🚀 Bist du bereit, die nächste Erfolgsgeschichte zu werden?
           </p>
           <button className="px-10 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105">
