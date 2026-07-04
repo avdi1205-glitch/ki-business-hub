@@ -7,6 +7,13 @@ import NewsletterForm from "@/app/components/NewsletterForm";
 import OptimizedAffiliateButton from "@/app/components/OptimizedAffiliateButton";
 import { Metadata } from "next";
 
+function getExcerpt(text: string, maxLength = 160): string {
+  if (!text) return "";
+  const cleaned = text.replace(/\s+/g, " ").trim();
+  if (cleaned.length <= maxLength) return cleaned;
+  return `${cleaned.slice(0, maxLength - 1)}…`;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -17,23 +24,39 @@ export async function generateMetadata({
 
   if (!article) return {};
 
+  const siteUrl = getSiteUrl();
+  const articleUrl = `${siteUrl}/blog/${slug}`;
+  const description = getExcerpt(article.idea || article.content, 170);
+  const ogImage = `${siteUrl}/og-image.png`;
+
   return {
     title: `${article.title} | KI Business Hub`,
-    description: article.idea,
+    description,
     alternates: {
       canonical: `/blog/${slug}`,
     },
+    authors: [{ name: "KI Business Hub" }],
     openGraph: {
       title: article.title,
-      description: article.idea,
+      description,
       type: "article",
-      url: `/blog/${slug}`,
+      url: articleUrl,
       publishedTime: article.createdAt.toISOString(),
+      section: article.category || "Blog",
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: article.title,
-      description: article.idea,
+      description,
+      images: [ogImage],
     },
   };
 }
@@ -58,19 +81,56 @@ export default async function BlogArticlePage({
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
+    "@id": articleUrl,
+    url: articleUrl,
     mainEntityOfPage: articleUrl,
     headline: article.title,
-    description: article.idea,
+    description: getExcerpt(article.idea || article.content, 170),
     datePublished: article.createdAt.toISOString(),
+    inLanguage: "de-DE",
+    articleSection: article.category || "Blog",
+    isAccessibleForFree: true,
+    image: [`${siteUrl}/og-image.png`],
+    wordCount: article.content ? article.content.trim().split(/\s+/).length : undefined,
     author: {
       "@type": "Organization",
       name: "KI Business Hub",
+      url: siteUrl,
     },
     publisher: {
       "@type": "Organization",
       name: "KI Business Hub",
       url: siteUrl,
+      logo: {
+        "@type": "ImageObject",
+        url: `${siteUrl}/logo.png`,
+      },
     },
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Startseite",
+        item: siteUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Blog",
+        item: `${siteUrl}/blog`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: article.title,
+        item: articleUrl,
+      },
+    ],
   };
 
   // Get top tools for recommendations
@@ -95,6 +155,11 @@ export default async function BlogArticlePage({
         id="article-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <Script
+        id="article-breadcrumb-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
       <main style={{ background: "var(--background)" }}>
