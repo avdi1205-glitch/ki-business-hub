@@ -16,7 +16,7 @@ function cleanJson(text: string) {
 
 export async function POST() {
   try {
-    const client = getOpenAI();
+    const client = await getOpenAI();
 
     const response = await client.responses.create({
       model: "gpt-4o-mini",

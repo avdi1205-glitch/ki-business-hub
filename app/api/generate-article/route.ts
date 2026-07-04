@@ -17,7 +17,7 @@ function createSlug(title: string) {
 
 export async function POST(req: Request) {
   try {
-    const client = getOpenAI();
+    const client = await getOpenAI();
     const { title, idea, category } = await req.json();
 
     const response = await client.responses.create({

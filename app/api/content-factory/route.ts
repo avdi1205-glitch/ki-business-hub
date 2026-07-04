@@ -51,7 +51,7 @@ export async function POST(req: Request) {
       articleType,
     } = await req.json();
 
-    const client = getOpenAI();
+    const client = await getOpenAI();
 
     const safeCount = Math.min(Number(count) || 1, 5);
 

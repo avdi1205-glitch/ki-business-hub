@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
     const { action, articleId, keywords } = await req.json();
 
     if (action === "suggest-affiliates") {
-      const openai = getOpenAI();
+      const openai = await getOpenAI();
 
       const article = await prisma.article.findUnique({
         where: { id: articleId },

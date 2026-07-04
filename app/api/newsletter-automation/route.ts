@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { resend } from "@/lib/resend";
+import { getResend } from "@/lib/resend";
 
 export async function POST(req: NextRequest) {
   try {
@@ -26,6 +26,8 @@ export async function POST(req: NextRequest) {
           message: "No subscribers in segment",
         });
       }
+
+      const resend = await getResend();
 
       const results = [];
       for (const subscriber of subscribers) {

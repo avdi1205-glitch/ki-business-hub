@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { resend } from "@/lib/resend";
+import { getResend } from "@/lib/resend";
 
 export async function POST(request: Request) {
   try {
@@ -42,6 +42,7 @@ export async function POST(request: Request) {
 
     const fromEmail = process.env.NEWSLETTER_FROM_EMAIL || process.env.RESEND_FROM_EMAIL;
     if (process.env.RESEND_API_KEY && fromEmail) {
+      const resend = await getResend();
       await resend.emails.send({
         from: fromEmail,
         to: normalizedEmail,
