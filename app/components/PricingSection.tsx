@@ -18,8 +18,7 @@ const pricingPlans = [
       "❌ Advanced SEO Tools",
     ],
     cta: "Jetzt Starten",
-    color: "from-blue-500 to-cyan-500",
-    bgGradient: "from-blue-50 to-cyan-50",
+    color: "#3b82f6",
     badge: "",
   },
   {
@@ -37,8 +36,7 @@ const pricingPlans = [
       "✅ Keyword Research Tool",
     ],
     cta: "Pro Starten",
-    color: "from-purple-500 to-violet-500",
-    bgGradient: "from-purple-50 to-violet-50",
+    color: "#8b5cf6",
     badge: "BESTSELLER",
     highlight: true,
   },
@@ -57,22 +55,21 @@ const pricingPlans = [
       "✅ White Label Option",
     ],
     cta: "Agency Kontaktieren",
-    color: "from-amber-500 to-yellow-500",
-    bgGradient: "from-amber-50 to-yellow-50",
+    color: "#f59e0b",
     badge: "ENTERPRISE",
   },
 ];
 
 export function PricingSection() {
   return (
-    <div className="py-24 bg-gradient-to-b from-white to-slate-50">
+    <div style={{ background: "var(--background)" }} className="py-24">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
             💰 Einfache, transparente Preise
           </h2>
-          <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+          <p className="text-xl max-w-2xl mx-auto" style={{ color: "var(--text-light)" }}>
             Starte kostenlos. Upgrade jederzeit. Kein Vertrag erforderlich.
           </p>
         </div>
@@ -82,16 +79,16 @@ export function PricingSection() {
           {pricingPlans.map((plan, idx) => (
             <div
               key={idx}
-              className={`relative rounded-2xl overflow-hidden transition-all duration-300 transform hover:scale-105 ${
-                plan.highlight ? "ring-2 ring-purple-500 md:scale-105" : ""
-              }`}
+              className="relative rounded-2xl overflow-hidden transition-all duration-300 transform hover:scale-105"
+              style={{
+                background: "var(--background-elevated)",
+                border: plan.highlight ? `2px solid ${plan.color}` : `1px solid rgba(255,255,255,0.1)`,
+                transform: plan.highlight ? "scale(1.05)" : "scale(1)",
+              }}
             >
-              {/* Background */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${plan.bgGradient}`} />
-
               {/* Badge */}
               {plan.badge && (
-                <div className={`absolute top-4 right-4 px-4 py-1 bg-gradient-to-r ${plan.color} text-white text-xs font-bold rounded-full`}>
+                <div className="absolute top-4 right-4 px-4 py-1 text-white text-xs font-bold rounded-full" style={{ background: plan.color }}>
                   {plan.badge}
                 </div>
               )}
@@ -101,16 +98,16 @@ export function PricingSection() {
                 {/* Header */}
                 <div className="mb-6">
                   <div className="text-5xl mb-3">{plan.emoji}</div>
-                  <h3 className="text-2xl font-bold text-slate-900">{plan.name}</h3>
-                  <p className="text-sm text-slate-600">{plan.description}</p>
+                  <h3 className="text-2xl font-bold" style={{ color: "var(--text-dark)" }}>{plan.name}</h3>
+                  <p className="text-sm" style={{ color: "var(--text-light)" }}>{plan.description}</p>
                 </div>
 
                 {/* Price */}
                 <div className="mb-6">
-                  <div className={`text-4xl font-bold bg-gradient-to-r ${plan.color} bg-clip-text text-transparent`}>
+                  <div className="text-4xl font-bold" style={{ color: plan.color }}>
                     {plan.price}
                   </div>
-                  <p className="text-sm text-slate-600">{plan.period}</p>
+                  <p className="text-sm" style={{ color: "var(--text-muted)" }}>{plan.period}</p>
                 </div>
 
                 {/* Features */}
@@ -118,7 +115,7 @@ export function PricingSection() {
                   {plan.features.map((feature, fidx) => (
                     <div key={fidx} className="flex items-start gap-2">
                       <span className="text-lg mt-1">{feature.includes("✅") ? "✅" : "❌"}</span>
-                      <span className={feature.includes("✅") ? "text-slate-700" : "text-slate-400"}>
+                      <span style={{ color: feature.includes("✅") ? "var(--text-light)" : "var(--text-muted)" }}>
                         {feature.replace("✅ ", "").replace("❌ ", "")}
                       </span>
                     </div>
@@ -127,9 +124,8 @@ export function PricingSection() {
 
                 {/* CTA Button */}
                 <button
-                  className={`w-full py-3 px-4 rounded-lg font-bold text-white transition-all duration-300 transform hover:scale-105 bg-gradient-to-r ${plan.color} hover:shadow-lg ${
-                    plan.highlight ? "ring-2 ring-offset-2 ring-purple-500" : ""
-                  }`}
+                  className="w-full py-3 px-4 rounded-lg font-bold text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                  style={{ background: plan.color }}
                 >
                   {plan.cta}
                 </button>
@@ -139,11 +135,11 @@ export function PricingSection() {
         </div>
 
         {/* Money-Back Guarantee */}
-        <div className="max-w-2xl mx-auto p-8 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 text-center">
-          <h3 className="text-2xl font-bold text-slate-900 mb-2">
+        <div className="max-w-2xl mx-auto p-8 rounded-xl text-center" style={{ background: "rgba(16, 185, 129, 0.1)", border: "1px solid var(--success)" }}>
+          <h3 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>
             🛡️ 30-Tage Geld-zurück-Garantie
           </h3>
-          <p className="text-slate-600">
+          <p style={{ color: "var(--text-light)" }}>
             Nicht zufrieden? Volle Rückerstattung. Keine Fragen gestellt.
           </p>
         </div>

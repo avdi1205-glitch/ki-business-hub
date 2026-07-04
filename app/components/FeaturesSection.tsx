@@ -8,9 +8,7 @@ const features = [
     title: "AI Content Factory",
     description: "Generiere 50+ professionelle Artikel/Monat automatisch",
     benefits: ["+2.000 Wörter pro Artikel", "SEO-optimiert", "Deutsche Qualität"],
-    color: "from-blue-500 to-cyan-500",
-    bgColor: "bg-blue-50",
-    textColor: "text-blue-600",
+    color: "#3b82f6",
     badge: "Most Popular",
   },
   {
@@ -18,9 +16,7 @@ const features = [
     title: "Affiliate Income",
     description: "Verdiene €1-€5 pro Click mit Best-In-Class Tools",
     benefits: ["47 Premium Partner", "€1.25 Durchschnitt", "Real-Time Tracking"],
-    color: "from-green-500 to-emerald-500",
-    bgColor: "bg-green-50",
-    textColor: "text-green-600",
+    color: "#10b981",
     badge: "Highest Revenue",
   },
   {
@@ -28,9 +24,7 @@ const features = [
     title: "Newsletter Automation",
     description: "Sende automatisierte Kampagnen an 1.000+ Subscriber",
     benefits: ["35% Öffnungsrate", "Segmentierung", "A/B Testing"],
-    color: "from-purple-500 to-violet-500",
-    bgColor: "bg-purple-50",
-    textColor: "text-purple-600",
+    color: "#8b5cf6",
     badge: "High Engagement",
   },
   {
@@ -38,23 +32,21 @@ const features = [
     title: "SEO Analytics",
     description: "Optimiere deine Artikel für bessere Rankings",
     benefits: ["Score bis 100", "Keyword-Analyse", "Auto-Linking"],
-    color: "from-orange-500 to-red-500",
-    bgColor: "bg-orange-50",
-    textColor: "text-orange-600",
+    color: "#f59e0b",
     badge: "Rank Booster",
   },
 ];
 
 export function FeaturesSection() {
   return (
-    <div className="py-24 bg-gradient-to-b from-slate-50 to-white">
+    <div style={{ background: "var(--background)" }} className="py-24">
       <div className="max-w-6xl mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
             Die 4 Säulen deines Erfolgs
           </h2>
-          <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+          <p className="text-xl max-w-2xl mx-auto" style={{ color: "var(--text-light)" }}>
             Alle Tools, die du brauchst um sofort €2.000+/Monat zu verdienen
           </p>
         </div>
@@ -64,14 +56,18 @@ export function FeaturesSection() {
           {features.map((feature, idx) => (
             <div
               key={idx}
-              className="relative group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+              className="relative group rounded-2xl overflow-hidden transition-all duration-300 transform hover:-translate-y-2"
+              style={{
+                background: "var(--background-elevated)",
+                border: `2px solid ${feature.color}40`,
+              }}
             >
               {/* Gradient Header */}
-              <div className={`h-2 bg-gradient-to-r ${feature.color}`} />
+              <div className="h-1" style={{ background: feature.color }} />
 
               {/* Badge */}
               <div className="absolute top-4 right-4">
-                <span className={`px-3 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r ${feature.color}`}>
+                <span className="px-3 py-1 rounded-full text-xs font-semibold text-white" style={{ background: feature.color }}>
                   {feature.badge}
                 </span>
               </div>
@@ -79,30 +75,32 @@ export function FeaturesSection() {
               {/* Content */}
               <div className="p-8">
                 {/* Icon */}
-                <div className={`text-5xl mb-4 ${feature.bgColor} w-16 h-16 flex items-center justify-center rounded-xl`}>
+                <div className="text-5xl mb-4 w-16 h-16 flex items-center justify-center rounded-xl" style={{ background: `${feature.color}20` }}>
                   {feature.icon}
                 </div>
 
                 {/* Title */}
-                <h3 className={`text-2xl font-bold mb-2 ${feature.textColor}`}>
+                <h3 className="text-2xl font-bold mb-2" style={{ color: feature.color }}>
                   {feature.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-gray-600 mb-6">{feature.description}</p>
+                <p className="mb-6" style={{ color: "var(--text-light)" }}>
+                  {feature.description}
+                </p>
 
                 {/* Benefits */}
                 <ul className="space-y-2 mb-6">
                   {feature.benefits.map((benefit, bidx) => (
-                    <li key={bidx} className="flex items-center gap-2 text-sm text-gray-700">
-                      <span className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${feature.color}`} />
+                    <li key={bidx} className="flex items-center gap-2 text-sm" style={{ color: "var(--text-muted)" }}>
+                      <span className="w-1.5 h-1.5 rounded-full" style={{ background: feature.color }} />
                       {benefit}
                     </li>
                   ))}
                 </ul>
 
                 {/* CTA */}
-                <button className={`w-full py-2 px-4 rounded-lg font-semibold transition-all duration-300 text-white bg-gradient-to-r ${feature.color} hover:shadow-lg group-hover:scale-105`}>
+                <button className="w-full py-2 px-4 rounded-lg font-semibold transition-all duration-300 text-white hover:shadow-lg group-hover:scale-105" style={{ background: feature.color }}>
                   Jetzt aktivieren →
                 </button>
               </div>
@@ -112,10 +110,10 @@ export function FeaturesSection() {
 
         {/* Bottom CTA */}
         <div className="mt-16 text-center">
-          <p className="text-gray-600 mb-4">
+          <p className="mb-4" style={{ color: "var(--text-light)" }}>
             🚀 Alle Features sind in der kostenlosen Version enthalten
           </p>
-          <button className="px-8 py-4 bg-gradient-to-r from-blue-600 to-green-600 text-white font-bold text-lg rounded-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+          <button className="px-8 py-4 text-white font-bold text-lg rounded-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105" style={{ background: "var(--primary)" }}>
             Kostenlos Starten
           </button>
         </div>

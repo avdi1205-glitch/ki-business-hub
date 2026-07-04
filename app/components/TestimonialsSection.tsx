@@ -56,14 +56,14 @@ export function TestimonialsSection() {
   }, []);
 
   return (
-    <div className="py-24 bg-gradient-to-b from-slate-50 to-white">
+    <div style={{ background: "var(--background)" }} className="py-24">
       <div className="max-w-6xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
             ⭐ Echte Erfolgsgeschichten von echten Menschen
           </h2>
-          <p className="text-xl text-slate-600">
+          <p className="text-xl" style={{ color: "var(--text-light)" }}>
             1.247+ Mitglieder verdienen bereits passives Einkommen
           </p>
         </div>
@@ -73,11 +73,12 @@ export function TestimonialsSection() {
           {testimonials.map((testimonial, idx) => (
             <div
               key={idx}
-              className={`rounded-2xl p-8 transition-all duration-300 transform cursor-pointer ${
-                activeIdx === idx
-                  ? "ring-2 ring-purple-500 scale-105 bg-gradient-to-br from-purple-50 to-violet-50"
-                  : "bg-white border border-gray-200"
-              }`}
+              className="rounded-2xl p-8 transition-all duration-300 transform cursor-pointer"
+              style={{
+                background: activeIdx === idx ? "var(--background-elevated)" : "var(--background-elevated)",
+                border: activeIdx === idx ? "2px solid var(--primary)" : "1px solid rgba(255,255,255,0.1)",
+                transform: activeIdx === idx ? "scale(1.05)" : "scale(1)",
+              }}
               onClick={() => setActiveIdx(idx)}
             >
               {/* Testimonial Content */}
@@ -87,10 +88,10 @@ export function TestimonialsSection() {
 
                 {/* Header Info */}
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-slate-900">
+                  <h3 className="text-xl font-bold" style={{ color: "var(--text-dark)" }}>
                     {testimonial.name}
                   </h3>
-                  <p className="text-sm text-slate-600">
+                  <p className="text-sm" style={{ color: "var(--text-muted)" }}>
                     {testimonial.role} · {testimonial.location}
                   </p>
 
@@ -106,21 +107,21 @@ export function TestimonialsSection() {
               </div>
 
               {/* Quote */}
-              <p className="text-lg text-slate-700 mb-6 italic">
+              <p className="text-lg mb-6 italic" style={{ color: "var(--text-light)" }}>
                 "{testimonial.quote}"
               </p>
 
               {/* Earnings Badge */}
               <div className="flex gap-4">
-                <div className="px-4 py-2 bg-gradient-to-r from-green-100 to-emerald-100 border border-green-300 rounded-lg">
-                  <p className="text-xs text-green-700 font-semibold">Verdient</p>
-                  <p className="text-2xl font-bold text-green-600">
+                <div className="px-4 py-2 rounded-lg" style={{ background: "rgba(16, 185, 129, 0.2)", border: "1px solid var(--success)" }}>
+                  <p className="text-xs font-semibold" style={{ color: "var(--success)" }}>Verdient</p>
+                  <p className="text-2xl font-bold" style={{ color: "var(--success)" }}>
                     {testimonial.earnings}
                   </p>
                 </div>
-                <div className="px-4 py-2 bg-gradient-to-r from-blue-100 to-cyan-100 border border-blue-300 rounded-lg">
-                  <p className="text-xs text-blue-700 font-semibold">Zeitrahmen</p>
-                  <p className="text-lg font-bold text-blue-600">
+                <div className="px-4 py-2 rounded-lg" style={{ background: "rgba(59, 130, 246, 0.2)", border: "1px solid var(--primary)" }}>
+                  <p className="text-xs font-semibold" style={{ color: "var(--primary)" }}>Zeitrahmen</p>
+                  <p className="text-lg font-bold" style={{ color: "var(--primary)" }}>
                     {testimonial.time}
                   </p>
                 </div>
@@ -130,22 +131,22 @@ export function TestimonialsSection() {
         </div>
 
         {/* Stats Strip */}
-        <div className="grid md:grid-cols-4 gap-6 p-8 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-2xl">
+        <div className="grid md:grid-cols-4 gap-6 p-8 text-white rounded-2xl" style={{ background: "var(--background-elevated)" }}>
           <div className="text-center">
             <div className="text-4xl font-bold">1.247+</div>
-            <p className="text-sm text-gray-300">Aktive Member</p>
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>Aktive Member</p>
           </div>
           <div className="text-center">
             <div className="text-4xl font-bold">€8.2M+</div>
-            <p className="text-sm text-gray-300">Verdient insgesamt</p>
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>Verdient insgesamt</p>
           </div>
           <div className="text-center">
             <div className="text-4xl font-bold">€4.850</div>
-            <p className="text-sm text-gray-300">Ø pro Mitglied</p>
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>Ø pro Mitglied</p>
           </div>
           <div className="text-center">
             <div className="text-4xl font-bold">4.9★</div>
-            <p className="text-sm text-gray-300">Bewertung (324 Reviews)</p>
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>Bewertung (324 Reviews)</p>
           </div>
         </div>
 
