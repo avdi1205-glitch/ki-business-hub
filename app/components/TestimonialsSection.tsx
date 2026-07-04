@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
 const testimonials = [
@@ -8,7 +9,7 @@ const testimonials = [
     role: "Digital Marketer",
     location: "München",
     image: "👩‍💼",
-    quote: "In meinem 1. Monat habe ich €1.250 verdient - völlig passiv. Unfassbar!",
+    quote: "Ich konnte deutlich schneller Inhalte veröffentlichen und meine ersten Affiliate-Klicks sauber auswerten.",
     earnings: "€1.250",
     time: "1. Monat",
     rating: 5,
@@ -18,7 +19,7 @@ const testimonials = [
     role: "Content Creator",
     location: "Berlin",
     image: "👨‍💻",
-    quote: "Die KI Content Factory spart mir 20 Stunden/Woche. Jetzt schreibe ich 40+ Artikel/Monat.",
+    quote: "Der größte Vorteil ist für mich die Zeitersparnis. Ideen, Inhalte und Struktur stehen viel schneller.",
     earnings: "€4.500",
     time: "2. Monat",
     rating: 5,
@@ -28,7 +29,7 @@ const testimonials = [
     role: "Entrepreneur",
     location: "Hamburg",
     image: "👩‍🔬",
-    quote: "Beste Entscheidung für mein Online-Business. Newsletter + Affiliate = €6.250/Monat",
+    quote: "Für mich war wichtig, dass Content, Newsletter und Monetarisierung in einem klaren Ablauf zusammenpassen.",
     earnings: "€6.250",
     time: "3. Monat",
     rating: 5,
@@ -38,7 +39,7 @@ const testimonials = [
     role: "Freelancer",
     location: "Wien",
     image: "👨‍🎓",
-    quote: "Support ist amazing. Dashboard ist professionell. Endlich verdiene ich online!",
+    quote: "Ich sehe schneller, welche Inhalte funktionieren und wo sich ein Upgrade fuer mich wirklich lohnt.",
     earnings: "€2.150",
     time: "1. Monat",
     rating: 5,
@@ -61,10 +62,10 @@ export function TestimonialsSection() {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
-            ⭐ Echte Erfolgsgeschichten von echten Menschen
+            ⭐ Beispiele, wie Nutzer das Setup einsetzen
           </h2>
           <p className="text-xl" style={{ color: "#cbd5e1" }}>
-            1.247+ Mitglieder verdienen bereits passives Einkommen
+            Fokus auf Zeitersparnis, bessere Prozesse und nachvollziehbare Ergebnisse
           </p>
         </div>
 
@@ -134,30 +135,33 @@ export function TestimonialsSection() {
         <div className="grid md:grid-cols-4 gap-6 p-8 text-white rounded-2xl" style={{ background: "var(--background-elevated)" }}>
           <div className="text-center">
             <div className="text-4xl font-bold">1.247+</div>
-            <p className="text-sm" style={{ color: "var(--text-muted)" }}>Aktive Member</p>
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>Aktive Nutzer</p>
           </div>
           <div className="text-center">
             <div className="text-4xl font-bold">€8.2M+</div>
-            <p className="text-sm" style={{ color: "var(--text-muted)" }}>Verdient insgesamt</p>
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>Getrackte Umsatzsignale</p>
           </div>
           <div className="text-center">
             <div className="text-4xl font-bold">€4.850</div>
-            <p className="text-sm" style={{ color: "var(--text-muted)" }}>Ø pro Mitglied</p>
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>Beispielwert aus Cases</p>
           </div>
           <div className="text-center">
             <div className="text-4xl font-bold">4.9★</div>
-            <p className="text-sm" style={{ color: "var(--text-muted)" }}>Bewertung (324 Reviews)</p>
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>Bewertung der Nutzererfahrung</p>
           </div>
         </div>
 
         {/* Bottom CTA */}
         <div className="mt-16 text-center">
           <p className="text-xl mb-8" style={{ color: "#cbd5e1" }}>
-            🚀 Bist du bereit, die nächste Erfolgsgeschichte zu werden?
+            🚀 Teste zuerst kostenlos und entscheide danach, ob Pro fuer dich Sinn macht.
           </p>
-          <button className="px-10 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105">
-            Kostenlos Starten (€0)
-          </button>
+          <Link
+            href="/content-factory"
+            className="inline-block px-10 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105"
+          >
+            Kostenlos starten
+          </Link>
         </div>
       </div>
     </div>

@@ -1,39 +1,48 @@
 "use client";
 
+import Link from "next/link";
 import React from "react";
 
 const features = [
   {
     icon: "🤖",
     title: "AI Content Factory",
-    description: "Generiere 50+ professionelle Artikel/Monat automatisch",
+    description: "Erstelle in kurzer Zeit SEO-taugliche Inhalte fuer deinen Funnel und Blog.",
     benefits: ["+2.000 Wörter pro Artikel", "SEO-optimiert", "Deutsche Qualität"],
     color: "#3b82f6",
-    badge: "Most Popular",
+    badge: "AM BELIEBTESTEN",
+    href: "/content-factory",
+    cta: "Content Factory starten",
   },
   {
     icon: "💰",
     title: "Affiliate Income",
-    description: "Verdiene €1-€5 pro Click mit Best-In-Class Tools",
+    description: "Monetarisiere Inhalte mit passenden Tools und nachvollziehbaren Klicks.",
     benefits: ["47 Premium Partner", "€1.25 Durchschnitt", "Real-Time Tracking"],
     color: "#10b981",
-    badge: "Highest Revenue",
+    badge: "UMSATZHEBEL",
+    href: "/affiliate",
+    cta: "Affiliate-Setup ansehen",
   },
   {
     icon: "📧",
     title: "Newsletter Automation",
-    description: "Sende automatisierte Kampagnen an 1.000+ Subscriber",
+    description: "Baue Reichweite auf und halte Kontakte mit automatisierten Sequenzen warm.",
     benefits: ["35% Öffnungsrate", "Segmentierung", "A/B Testing"],
     color: "#8b5cf6",
-    badge: "High Engagement",
+    badge: "MEHR BINDUNG",
+    href: "/content-factory",
+    cta: "Automationen entdecken",
   },
   {
     icon: "🔍",
     title: "SEO Analytics",
-    description: "Optimiere deine Artikel für bessere Rankings",
+    description: "Verbessere Rankings, interne Verlinkung und Themenpriorisierung systematisch.",
     benefits: ["Score bis 100", "Keyword-Analyse", "Auto-Linking"],
     color: "#f59e0b",
-    badge: "Rank Booster",
+    badge: "MEHR SICHTBARKEIT",
+    href: "/stats",
+    cta: "SEO-Daten prüfen",
   },
 ];
 
@@ -47,7 +56,7 @@ export function FeaturesSection() {
             Die 4 Säulen deines Erfolgs
           </h2>
           <p className="text-xl max-w-2xl mx-auto" style={{ color: "var(--text-light)" }}>
-            Alle Tools, die du brauchst um sofort €2.000+/Monat zu verdienen
+            Vier konkrete Hebel, mit denen du Inhalte, Reichweite und Umsatz Schritt fuer Schritt ausbaust.
           </p>
         </div>
 
@@ -85,7 +94,7 @@ export function FeaturesSection() {
                 </h3>
 
                 {/* Description */}
-                <p className="mb-6" style={{ color: "var(--text-light)" }}>
+                <p className="mb-6 leading-7" style={{ color: "var(--text-light)" }}>
                   {feature.description}
                 </p>
 
@@ -100,9 +109,13 @@ export function FeaturesSection() {
                 </ul>
 
                 {/* CTA */}
-                <button className="w-full py-2 px-4 rounded-lg font-semibold transition-all duration-300 text-white hover:shadow-lg group-hover:scale-105" style={{ background: feature.color }}>
-                  Jetzt aktivieren →
-                </button>
+                <Link
+                  href={feature.href}
+                  className="block w-full rounded-lg px-4 py-3 text-center font-semibold text-white transition-all duration-300 hover:shadow-lg group-hover:scale-105"
+                  style={{ background: feature.color }}
+                >
+                  {feature.cta} →
+                </Link>
               </div>
             </div>
           ))}
@@ -110,12 +123,16 @@ export function FeaturesSection() {
 
         {/* Bottom CTA */}
         <div className="mt-16 text-center">
-          <p className="mb-4" style={{ color: "var(--text-light)" }}>
-            🚀 Alle Features sind in der kostenlosen Version enthalten
+          <p className="mb-4 text-lg" style={{ color: "var(--text-light)" }}>
+            🚀 Starte kostenlos und schalte Pro erst frei, wenn du regelmaessig output und Umsatz brauchst.
           </p>
-          <button className="px-8 py-4 text-white font-bold text-lg rounded-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105" style={{ background: "var(--primary)" }}>
-            Kostenlos Starten
-          </button>
+          <Link
+            href="/content-factory"
+            className="inline-block rounded-lg px-8 py-4 text-lg font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+            style={{ background: "var(--primary)" }}
+          >
+            Kostenlos starten
+          </Link>
         </div>
       </div>
     </div>

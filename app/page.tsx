@@ -141,18 +141,26 @@ export default async function Home() {
       <section className="py-24 bg-gradient-to-r from-slate-900 to-slate-800 text-white">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Bereit zum Starten?
+            Bereit fuer den naechsten Schritt?
           </h2>
           <p className="text-xl leading-8 mb-8" style={{ color: "#e2e8f0" }}>
-            Schließe dich 1.247+ erfolgreichen Membern an und verdiene dein erstes Geld
+            Starte kostenlos oder geh direkt in Pro, wenn du deinen Content- und Affiliate-Workflow heute produktiv einsetzen willst.
           </p>
           <div className="flex flex-col items-center gap-4">
-            <Link
-              href="/content-factory"
-              className="px-10 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105"
-            >
-              🚀 Kostenlos Starten
-            </Link>
+            <div className="flex flex-col gap-4 sm:flex-row">
+              <Link
+                href="/content-factory"
+                className="px-10 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105"
+              >
+                🚀 Kostenlos starten
+              </Link>
+              <Link
+                href="/api/checkout?plan=pro&source=final-cta"
+                className="px-10 py-4 rounded-lg border border-cyan-400/30 bg-cyan-500/10 text-cyan-100 font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:bg-cyan-500/20"
+              >
+                💎 Pro fuer 39 EUR freischalten
+              </Link>
+            </div>
             <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-5 text-left">
               <p className="mb-3 text-sm font-semibold text-cyan-300">📧 Hol dir wöchentliche Conversion- und Tool-Updates</p>
               <NewsletterForm source="homepage-final-cta" />
