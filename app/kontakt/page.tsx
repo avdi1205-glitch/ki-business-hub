@@ -54,7 +54,7 @@ export default async function KontaktPage({
             <p>1. Affiliate-Klicks und Verkäufe laufen über deine Partnerprogramme.</p>
             <p>2. Direkte Plan-Umsätze laufen über deinen Zahlungsanbieter, z. B. Stripe Payment Links.</p>
             <p>3. Newsletter und A/B-Tests helfen dir, mehr Klicks und mehr bezahlte Conversions zu erzeugen.</p>
-          </p>
+          </div>
         </div>
       </section>
     </main>
