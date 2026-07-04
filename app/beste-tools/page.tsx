@@ -30,20 +30,19 @@ export default async function BesteToolsPage() {
   });
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
-      <section className="relative overflow-hidden px-6 py-20">
-        <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-cyan-500/10 to-transparent" />
-
-        <div className="relative mx-auto max-w-6xl">
-          <p className="mb-4 font-bold text-green-400">
+    <main style={{ background: "var(--background)", minHeight: "100vh" }}>
+      {/* Hero Section */}
+      <section className="relative overflow-hidden px-6 py-20" style={{ background: "linear-gradient(135deg, var(--background) 0%, var(--background-alt) 100%)" }}>
+        <div className="mx-auto max-w-6xl">
+          <p className="mb-4 font-bold" style={{ color: "var(--success)" }}>
             💰 KI Business Hub Empfehlungen
           </p>
 
-          <h1 className="mb-6 text-5xl font-bold tracking-tight md:text-7xl">
+          <h1 className="mb-6 text-5xl font-bold tracking-tight md:text-7xl" style={{ color: "var(--text-dark)" }}>
             Die besten Tools für dein Online-Business
           </h1>
 
-          <p className="mb-10 max-w-3xl text-xl text-gray-300">
+          <p className="mb-10 max-w-3xl text-xl" style={{ color: "var(--text-light)" }}>
             Vergleiche Software für KI, Hosting, VPN, Automation und Affiliate-Marketing.
             Schnell, klar und auf den Punkt.
           </p>

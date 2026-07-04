@@ -47,40 +47,55 @@ export default function CreateArticle() {
 
         <div className="space-y-6">
           <div>
-            <label className="font-bold block mb-2">
+            <label className="font-bold block mb-2" style={{ color: "var(--text-dark)" }}>
               Titel
             </label>
 
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600"
+              className="w-full p-3 rounded-lg font-medium"
+              style={{
+                borderColor: "var(--border)",
+                color: "var(--text-dark)",
+                background: "var(--background-alt)",
+              }}
               placeholder="Titel eingeben"
             />
           </div>
 
           <div>
-            <label className="font-bold block mb-2">
+            <label className="font-bold block mb-2" style={{ color: "var(--text-dark)" }}>
               Artikel Idee
             </label>
 
             <textarea
               value={idea}
               onChange={(e) => setIdea(e.target.value)}
-              className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600 h-40"
+              className="w-full p-3 rounded-lg font-medium h-40"
+              style={{
+                borderColor: "var(--border)",
+                color: "var(--text-dark)",
+                background: "var(--background-alt)",
+              }}
               placeholder="Beschreibe deine Idee..."
             />
           </div>
 
           <div>
-            <label className="font-bold block mb-2">
+            <label className="font-bold block mb-2" style={{ color: "var(--text-dark)" }}>
               Kategorie
             </label>
 
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600"
+              className="w-full p-3 rounded-lg font-medium"
+              style={{
+                borderColor: "var(--border)",
+                color: "var(--text-dark)",
+                background: "var(--background-alt)",
+              }}
             >
               <option>KI Tools</option>
               <option>Hosting</option>
@@ -92,17 +107,25 @@ export default function CreateArticle() {
 
           <button
             onClick={generateArticle}
-            className="bg-cyan-500 hover:bg-cyan-600 px-6 py-3 rounded-xl"
+            className="btn-primary font-bold rounded-lg"
+            style={{
+              background: "linear-gradient(135deg, var(--success) 0%, var(--success-light) 100%)",
+            }}
           >
             🤖 Artikel generieren
           </button>
         </div>
 
         {article && (
-          <div className="mt-10 bg-white/10 p-6 rounded-xl">
-            <ReactMarkdown>
-              {article}
-            </ReactMarkdown>
+          <div className="mt-10 rounded-lg p-6 card" style={{ background: "var(--background-alt)" }}>
+            <h2 className="text-2xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
+              📄 Generierter Artikel
+            </h2>
+            <div style={{ color: "var(--text-light)" }}>
+              <ReactMarkdown>
+                {article}
+              </ReactMarkdown>
+            </div>
           </div>
         )}
       </div>
