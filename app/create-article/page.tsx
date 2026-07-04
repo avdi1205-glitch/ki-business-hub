@@ -35,13 +35,13 @@ export default function CreateArticle() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-900 text-white p-10">
-      <div className="max-w-4xl mx-auto bg-white/10 p-8 rounded-xl">
-        <h1 className="text-5xl font-bold mb-4">
+    <main style={{ background: "var(--background)", minHeight: "100vh" }} className="p-6">
+      <div className="max-w-4xl mx-auto rounded-xl p-8 card">
+        <h1 className="text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
           🚀 KI Artikel erstellen
         </h1>
 
-        <p className="text-gray-300 mb-8">
+        <p className="mb-8" style={{ color: "var(--text-light)" }}>
           Erstelle neue Inhalte für deinen Business Blog.
         </p>
 
