@@ -76,7 +76,7 @@ export function ComparisonTable() {
             📊 Vergleich der Plans
           </h2>
           <p className="text-xl" style={{ color: "#cbd5e1" }}>
-            Finde den perfekten Plan für deine Bedürfnisse
+            Wähle den Plan, der zu deinem aktuellen Umsatz-Ziel passt
           </p>
         </div>
 
@@ -184,10 +184,10 @@ export function ComparisonTable() {
         {/* Bottom CTA */}
         <div className="mt-16 text-center">
           <p className="text-lg mb-8" style={{ color: "#cbd5e1" }}>
-            Alle Plans haben 30 Tage Geld-Zurück-Garantie 🛡️
+            Beide bezahlten Pläne sind direkt live nutzbar und monatlich kündbar 🛡️
           </p>
           <Link href="/api/checkout?plan=pro&source=comparison-table" className="inline-block px-10 py-4 text-white font-bold text-lg rounded-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105" style={{ background: "var(--success)" }}>
-            Jetzt upgraden
+            Pro jetzt freischalten
           </Link>
         </div>
       </div>

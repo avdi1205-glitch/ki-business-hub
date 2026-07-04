@@ -9,7 +9,7 @@ const pricingPlans = [
     emoji: "🚀",
     price: "Kostenlos",
     period: "Für immer",
-    description: "Perfect für Anfänger",
+    description: "Zum Starten und ersten Testen",
     features: [
       "✅ 5 Artikel/Monat mit KI",
       "✅ Basis-Affiliate Links",
@@ -18,7 +18,7 @@ const pricingPlans = [
       "❌ Newsletter Automation",
       "❌ Advanced SEO Tools",
     ],
-    cta: "Jetzt Starten",
+    cta: "Kostenlos starten",
     color: "#3b82f6",
     badge: "",
     href: "/content-factory",
@@ -28,7 +28,7 @@ const pricingPlans = [
     emoji: "💎",
     price: "€39",
     period: "pro Monat",
-    description: "Für ernsthaft Verdienende",
+    description: "Für Solos, Creator und kleine Business-Setups",
     features: [
       "✅ 50 Artikel/Monat mit KI",
       "✅ Premium-Affiliate Links (47 Partner)",
@@ -37,9 +37,9 @@ const pricingPlans = [
       "✅ Newsletter Automation",
       "✅ Keyword Research Tool",
     ],
-    cta: "Pro Starten",
+    cta: "Pro jetzt freischalten",
     color: "#8b5cf6",
-    badge: "BESTSELLER",
+    badge: "BESTER START",
     highlight: true,
     href: "/api/checkout?plan=pro&source=pricing-card-pro",
   },
@@ -48,7 +48,7 @@ const pricingPlans = [
     emoji: "👑",
     price: "€149",
     period: "pro Monat",
-    description: "Für Agenturen & Teams",
+    description: "Für Agenturen, Teams und mehrere Projekte",
     features: [
       "✅ Unbegrenzte Artikel mit KI",
       "✅ Alle Affiliate Links + Custom",
@@ -57,9 +57,9 @@ const pricingPlans = [
       "✅ Team Management (5 Member)",
       "✅ White Label Option",
     ],
-    cta: "Agency Kontaktieren",
+    cta: "Agency jetzt freischalten",
     color: "#f59e0b",
-    badge: "ENTERPRISE",
+    badge: "FÜR TEAMS",
     href: "/api/checkout?plan=agency&source=pricing-card-agency",
   },
 ];
@@ -74,7 +74,7 @@ export function PricingSection() {
             💰 Einfache, transparente Preise
           </h2>
           <p className="text-xl max-w-2xl mx-auto" style={{ color: "#cbd5e1" }}>
-            Starte kostenlos. Upgrade jederzeit. Kein Vertrag erforderlich.
+            Starte kostenlos und upgrade erst dann, wenn dir die Automatisierung wirklich Zeit und Umsatz bringt.
           </p>
         </div>
 
@@ -112,6 +112,11 @@ export function PricingSection() {
                     {plan.price}
                   </div>
                   <p className="text-sm" style={{ color: "#94a3b8" }}>{plan.period}</p>
+                  {plan.name !== "Starter" && (
+                    <p className="mt-2 text-sm font-medium" style={{ color: "#e2e8f0" }}>
+                      {plan.name === "Pro" ? "Ideal, wenn du regelmäßig Inhalte und Affiliate-Umsatz aufbauen willst." : "Sinnvoll, wenn du mehrere Marken, Kunden oder Teammitglieder steuerst."}
+                    </p>
+                  )}
                 </div>
 
                 {/* Features */}
@@ -142,10 +147,10 @@ export function PricingSection() {
         {/* Money-Back Guarantee */}
         <div className="max-w-2xl mx-auto p-8 rounded-xl text-center" style={{ background: "rgba(16, 185, 129, 0.1)", border: "1px solid var(--success)" }}>
           <h3 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>
-            🛡️ 30-Tage Geld-zurück-Garantie
+            🛡️ 30 Tage ohne Risiko testen
           </h3>
           <p style={{ color: "#e2e8f0" }}>
-            Nicht zufrieden? Volle Rückerstattung. Keine Fragen gestellt.
+            Wenn es nicht zu deinem Workflow passt, bekommst du dein Geld zurueck.
           </p>
           <p className="mt-4 text-sm" style={{ color: "var(--text-muted)" }}>
             Für bezahlte Pläne kannst du `PRO_CHECKOUT_URL` und `AGENCY_CHECKOUT_URL` in Vercel hinterlegen.

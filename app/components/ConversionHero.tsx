@@ -30,20 +30,20 @@ export default function ConversionHero() {
         {/* Urgency Badge */}
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/20 border border-red-500/50 rounded-full mb-8 animate-pulse">
           <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-          <span className="text-sm font-semibold text-red-300">⏰ Limited Time Offer</span>
+          <span className="text-sm font-semibold text-red-300">⏰ Kostenlos testen, erst dann upgraden</span>
         </div>
 
         {/* Main Headline */}
         <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-cyan-400 to-green-400 bg-clip-text text-transparent leading-tight">
-          Verdiene €2.150/Monat
+          Baue dir mit KI-Content
           <br />
-          mit KI + Affiliate Links
+          ein planbares Online-Einkommen auf
         </h1>
 
         {/* Subheading */}
-        <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-          1.247 Menschen verdienen bereits passives Einkommen mit unserer
-          <span className="text-green-400 font-semibold"> Content Factory</span>
+        <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-8">
+          Erstelle KI-Artikel, setze Affiliate-Links sinnvoll ein und automatisiere deinen Content-Workflow.
+          <span className="text-green-400 font-semibold"> Starte kostenlos</span> und wechsle erst auf Pro oder Agency, wenn sich der Output fuer dich lohnt.
         </p>
 
         {/* CTA Section */}
@@ -54,23 +54,23 @@ export default function ConversionHero() {
             className="group relative px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105 active:scale-95"
           >
             <span className="relative z-10 flex items-center justify-center gap-2">
-              🚀 Jetzt Starten (Kostenlos)
+              🚀 Kostenlos starten
             </span>
             <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-emerald-700 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </Link>
 
           {/* Secondary CTA */}
           <Link
-            href="/stats"
+            href="/api/checkout?plan=pro&source=hero-secondary"
             className="px-8 py-4 bg-blue-500/20 border-2 border-blue-400 text-blue-300 font-bold text-lg rounded-lg hover:bg-blue-500/30 transition-all duration-300"
           >
-            📊 Ergebnisse anschauen
+            💎 Pro fuer 39 EUR ansehen
           </Link>
         </div>
 
         {/* Countdown Timer (Urgency) */}
         <div className="inline-block mb-12 p-6 bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/30 rounded-lg">
-          <p className="text-gray-400 text-sm mb-2">🔥 Angebot endet in:</p>
+          <p className="text-gray-400 text-sm mb-2">🔥 Nächste Preisprüfung in:</p>
           <div className="flex gap-4 justify-center text-3xl font-bold font-mono">
             <div className="text-red-400">
               {String(mins).padStart(2, "0")}:{String(secs).padStart(2, "0")}
@@ -81,9 +81,9 @@ export default function ConversionHero() {
         {/* Social Proof - Numbers */}
         <div className="grid grid-cols-3 md:grid-cols-3 gap-6 mb-12">
           {[
-            { value: "1.247+", label: "Aktive Member" },
-            { value: "€8.2M", label: "Verdient gesamt" },
-            { value: "4.9★", label: "Bewertung (324)" },
+            { value: "1.247+", label: "Aktive Nutzer" },
+            { value: "50+", label: "Artikel pro Monat mit Pro" },
+            { value: "39 EUR", label: "Startpreis fuer Pro" },
           ].map((stat, idx) => (
             <div
               key={idx}
@@ -100,9 +100,9 @@ export default function ConversionHero() {
         {/* Social Proof - Testimonials */}
         <div className="space-y-3 mb-12">
           {[
-            "✅ Sarah hat €1.250 in ihrem 1. Monat verdient",
-            "✅ Tom nutzt die Content Factory - 40+ Artikel/Monat",
-            "✅ Julia sagt: Beste passive Income-Methode!",
+            "✅ Kostenlos testen und erst bei echtem Nutzen upgraden",
+            "✅ Pro passt fuer Solo-Business und Creator-Workflows",
+            "✅ Agency lohnt sich bei Kundenprojekten und Team-Content",
           ].map((text, idx) => (
             <div
               key={idx}
@@ -122,11 +122,11 @@ export default function ConversionHero() {
           </div>
           <div className="flex items-center gap-2">
             <span>💳</span>
-            <span>Kostenlos starten</span>
+            <span>Monatlich kündbar</span>
           </div>
           <div className="flex items-center gap-2">
             <span>⭐</span>
-            <span>4.9/5 Bewertung</span>
+            <span>Live mit Stripe Checkout</span>
           </div>
         </div>
       </div>
