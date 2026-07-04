@@ -104,7 +104,8 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { action, affiliateLinkId, variantA, variantB } = await req.json();
+    const body = await req.json();
+    const { action, affiliateLinkId, variantA, variantB } = body;
 
     if (action === "create-test") {
       if (!affiliateLinkId || !variantA || !variantB) {
@@ -144,7 +145,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (action === "track-interaction") {
-      const { testId, variant, type } = await req.json();
+      const { testId, variant, type } = body;
 
       if (!testId || !variant || !type) {
         return NextResponse.json({ success: false, error: "testId, variant und type sind erforderlich" }, { status: 400 });
@@ -176,7 +177,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (action === "get-results") {
-      const { testId } = await req.json();
+      const { testId } = body;
 
       const test = await prisma.aBTest.findUnique({
         where: { id: Number(testId) },
@@ -198,7 +199,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (action === "apply-winner") {
-      const { testId, winner } = await req.json();
+      const { testId, winner } = body;
 
       const test = await prisma.aBTest.findUnique({
         where: { id: Number(testId) },
