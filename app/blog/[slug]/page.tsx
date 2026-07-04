@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Script from "next/script";
 import { prisma } from "../../../lib/prisma";
+import { getSiteUrl } from "../../../lib/site-url";
 import NewsletterForm from "@/app/components/NewsletterForm";
 import OptimizedAffiliateButton from "@/app/components/OptimizedAffiliateButton";
 import { Metadata } from "next";
@@ -16,9 +18,20 @@ export async function generateMetadata({
   if (!article) return {};
 
   return {
-    title: article.title,
+    title: `${article.title} | KI Business Hub`,
     description: article.idea,
+    alternates: {
+      canonical: `/blog/${slug}`,
+    },
     openGraph: {
+      title: article.title,
+      description: article.idea,
+      type: "article",
+      url: `/blog/${slug}`,
+      publishedTime: article.createdAt.toISOString(),
+    },
+    twitter: {
+      card: "summary_large_image",
       title: article.title,
       description: article.idea,
     },
@@ -40,6 +53,26 @@ export default async function BlogArticlePage({
     notFound();
   }
 
+  const siteUrl = getSiteUrl();
+  const articleUrl = `${siteUrl}/blog/${slug}`;
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    mainEntityOfPage: articleUrl,
+    headline: article.title,
+    description: article.idea,
+    datePublished: article.createdAt.toISOString(),
+    author: {
+      "@type": "Organization",
+      name: "KI Business Hub",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "KI Business Hub",
+      url: siteUrl,
+    },
+  };
+
   // Get top tools for recommendations
   const topTools = await prisma.affiliateLink.findMany({
     orderBy: { rating: "desc" },
@@ -57,7 +90,14 @@ export default async function BlogArticlePage({
   const sidebarTools = relatedTools.slice(0, 4);
 
   return (
-    <main style={{ background: "var(--background)" }}>
+    <>
+      <Script
+        id="article-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+
+      <main style={{ background: "var(--background)" }}>
       {/* Hero Section */}
       <section className="relative overflow-hidden px-6 py-20" style={{ background: "linear-gradient(135deg, var(--background) 0%, var(--background-alt) 100%)" }}>
         <div className="relative mx-auto max-w-4xl">
@@ -271,6 +311,7 @@ export default async function BlogArticlePage({
           </Link>
         </div>
       </section>
-    </main>
+      </main>
+    </>
   );
 }

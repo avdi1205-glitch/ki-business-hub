@@ -1,5 +1,15 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { prisma } from "../../lib/prisma";
+
+export const metadata: Metadata = {
+  title: "KI Business Hub Blog | KI-Tools, Vergleiche und Praxisguides",
+  description:
+    "Aktuelle Artikel, Tests und Vergleiche zu KI-Tools, Automatisierung und Affiliate-Strategien mit Fokus auf praktische Umsetzung.",
+  alternates: {
+    canonical: "/blog",
+  },
+};
 
 export default async function BlogPage() {
   const articles = await prisma.article.findMany({

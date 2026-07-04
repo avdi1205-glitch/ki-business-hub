@@ -5,6 +5,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import { ExitIntentPopup } from "./components/ExitIntentPopup";
 import { SocialProof } from "./components/SocialProof";
+import { getSiteUrl } from "../lib/site-url";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,18 +17,28 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = getSiteUrl();
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "KI Business Hub | Verdiene mit KI & Affiliate Marketing",
   description: "Erhalte Zugang zu 50+ KI-Tools, automatisierter Content-Factory und Affiliate-Einnahmen. 1.247+ member verdienen bereits €2.150+/Monat.",
   keywords: ["KI Tools", "Affiliate Marketing", "Content Factory", "AI Business", "Automatisierung"],
+  alternates: {
+    canonical: "/",
+    languages: {
+      de: "/",
+    },
+  },
   verification: {
     google: process.env.GOOGLE_VERIFICATION || "add-your-verification-code",
   },
   openGraph: {
     title: "KI Business Hub | Verdiene mit KI & Affiliate Marketing",
     description: "Zugang zu 50+ KI-Tools, automatisierter Content-Factory und Affiliate-Einnahmen.",
+    url: "/",
     images: [{
-      url: "https://ki-business-hub.vercel.app/og-image.png",
+      url: `${siteUrl}/og-image.png`,
       width: 1200,
       height: 630,
       alt: "KI Business Hub",
@@ -64,8 +75,8 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
 
         {/* Canonical & Alternative Links */}
-        <link rel="canonical" href="https://ki-business-hub.vercel.app" />
-        <link rel="alternate" hrefLang="de" href="https://ki-business-hub.vercel.app" />
+        <link rel="canonical" href={siteUrl} />
+        <link rel="alternate" hrefLang="de" href={siteUrl} />
 
         {/* Favicon & Icons */}
         <link rel="icon" href="/favicon.ico" />
@@ -79,9 +90,27 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Organization",
               name: "KI Business Hub",
-              url: "https://ki-business-hub.vercel.app",
-              logo: "https://ki-business-hub.vercel.app/logo.png",
+              url: siteUrl,
+              logo: `${siteUrl}/logo.png`,
+              description: "KI-Tools, Content-Factory und Affiliate-Workflow fuer nachhaltige Content-Monetarisierung.",
+              inLanguage: "de-DE",
               sameAs: ["https://twitter.com/kibusinesshub"],
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "LocalBusiness",
+              name: "KI Business Hub",
+              url: siteUrl,
+              image: `${siteUrl}/og-image.png`,
+              description: "Plattform fuer KI-Tools, Content-Automation und Affiliate-Workflows.",
+              priceRange: "EUR",
+              areaServed: "DE",
+              serviceType: "Digital Marketing Platform",
             }),
           }}
         />

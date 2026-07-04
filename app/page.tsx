@@ -1,4 +1,6 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+import Script from "next/script";
 import { prisma } from "../lib/prisma";
 import TopTools from "./components/TopTools";
 import ConversionHero from "./components/ConversionHero";
@@ -8,8 +10,59 @@ import { ComparisonTable } from "./components/ComparisonTable";
 import { FAQSection } from "./components/FAQSection";
 import { TestimonialsSection } from "./components/TestimonialsSection";
 import NewsletterForm from "./components/NewsletterForm";
+import { getSiteUrl } from "../lib/site-url";
+
+export const metadata: Metadata = {
+  title: "KI Business Hub | KI-Tools, Content-Factory und Affiliate-Workflow",
+  description:
+    "Nutze KI-Content, Affiliate-Tools und Automatisierung in einem klaren Workflow. Starte kostenlos und upgrade bei Bedarf auf Pro oder Agency.",
+  alternates: {
+    canonical: "/",
+  },
+};
 
 export default async function Home() {
+  const siteUrl = getSiteUrl();
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Wie viel kann ich wirklich verdienen?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Das haengt von Nische, Reichweite und Umsetzung ab. Die Plattform hilft dir, Inhalte schneller zu erstellen und Monetarisierung strukturierter umzusetzen.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Ist das wirklich kostenlos?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Ja, du kannst kostenlos starten. Fuer mehr Volumen, Automatisierung und Reports gibt es Pro fuer 39 EUR pro Monat.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Wie funktioniert die Affiliate-Bezahlung?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Du platzierst passende Empfehlungen und kannst Klicks tracken. Die Verguetung kommt vom jeweiligen Partnerprogramm und ist unterschiedlich.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Ist meine Seite wirklich sicher?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Es gibt technische Schutzmechanismen fuer Infrastruktur und Datenzugriff. Zusaetzlich solltest du starke Zugangsdaten und saubere Prozesse nutzen.",
+        },
+      },
+    ],
+  };
+
   const tools = await prisma.affiliateLink.findMany({
     orderBy: { rating: "desc" },
     take: 3,
@@ -21,7 +74,28 @@ export default async function Home() {
   });
 
   return (
-    <main style={{ background: "var(--background)", minHeight: "100vh" }}>
+    <>
+      <Script
+        id="faq-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+
+      <Script
+        id="website-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "KI Business Hub",
+            url: siteUrl,
+            inLanguage: "de-DE",
+          }),
+        }}
+      />
+
+      <main style={{ background: "var(--background)", minHeight: "100vh" }}>
       {/* Conversion Hero */}
       <ConversionHero />
 
@@ -168,6 +242,7 @@ export default async function Home() {
           </div>
         </div>
       </section>
-    </main>
+      </main>
+    </>
   );
 }
