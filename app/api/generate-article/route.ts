@@ -15,6 +15,26 @@ function createSlug(title: string) {
     .replace(/-+/g, "-");
 }
 
+async function createUniqueSlug(title: string) {
+  const baseSlug = createSlug(title) || `artikel-${Date.now()}`;
+  let candidate = baseSlug;
+  let counter = 2;
+
+  while (true) {
+    const exists = await prisma.article.findUnique({
+      where: { slug: candidate },
+      select: { id: true },
+    });
+
+    if (!exists) {
+      return candidate;
+    }
+
+    candidate = `${baseSlug}-${counter}`;
+    counter += 1;
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const client = await getOpenAI();
@@ -31,10 +51,12 @@ export async function POST(req: Request) {
         idea,
     });
 
+    const uniqueSlug = await createUniqueSlug(title);
+
     const savedArticle = await prisma.article.create({
       data: {
         title: title,
-        slug: createSlug(title),
+        slug: uniqueSlug,
         category: category,
         idea: idea,
         content: response.output_text,
