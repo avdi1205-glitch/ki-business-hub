@@ -105,6 +105,7 @@ export default function CreateArticle() {
               }}
             >
               <option>KI Tools</option>
+              <option>SEO</option>
               <option>Hosting</option>
               <option>VPN</option>
               <option>Affiliate</option>
