@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 
 const comparisonData = [
   {
@@ -92,10 +93,10 @@ export function ComparisonTable() {
                   <div className="font-bold" style={{ color: "var(--text-dark)" }}>Starter</div>
                   <div className="text-sm" style={{ color: "var(--text-light)" }}>Kostenlos</div>
                 </th>
-                <th className="px-6 py-4 text-center" style={{ background: "rgba(139, 92, 246, 0.1)", borderLeft: "2px solid rgba(139, 92, 246, 0.3)", borderRight: "2px solid rgba(139, 92, 246, 0.3)" }}>
+                <th className="px-6 py-4 text-center" style={{ background: "rgba(139, 92, 246, 0.12)", borderLeft: "2px solid rgba(139, 92, 246, 0.3)", borderRight: "2px solid rgba(139, 92, 246, 0.3)" }}>
                   <div className="text-2xl mb-2">💎</div>
-                  <div className="font-bold" style={{ color: "#8b5cf6" }}>Pro</div>
-                  <div className="text-sm" style={{ color: "#8b5cf6" }}>€29/Monat</div>
+                  <div className="font-bold" style={{ color: "#c4b5fd" }}>Pro</div>
+                  <div className="text-sm" style={{ color: "#ddd6fe" }}>€29/Monat</div>
                 </th>
                 <th className="px-6 py-4 text-center">
                   <div className="text-2xl mb-2">👑</div>
@@ -119,7 +120,7 @@ export function ComparisonTable() {
                   <td className="px-6 py-4 text-center" style={{ color: "var(--text-light)" }}>
                     {row.starter}
                   </td>
-                  <td className="px-6 py-4 text-center font-bold" style={{ background: "rgba(139, 92, 246, 0.1)", color: "#8b5cf6" }}>
+                  <td className="px-6 py-4 text-center font-bold" style={{ background: "rgba(139, 92, 246, 0.12)", color: "#e9d5ff" }}>
                     {row.pro}
                   </td>
                   <td className="px-6 py-4 text-center" style={{ color: "var(--text-light)" }}>
@@ -185,9 +186,9 @@ export function ComparisonTable() {
           <p className="text-lg mb-8" style={{ color: "var(--text-light)" }}>
             Alle Plans haben 30 Tage Geld-Zurück-Garantie 🛡️
           </p>
-          <button className="px-10 py-4 text-white font-bold text-lg rounded-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105" style={{ background: "var(--success)" }}>
+          <Link href="/api/checkout?plan=pro&source=comparison-table" className="inline-block px-10 py-4 text-white font-bold text-lg rounded-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105" style={{ background: "var(--success)" }}>
             Jetzt upgraden
-          </button>
+          </Link>
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma migrate resolve --rolled-back 20260704000000_init_postgres || true ; prisma migrate deploy ; next build",
+    "build": "node scripts/build.mjs",
     "start": "next start",
     "lint": "eslint"
   },

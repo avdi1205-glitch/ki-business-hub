@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 
 const pricingPlans = [
   {
@@ -20,6 +21,7 @@ const pricingPlans = [
     cta: "Jetzt Starten",
     color: "#3b82f6",
     badge: "",
+    href: "/content-factory",
   },
   {
     name: "Pro",
@@ -39,6 +41,7 @@ const pricingPlans = [
     color: "#8b5cf6",
     badge: "BESTSELLER",
     highlight: true,
+    href: "/api/checkout?plan=pro&source=pricing-card-pro",
   },
   {
     name: "Agency",
@@ -57,6 +60,7 @@ const pricingPlans = [
     cta: "Agency Kontaktieren",
     color: "#f59e0b",
     badge: "ENTERPRISE",
+    href: "/api/checkout?plan=agency&source=pricing-card-agency",
   },
 ];
 
@@ -115,7 +119,7 @@ export function PricingSection() {
                   {plan.features.map((feature, fidx) => (
                     <div key={fidx} className="flex items-start gap-2">
                       <span className="text-lg mt-1">{feature.includes("✅") ? "✅" : "❌"}</span>
-                      <span style={{ color: feature.includes("✅") ? "var(--text-light)" : "var(--text-muted)" }}>
+                      <span style={{ color: feature.includes("✅") ? "var(--text-light)" : "#cbd5e1" }}>
                         {feature.replace("✅ ", "").replace("❌ ", "")}
                       </span>
                     </div>
@@ -123,12 +127,13 @@ export function PricingSection() {
                 </div>
 
                 {/* CTA Button */}
-                <button
-                  className="w-full py-3 px-4 rounded-lg font-bold text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                <Link
+                  href={plan.href}
+                  className="block w-full rounded-lg px-4 py-3 text-center font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
                   style={{ background: plan.color }}
                 >
                   {plan.cta}
-                </button>
+                </Link>
               </div>
             </div>
           ))}
@@ -141,6 +146,9 @@ export function PricingSection() {
           </h3>
           <p style={{ color: "var(--text-light)" }}>
             Nicht zufrieden? Volle Rückerstattung. Keine Fragen gestellt.
+          </p>
+          <p className="mt-4 text-sm" style={{ color: "var(--text-muted)" }}>
+            Für bezahlte Pläne kannst du `PRO_CHECKOUT_URL` und `AGENCY_CHECKOUT_URL` in Vercel hinterlegen.
           </p>
         </div>
       </div>
