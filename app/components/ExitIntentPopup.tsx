@@ -44,11 +44,12 @@ export function ExitIntentPopup() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl p-8 max-w-md mx-4 shadow-2xl animate-in fade-in scale-95 duration-200">
+      <div className="rounded-2xl p-8 max-w-md mx-4 shadow-2xl animate-in fade-in scale-95 duration-200" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
         {/* Close Button */}
         <button
           onClick={() => setShown(false)}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+          className="absolute top-4 right-4 transition-colors"
+          style={{ color: "var(--text-muted)" }}
         >
           ✕
         </button>
@@ -56,16 +57,16 @@ export function ExitIntentPopup() {
         {/* Content */}
         <div className="text-center">
           <div className="text-4xl mb-4">🎁</div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>
             Warte! Du verpasst was...
           </h2>
-          <p className="text-gray-600 mb-4">
+          <p className="mb-4" style={{ color: "var(--text-light)" }}>
             Erhalte täglich KI-Business-Tipps direkt in dein Postfach. Die besten Tools, die höchsten Affiliate-Deals.
           </p>
 
           {/* Bonus */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6">
-            <p className="text-sm font-semibold text-blue-900">
+          <div className="rounded-lg p-3 mb-6" style={{ background: "rgba(59, 130, 246, 0.1)", border: "1px solid rgba(59, 130, 246, 0.3)" }}>
+            <p className="text-sm font-semibold" style={{ color: "#3b82f6" }}>
               ✨ Bonus: Exklusives "Top 10 AI Tools 2026" PDF (kostenlos)
             </p>
           </div>
@@ -77,12 +78,18 @@ export function ExitIntentPopup() {
               placeholder="deine@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 transition-all"
+              style={{
+                background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                color: "var(--text-dark)",
+              }}
             />
             <button
               onClick={handleSubscribe}
               disabled={loading || !email}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 font-medium transition-colors"
+              className="px-6 py-2 text-white rounded-lg font-medium transition-colors"
+              style={{ background: "var(--primary)", opacity: loading || !email ? 0.5 : 1 }}
             >
               {loading ? "..." : "Ja!"}
             </button>
@@ -91,7 +98,8 @@ export function ExitIntentPopup() {
           {/* Close CTA */}
           <button
             onClick={() => setShown(false)}
-            className="text-sm text-gray-500 hover:text-gray-700 w-full py-2"
+            className="text-sm w-full py-2 transition-colors"
+            style={{ color: "var(--text-muted)" }}
           >
             Nein danke, ich will kein Geld verdienen
           </button>

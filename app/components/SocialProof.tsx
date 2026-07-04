@@ -28,23 +28,24 @@ export function SocialProof() {
   return (
     <div className="fixed bottom-4 right-4 z-40 max-w-sm animate-in fade-in slide-in-from-right-2 duration-500">
       {/* Main Badge */}
-      <div className="bg-white rounded-xl shadow-lg border border-green-200 p-4 mb-3">
+      <div className="rounded-xl shadow-lg p-4 mb-3" style={{ background: "var(--background-elevated)", border: "1px solid rgba(16, 185, 129, 0.3)" }}>
         <div className="flex items-start gap-3">
           <div className="text-2xl">✅</div>
           <div className="flex-1">
-            <p className="font-bold text-gray-900 text-sm">
+            <p className="font-bold text-sm" style={{ color: "var(--text-dark)" }}>
               1.247 Member verdienen Geld
             </p>
             <div className="flex gap-1 mt-1">
               {[1, 2, 3, 4, 5].map((i) => (
                 <span key={i} className="text-yellow-400">★</span>
               ))}
-              <span className="text-xs text-gray-600">4.9/5 (324 Reviews)</span>
+              <span className="text-xs" style={{ color: "var(--text-muted)" }}>4.9/5 (324 Reviews)</span>
             </div>
           </div>
           <button
             onClick={() => setIsVisible(false)}
-            className="text-gray-400 hover:text-gray-600"
+            className="transition-colors"
+            style={{ color: "var(--text-muted)" }}
           >
             ✕
           </button>
@@ -56,18 +57,22 @@ export function SocialProof() {
         {notifications.slice(0, 2).map((notif) => (
           <div
             key={notif.id}
-            className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-3 border border-green-100 animate-pulse"
+            className="rounded-lg p-3 animate-pulse"
+            style={{
+              background: "rgba(16, 185, 129, 0.1)",
+              border: "1px solid rgba(16, 185, 129, 0.2)",
+            }}
           >
-            <p className="text-xs font-medium text-gray-900">
-              <span className="text-green-600">✓</span> {notif.name}{" "}
-              <span className="text-gray-600">{notif.text}</span>
+            <p className="text-xs font-medium" style={{ color: "var(--text-light)" }}>
+              <span style={{ color: "var(--success)" }}>✓</span> {notif.name}{" "}
+              <span style={{ color: "var(--text-muted)" }}>{notif.text}</span>
             </p>
           </div>
         ))}
       </div>
 
       {/* Trust Stats */}
-      <div className="text-center mt-3 text-xs text-gray-500">
+      <div className="text-center mt-3 text-xs" style={{ color: "var(--text-muted)" }}>
         <p>💰 Durchschn. €2.150/Monat • 🔐 100% Sicher</p>
       </div>
     </div>
