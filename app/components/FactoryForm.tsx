@@ -61,7 +61,7 @@ export default function FactoryForm({
 
   startFactory,
 }: Props) {
-  const t = useTranslations("home.contentFactory");
+  const t = useTranslations("contentFactory");
   const locale = useLocale();
   const isEn = locale === "en";
 

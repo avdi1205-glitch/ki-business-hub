@@ -17,7 +17,7 @@ type Stats = {
 export default function FactoryStats({
   refreshKey = 0,
 }: FactoryStatsProps) {
-  const t = useTranslations("home.contentFactory");
+  const t = useTranslations("contentFactory");
   const [stats, setStats] = useState<Stats>({
     todayArticles: 0,
     totalArticles: 0,

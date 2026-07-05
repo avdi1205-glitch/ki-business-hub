@@ -23,7 +23,7 @@ type QueueItem = {
 };
 
 export default function ContentFactoryPage() {
-  const t = useTranslations("home.contentFactory");
+  const t = useTranslations("contentFactory");
   const locale = useLocale();
   const isEn = locale === "en";
   const [category, setCategory] = useState(isEn ? "AI tools" : "KI Tools");

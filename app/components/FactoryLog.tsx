@@ -7,7 +7,7 @@ type FactoryLogProps = {
 };
 
 export default function FactoryLog({ logs }: FactoryLogProps) {
-  const t = useTranslations("home.contentFactory");
+  const t = useTranslations("contentFactory");
 
   return (
     <div className="mt-6 rounded-xl border border-white/10 bg-black/30 p-4">
