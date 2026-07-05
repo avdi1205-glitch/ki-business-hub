@@ -4,6 +4,32 @@ export default async function KontaktPage({
   searchParams: Promise<{ plan?: string; source?: string; intent?: string }>;
 }) {
   const { plan, source, intent } = await searchParams;
+  const planLabel = plan?.toLowerCase() === "agency"
+    ? "Agency Plan"
+    : plan?.toLowerCase() === "pro"
+      ? "Pro Plan"
+      : plan?.toUpperCase();
+
+  const sourceLabels: Record<string, string> = {
+    "hero-start-free-start": "Startseite Hero - Kostenlos starten",
+    "hero-start-direct-start": "Startseite Hero - Direkt loslegen",
+    "hero-pro-price-view": "Startseite Hero - Pro ansehen",
+    "hero-pro-direct-pro": "Startseite Hero - Pro direkt",
+    "pricing-pro-variant-a": "Preisbereich - Pro Variante A",
+    "pricing-pro-variant-b": "Preisbereich - Pro Variante B",
+    "pricing-agency-variant-a": "Preisbereich - Agency Variante A",
+    "pricing-agency-variant-b": "Preisbereich - Agency Variante B",
+    "final-pro-variant-a": "Final CTA - Pro Variante A",
+    "final-pro-variant-b": "Final CTA - Pro Variante B",
+    "pricing-card-pro": "Preiskarte Pro",
+    "pricing-card-agency": "Preiskarte Agency",
+    "hero-secondary": "Startseite Hero Secondary",
+    "final-cta": "Final CTA",
+  };
+
+  const sourceLabel = source
+    ? sourceLabels[source] || source.replaceAll("-", " ")
+    : "website";
 
   return (
     <main className="min-h-screen p-10" style={{ background: "var(--background)", color: "var(--text-dark)" }}>
@@ -19,10 +45,10 @@ export default async function KontaktPage({
         {(plan || intent === "upgrade") && (
           <div className="mb-8 rounded-xl p-5" style={{ background: "rgba(59, 130, 246, 0.08)", border: "1px solid rgba(59, 130, 246, 0.24)" }}>
             <p className="font-semibold" style={{ color: "var(--text-dark)" }}>
-              Anfrage: {plan ? `${plan.toUpperCase()} Plan` : "Upgrade"}
+              Anfrage: {plan ? `${planLabel} Plan` : "Upgrade"}
             </p>
             <p className="mt-2 text-sm" style={{ color: "var(--text-light)" }}>
-              Quelle: {source || "website"}. Hinterlege `PRO_CHECKOUT_URL` und `AGENCY_CHECKOUT_URL` in Vercel, damit Kunden direkt bezahlen können.
+              Quelle: {sourceLabel}. Hinterlege `PRO_CHECKOUT_URL` und `AGENCY_CHECKOUT_URL` in Vercel, damit Kunden direkt bezahlen können.
             </p>
           </div>
         )}
