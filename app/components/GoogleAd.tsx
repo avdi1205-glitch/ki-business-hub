@@ -27,6 +27,15 @@ export default function GoogleAd({
         adsbygoogle?: Array<Record<string, unknown>>;
       };
 
+      if (!document.getElementById("adsense-loader")) {
+        const loader = document.createElement("script");
+        loader.id = "adsense-loader";
+        loader.async = true;
+        loader.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClientId}`;
+        loader.crossOrigin = "anonymous";
+        document.body.appendChild(loader);
+      }
+
       // Push ads config
       googleAds.adsbygoogle = googleAds.adsbygoogle || [];
       googleAds.adsbygoogle.push({});

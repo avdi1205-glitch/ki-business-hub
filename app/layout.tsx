@@ -146,15 +146,6 @@ export default async function RootLayout({
           <meta name="google-adsense-account" content={adClient} />
         )}
 
-        {adClient && (
-          <Script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClient}`}
-            crossOrigin="anonymous"
-            strategy="afterInteractive"
-          />
-        )}
-
         {/* Google Analytics */}
         {process.env.NEXT_PUBLIC_GA_ID && (
           <>
