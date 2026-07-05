@@ -3,27 +3,23 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
 model Article {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   title     String
-  slug      String?  @unique
+  slug      String?   @unique
   category  String?
   idea      String
   content   String
-  locale    String   @default("de")
-  translationGroup String?
-
-  status    String   @default("Entwurf")
-  seoScore  Int      @default(0)
+  status    String    @default("Entwurf")
+  seoScore  Int       @default(0)
   publishAt DateTime?
-  recurring Boolean  @default(false)
-
-  createdAt DateTime @default(now())
+  recurring Boolean   @default(false)
+  createdAt DateTime  @default(now())
 }
 
 model AffiliateLink {
@@ -31,17 +27,14 @@ model AffiliateLink {
   name        String
   url         String
   category    String
-
   logo        String?
   rating      Float    @default(5)
   price       String?
   badge       String?
   buttonText  String?  @default("Jetzt ansehen")
-
   description String?
   pros        String?
   cons        String?
-
   clicks      Int      @default(0)
   createdAt   DateTime @default(now())
   abTests     ABTest[]
@@ -50,7 +43,6 @@ model AffiliateLink {
 model ABTest {
   id              Int           @id @default(autoincrement())
   affiliateLinkId Int
-  affiliateLink   AffiliateLink @relation(fields: [affiliateLinkId], references: [id], onDelete: Cascade)
   variantA        String
   variantB        String
   impressionsA    Int           @default(0)
@@ -62,7 +54,9 @@ model ABTest {
   status          String        @default("active")
   appliedAt       DateTime?
   createdAt       DateTime      @default(now())
+  affiliateLink   AffiliateLink @relation(fields: [affiliateLinkId], references: [id], onDelete: Cascade)
 }
+
 model ContentIdea {
   id            Int      @id @default(autoincrement())
   title         String
@@ -76,16 +70,16 @@ model ContentIdea {
 }
 
 model AffiliateClick {
-  id            Int      @id @default(autoincrement())
+  id              Int      @id @default(autoincrement())
   affiliateLinkId Int
-  articleSlug   String?
-  source        String?
-  userId        String?  // IP or session ID
-  userAgent     String?
-  referrer      String?
-  revenue       Float?   @default(0)
-  status        String   @default("pending") // pending, confirmed, rejected
-  createdAt     DateTime @default(now())
+  articleSlug     String?
+  source          String?
+  userId          String?
+  userAgent       String?
+  referrer        String?
+  revenue         Float?   @default(0)
+  status          String   @default("pending")
+  createdAt       DateTime @default(now())
 }
 
 model NewsletterSubscriber {
@@ -98,21 +92,34 @@ model NewsletterSubscriber {
 }
 
 model AdImpression {
-  id        Int      @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   articleSlug String?
-  adType    String   // "display", "banner", "sidebar"
-  clicks    Int      @default(0)
-  impressions Int     @default(0)
-  revenue   Float    @default(0)
-  createdAt DateTime @default(now())
+  adType      String
+  clicks      Int      @default(0)
+  impressions Int      @default(0)
+  revenue     Float    @default(0)
+  createdAt   DateTime @default(now())
 }
 
 model EarningsLog {
-  id            Int      @id @default(autoincrement())
-  date          DateTime
-  affiliateRevenue Float   @default(0)
-  adRevenue     Float    @default(0)
-  sponsorRevenue Float   @default(0)
-  totalRevenue  Float    @default(0)
-  createdAt     DateTime @default(now())
+  id               Int      @id @default(autoincrement())
+  date             DateTime
+  affiliateRevenue Float    @default(0)
+  adRevenue        Float    @default(0)
+  sponsorRevenue   Float    @default(0)
+  totalRevenue     Float    @default(0)
+  createdAt        DateTime @default(now())
+}
+
+model RevenuePlaybook {
+  id                  Int      @id @default(autoincrement())
+  weekStart           DateTime
+  plan                String   @default("pro")
+  summary             String
+  projectedMonthlyLift Float   @default(0)
+  recommendations     Json
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@unique([weekStart, plan])
 }

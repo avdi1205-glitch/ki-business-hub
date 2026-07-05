@@ -61,6 +61,14 @@ export default function AdminPage() {
       color: "#06b6d4",
       accent: "text-cyan-400",
     },
+    {
+      icon: "💸",
+      name: "Umsatz-Navigator",
+      desc: "Weekly revenue playbook with action priorities",
+      href: "/admin/revenue-navigator",
+      color: "#10b981",
+      accent: "text-emerald-400",
+    },
   ];
 
   return (
