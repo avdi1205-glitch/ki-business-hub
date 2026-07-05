@@ -112,21 +112,6 @@ export default function ConversionHero() {
           </div>
         </div>
 
-        {/* Trust Badges */}
-        <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-400">
-          <div className="flex items-center gap-2">
-            <span>🔒</span>
-            <span>{t("trustSecure")}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span>💳</span>
-            <span>{t("trustMonthly")}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span>⭐</span>
-            <span>{t("trustStripe")}</span>
-          </div>
-        </div>
       </div>
 
       {/* Scroll indicator */}
