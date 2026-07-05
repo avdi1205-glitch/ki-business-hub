@@ -22,12 +22,23 @@ export default async function BlogPage() {
   const blogTopAdSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_TOP;
   const blogGridAdSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_GRID;
 
-  const articles = await prisma.article.findMany({
-    where: { locale },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  let articles: Awaited<ReturnType<typeof prisma.article.findMany>> = [];
+
+  try {
+    articles = await prisma.article.findMany({
+      where: { locale } as any,
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+  } catch {
+    // Fallback for environments where the DB schema is not yet migrated.
+    articles = await prisma.article.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+  }
 
   return (
     <main style={{ background: "var(--background)" }}>
