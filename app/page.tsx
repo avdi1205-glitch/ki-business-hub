@@ -168,7 +168,7 @@ export default async function Home() {
       {/* Conversion Hero */}
       <ConversionHero />
 
-      <section className="px-6 pb-8 pt-2">
+      <section className="px-6 pb-4 pt-0">
         <div className="mx-auto max-w-6xl rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur">
           <p className="mb-4 text-sm font-bold uppercase tracking-wide text-cyan-300">Schneller Einstieg</p>
           <div className="grid gap-4 md:grid-cols-3">
@@ -197,14 +197,14 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="px-6 pb-6">
+      <section className="px-6 pb-3">
         <div className="mx-auto max-w-6xl rounded-2xl border border-cyan-400/20 bg-cyan-500/5 px-5 py-4 text-sm leading-7 text-slate-200">
           <span className="font-semibold text-cyan-300">Oder direkt entscheiden:</span> Wenn du schon weißt, was du brauchst, nimm oben die passende Strecke. Wenn du unsicher bist, helfen dir die Top-Tools beim Vergleichen.
         </div>
       </section>
 
       {/* Top Tools Section */}
-      <section className="py-24" style={{ background: "linear-gradient(135deg, var(--background) 0%, var(--background-alt) 100%)" }}>
+      <section className="py-20" style={{ background: "linear-gradient(135deg, var(--background) 0%, var(--background-alt) 100%)" }}>
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
