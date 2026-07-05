@@ -67,8 +67,9 @@ export default async function DashboardPage() {
       prisma.aBTest.count({ where: { status: "active" } }),
       prisma.aBTest.count({ where: { status: "complete" } }),
     ]);
-  } catch {
+  } catch (error) {
     dbUnavailable = true;
+    console.error("[admin/dashboard] Query failed", error);
   }
 
   const topLeadSource = Object.entries(
@@ -85,7 +86,7 @@ export default async function DashboardPage() {
 
       {dbUnavailable && (
         <div className="mb-6 rounded-xl border border-yellow-500/30 bg-yellow-500/10 p-4 text-yellow-100">
-          Datenbank ist aktuell nicht erreichbar. Dashboard zeigt temporaer Fallback-Werte.
+          Mindestens eine Dashboard-Abfrage ist fehlgeschlagen. Einige Kennzahlen sind temporaere Fallback-Werte.
         </div>
       )}
 
