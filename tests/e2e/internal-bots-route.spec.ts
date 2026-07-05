@@ -31,3 +31,20 @@ test("internal bots route requires a goal", async ({ request }) => {
   expect(body.success).toBe(false);
   expect(body.error || "").toContain("Bitte ein Ziel angeben");
 });
+
+test("role permission blocks unauthorized bot usage", async ({ request }) => {
+  const response = await request.post("/api/internal-bots", {
+    data: {
+      role: "support",
+      bot: "sales",
+      goal: "Mehr Upgrades",
+      context: "test",
+    },
+  });
+
+  const body = (await response.json()) as { success: boolean; error?: string };
+
+  expect(response.status()).toBe(403);
+  expect(body.success).toBe(false);
+  expect(body.error || "").toContain("Rolle darf diesen Bot nicht");
+});
