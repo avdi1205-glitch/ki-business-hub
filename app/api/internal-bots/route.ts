@@ -91,6 +91,7 @@ Antworte auf Deutsch und strukturiere die Antwort so:
 1) Kurzdiagnose
 2) Top-3 Aktionen mit Prioritaet
 3) Konkreter 7-Tage-Plan
+Verwende nur ASCII-Zeichen (ae, oe, ue, ss statt Umlaute).
 `,
     });
 

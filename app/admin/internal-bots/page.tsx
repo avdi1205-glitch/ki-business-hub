@@ -106,6 +106,8 @@ export default function InternalBotsPage() {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [historyLoading, setHistoryLoading] = useState(true);
   const [persistenceAvailable, setPersistenceAvailable] = useState(true);
+  const [favoriteOnly, setFavoriteOnly] = useState(false);
+  const [recurringOnly, setRecurringOnly] = useState(false);
 
   const allowedBots = useMemo(() => {
     if (role === "owner") return ["sales", "seo", "content-ops", "support"] as BotType[];
@@ -130,7 +132,12 @@ export default function InternalBotsPage() {
 
   const loadHistory = async () => {
     try {
-      const res = await fetch("/api/internal-bots/history?limit=50", { cache: "no-store" });
+      const params = new URLSearchParams();
+      params.set("limit", "50");
+      if (favoriteOnly) params.set("favoriteOnly", "true");
+      if (recurringOnly) params.set("recurringOnly", "true");
+
+      const res = await fetch(`/api/internal-bots/history?${params.toString()}`, { cache: "no-store" });
       const json = (await res.json()) as { success: boolean; persistenceAvailable?: boolean; items?: HistoryItem[] };
       if (json.success) {
         setHistory(Array.isArray(json.items) ? json.items : []);
@@ -146,7 +153,7 @@ export default function InternalBotsPage() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     void loadHistory();
-  }, []);
+  }, [favoriteOnly, recurringOnly]);
 
   const applyPlaybook = (preset: { name: string; goal: string; context: string }) => {
     setPlaybook(preset.name);
@@ -408,9 +415,45 @@ export default function InternalBotsPage() {
           <div className="mt-6 rounded-xl border p-5" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
             Verlauf wird geladen...
           </div>
-        ) : history.length > 0 && (
+        ) : history.length > 0 ? (
           <div className="mt-6 rounded-xl border p-5" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
-            <h2 className="mb-4 text-xl font-bold">Verlauf</h2>
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+              <h2 className="text-xl font-bold">Verlauf</h2>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  className="rounded-md border px-2 py-1 text-xs"
+                  style={{
+                    borderColor: favoriteOnly ? "rgba(16,185,129,0.7)" : "rgba(255,255,255,0.2)",
+                    background: favoriteOnly ? "rgba(16,185,129,0.15)" : "transparent",
+                  }}
+                  onClick={() => setFavoriteOnly((prev) => !prev)}
+                >
+                  Nur Favoriten
+                </button>
+                <button
+                  type="button"
+                  className="rounded-md border px-2 py-1 text-xs"
+                  style={{
+                    borderColor: recurringOnly ? "rgba(16,185,129,0.7)" : "rgba(255,255,255,0.2)",
+                    background: recurringOnly ? "rgba(16,185,129,0.15)" : "transparent",
+                  }}
+                  onClick={() => setRecurringOnly((prev) => !prev)}
+                >
+                  Nur Recurring
+                </button>
+                <button
+                  type="button"
+                  className="rounded-md border px-2 py-1 text-xs"
+                  style={{ borderColor: "rgba(255,255,255,0.2)" }}
+                  onClick={() => {
+                    void loadHistory();
+                  }}
+                >
+                  Neu laden
+                </button>
+              </div>
+            </div>
             <div className="space-y-3">
               {history.map((item) => (
                 <div
@@ -459,6 +502,10 @@ export default function InternalBotsPage() {
                 </div>
               ))}
             </div>
+          </div>
+        ) : (
+          <div className="mt-6 rounded-xl border p-5" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
+            Kein Verlauf fuer den aktuellen Filter gefunden.
           </div>
         )}
       </div>
