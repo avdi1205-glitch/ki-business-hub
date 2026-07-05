@@ -39,20 +39,6 @@
   --foreground: #f1f5f9;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --background: #ffffff;
-    --background-alt: #f8fafc;
-    --background-elevated: #e2e8f0;
-    --text-dark: #0f172a;
-    --text-light: #475569;
-    --text-muted: #94a3b8;
-    --border: #e2e8f0;
-    --border-light: #cbd5e1;
-    --shadow: rgba(0, 0, 0, 0.08);
-  }
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
