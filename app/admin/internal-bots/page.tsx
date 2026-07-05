@@ -53,6 +53,16 @@ const playbooks: Record<BotType, { name: string; goal: string; context: string }
       goal: "Mehr Agency-Abschluesse fuer Teamkunden",
       context: "Fokus auf B2B-Use-Cases, ROI-Kommunikation und klaren Upgrade-Triggern.",
     },
+    {
+      name: "High-Converting Offer Sprint",
+      goal: "Sofort mehr Abschlussquote auf Pro/Agency-Angebote holen",
+      context: "Optimiere Offer, Preisanker, CTA, Social Proof und den naechsten Kaufimpuls. Nenne die schnellste Massnahme mit hoechster Wirkung.",
+    },
+    {
+      name: "Objection Crusher",
+      goal: "Hauefige Kauf-Einwaende in Upgrades umwandeln",
+      context: "Einwaende: Preis, Zeit, Nutzen, Unsicherheit. Liefere kurze Antwortbausteine, die direkt zu Upgrade oder Demo fuehren.",
+    },
   ],
   seo: [
     {
@@ -64,6 +74,16 @@ const playbooks: Record<BotType, { name: string; goal: string; context: string }
       name: "Bestandscontent Refresh",
       goal: "Bestehende Top-Seiten fuer mehr Klicks optimieren",
       context: "Fokus auf Titel, Intro, CTA-Platzierung und FAQ-Erweiterung.",
+    },
+    {
+      name: "Money Keyword Attack",
+      goal: "Suchbegriffe mit Kaufabsicht schnell auf konvertierende Seiten lenken",
+      context: "Fokussiere auf Vergleichsseiten, Best-of-Listen, Alternativen und transaktionale Keywords. Nenne die naechsten drei Seiten mit dem hoechsten Umsatzpotenzial.",
+    },
+    {
+      name: "Comparison Page Domination",
+      goal: "Vergleichsseiten bauen, die Kaufentscheidungen einsammeln",
+      context: "Ziel: mehr Klicks auf Affiliate-Links. Gib H1, Unterpunkte, CTA-Positionen und FAQ-Fragen mit Conversion-Fokus.",
     },
   ],
   "content-ops": [
@@ -77,6 +97,16 @@ const playbooks: Record<BotType, { name: string; goal: string; context: string }
       goal: "Bottlenecks in der Content-Pipeline reduzieren",
       context: "Nenne die groessten Reibungsverluste und jeweils einen direkten Fix.",
     },
+    {
+      name: "Revenue Sprint Queue",
+      goal: "Nur Inhalte priorisieren, die am ehesten Geld oder qualifizierten Traffic bringen",
+      context: "Sortiere nach Umsatzwirkung, Conversion-Naehe und Produktionsaufwand. Nenne eine harte Reihenfolge fuer die naechsten 7 Tage.",
+    },
+    {
+      name: "Conversion Refresh List",
+      goal: "Bestehende Inhalte mit hohem Umsatzpotenzial zuerst aktualisieren",
+      context: "Ziel: schneller mehr Umsatz aus vorhandenen Seiten. Gib eine Prioritaetenliste mit Title, Intro, CTA und interner Verlinkung.",
+    },
   ],
   support: [
     {
@@ -88,6 +118,16 @@ const playbooks: Record<BotType, { name: string; goal: string; context: string }
       name: "Einwandbehandlung",
       goal: "Haeufige Einwaende strukturiert beantworten",
       context: "Einwaende: Preis, Aufwand, Unsicherheit. Bitte kurze Antwort-Bausteine.",
+    },
+    {
+      name: "Upgrade Rescue Kit",
+      goal: "Support-Antworten direkt auf Upgrade oder Aktivierung drehen",
+      context: "Formuliere Antworten so, dass Nutzer naechsten Schritt, Upgrade oder Buchung sofort verstehen. Kurz, freundlich, conversion-orientiert.",
+    },
+    {
+      name: "Retention Save Playbook",
+      goal: "Kritische Kunden halten und Friktion abbauen",
+      context: "Fokussiere auf schnelle Hilfe, klare Konsequenzen und einen naechsten Schritt, der Churn reduziert.",
     },
   ],
 };
