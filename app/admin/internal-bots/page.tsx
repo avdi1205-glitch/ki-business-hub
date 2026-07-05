@@ -241,6 +241,65 @@ export default function InternalBotsPage() {
     }));
   }, [trendSource]);
 
+  const topMoneyTasks = useMemo(() => {
+    const taskMap = new Map<
+      string,
+      {
+        id: string;
+        bot: BotType;
+        role: TeamRole;
+        playbook: string | null;
+        goal: string;
+        context: string | null;
+        tags: string[];
+        recurringTaskKey: string | null;
+        runs: number;
+        favorites: number;
+        lastRunAt: string;
+      }
+    >();
+
+    for (const item of allHistory) {
+      const taskId = item.recurringTaskKey || `${item.bot}:${item.playbook || "free"}:${item.goal}`;
+      const existing = taskMap.get(taskId);
+
+      if (!existing) {
+        taskMap.set(taskId, {
+          id: taskId,
+          bot: item.bot,
+          role: item.role,
+          playbook: item.playbook,
+          goal: item.goal,
+          context: item.context,
+          tags: toTagList(item.tags),
+          recurringTaskKey: item.recurringTaskKey,
+          runs: 1,
+          favorites: item.favorite ? 1 : 0,
+          lastRunAt: item.createdAt,
+        });
+        continue;
+      }
+
+      existing.runs += 1;
+      existing.favorites += item.favorite ? 1 : 0;
+      if (new Date(item.createdAt).getTime() > new Date(existing.lastRunAt).getTime()) {
+        existing.lastRunAt = item.createdAt;
+      }
+    }
+
+    return Array.from(taskMap.values())
+      .map((item) => {
+        const score = item.runs * 2 + item.favorites * 3 + (item.recurringTaskKey ? 4 : 0);
+        return {
+          ...item,
+          score,
+          favoriteRate: item.runs > 0 ? Math.round((item.favorites / item.runs) * 100) : 0,
+        };
+      })
+      .sort((a, b) => b.score - a.score || b.runs - a.runs || b.favorites - a.favorites)
+      .slice(0, 3);
+  }, [allHistory]);
+
   const applyPlaybook = (preset: { name: string; goal: string; context: string }) => {
     setPlaybook(preset.name);
     setGoal(preset.goal);
@@ -478,6 +537,94 @@ export default function InternalBotsPage() {
             <p className="text-xs uppercase tracking-wide" style={{ color: "var(--text-light)" }}>Recurring</p>
             <p className="mt-1 text-2xl font-bold">{historyKpis.recurringRuns}</p>
           </div>
+        </div>
+
+        <div className="mt-6 rounded-xl border p-5" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h2 className="text-lg font-bold">Top Money Tasks</h2>
+              <p className="text-xs" style={{ color: "var(--text-light)" }}>Die drei profitabelsten Bot-Aktionen aus eurem Verlauf</p>
+            </div>
+            <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-100">
+              Fokus auf Umsatz, nicht nur Output
+            </span>
+          </div>
+
+          {topMoneyTasks.length > 0 ? (
+            <div className="grid gap-3 lg:grid-cols-3">
+              {topMoneyTasks.map((task) => (
+                <div key={task.id} className="rounded-lg border p-4" style={{ borderColor: "rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.03)" }}>
+                  <div className="mb-3 flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-semibold">{task.playbook || "Freier Money-Task"}</p>
+                      <p className="text-xs uppercase tracking-wide" style={{ color: "var(--text-light)" }}>
+                        {task.bot.toUpperCase()} · {task.role.toUpperCase()}
+                      </p>
+                    </div>
+                    <span className="rounded-full bg-emerald-500/15 px-2 py-1 text-xs font-semibold text-emerald-100">
+                      Score {task.score}
+                    </span>
+                  </div>
+
+                  <p className="text-sm" style={{ color: "var(--text-light)" }}>{task.goal}</p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs">{task.runs} Runs</span>
+                    <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs">{task.favoriteRate}% Favoriten</span>
+                    {task.recurringTaskKey && (
+                      <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs">Recurring</span>
+                    )}
+                  </div>
+
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      className="rounded-lg bg-emerald-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-emerald-500"
+                      onClick={() => {
+                        setBot(task.bot);
+                        setRole(task.role);
+                        setPlaybook(task.playbook || "");
+                        setGoal(task.goal);
+                        setContext(task.context || "");
+                        setTagsInput(task.tags.join(", "));
+                        setRecurringTaskKey(task.recurringTaskKey || "");
+                        void generate({
+                          bot: task.bot,
+                          role: task.role,
+                          playbook: task.playbook || "",
+                          goal: task.goal,
+                          context: task.context || "",
+                          tagsInput: task.tags.join(", "),
+                          recurringTaskKey: task.recurringTaskKey || "",
+                        });
+                      }}
+                    >
+                      Jetzt ausfuehren
+                    </button>
+                    <button
+                      type="button"
+                      className="rounded-lg border px-3 py-1.5 text-sm"
+                      style={{ borderColor: "rgba(255,255,255,0.2)" }}
+                      onClick={() => {
+                        setBot(task.bot);
+                        setRole(task.role);
+                        setPlaybook(task.playbook || "");
+                        setGoal(task.goal);
+                        setContext(task.context || "");
+                        setTagsInput(task.tags.join(", "));
+                        setRecurringTaskKey(task.recurringTaskKey || "");
+                      }}
+                    >
+                      Vorbereiten
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm" style={{ color: "var(--text-light)" }}>
+              Noch keine ausreichend starken Tasks vorhanden. Erstelle ein paar Runs, damit hier die Top-Tasks hochgezogen werden.
+            </p>
+          )}
         </div>
 
         <div className="mt-6 rounded-xl border p-5" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
