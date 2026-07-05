@@ -1,8 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import { randomUUID } from "node:crypto";
 import { prisma } from "@/lib/prisma";
 import { getOpenAI } from "@/lib/openai";
 import { normalizeLocale, otherLocale, type SupportedLocale } from "@/lib/article-locale";
+
+function detectLocaleFromText(text: string): SupportedLocale {
+  const sample = text.toLowerCase();
+  if (/[äöüß]/.test(sample)) return "de";
+
+  const germanSignals = [" und ", " ist ", " mit ", " fuer ", "für ", " auf ", " nicht ", " die "];
+  const englishSignals = [" and ", " is ", " with ", " for ", " on ", " not ", " the "];
+
+  const germanScore = germanSignals.reduce((sum, token) => sum + (sample.includes(token) ? 1 : 0), 0);
+  const englishScore = englishSignals.reduce((sum, token) => sum + (sample.includes(token) ? 1 : 0), 0);
+
+  return germanScore >= englishScore ? "de" : "en";
+}
 
 function createSlug(title: string) {
   return title
@@ -67,39 +79,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: "Article not found" }, { status: 404 });
     }
 
-    const sourceLocale = normalizeLocale(source.locale);
+    const sourceLocale = normalizeLocale(detectLocaleFromText(`${source.title}\n${source.idea}\n${source.content}`));
     const destinationLocale: SupportedLocale = targetLocale
       ? normalizeLocale(targetLocale)
       : otherLocale(sourceLocale);
 
     if (destinationLocale === sourceLocale) {
       return NextResponse.json({ success: false, error: "Target locale must differ from source locale" }, { status: 400 });
-    }
-
-    const translationGroup = source.translationGroup || randomUUID();
-
-    if (!source.translationGroup) {
-      await prisma.article.update({
-        where: { id: source.id },
-        data: { translationGroup },
-      });
-    }
-
-    const existing = await prisma.article.findFirst({
-      where: {
-        translationGroup,
-        locale: destinationLocale,
-      },
-      select: { id: true, slug: true },
-    });
-
-    if (existing) {
-      return NextResponse.json({
-        success: true,
-        skipped: true,
-        message: "Translation already exists",
-        article: existing,
-      });
     }
 
     const openai = await getOpenAI();
@@ -133,16 +119,17 @@ Content: ${source.content}
         category: source.category,
         idea: translatedIdea,
         content: translatedContent,
-        locale: destinationLocale,
-        translationGroup,
       },
-      select: { id: true, slug: true, locale: true },
+      select: { id: true, slug: true },
     });
 
     return NextResponse.json({
       success: true,
       skipped: false,
-      article: created,
+      article: {
+        ...created,
+        locale: destinationLocale,
+      },
     });
   } catch (error) {
     return NextResponse.json(

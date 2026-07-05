@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { randomUUID } from "node:crypto";
 import { prisma } from "@/lib/prisma";
 import { getOpenAI } from "@/lib/openai";
 import { normalizeLocale, otherLocale, type SupportedLocale } from "@/lib/article-locale";
@@ -10,9 +9,20 @@ type ArticleLike = {
   idea: string;
   content: string;
   category: string | null;
-  locale: string;
-  translationGroup: string | null;
 };
+
+function detectLocaleFromText(text: string): SupportedLocale {
+  const sample = text.toLowerCase();
+  if (/[äöüß]/.test(sample)) return "de";
+
+  const germanSignals = [" und ", " ist ", " mit ", " fuer ", "für ", " auf ", " nicht ", " die "];
+  const englishSignals = [" and ", " is ", " with ", " for ", " on ", " not ", " the "];
+
+  const germanScore = germanSignals.reduce((sum, token) => sum + (sample.includes(token) ? 1 : 0), 0);
+  const englishScore = englishSignals.reduce((sum, token) => sum + (sample.includes(token) ? 1 : 0), 0);
+
+  return germanScore >= englishScore ? "de" : "en";
+}
 
 function createSlug(title: string) {
   return title
@@ -102,55 +112,21 @@ export async function POST(req: Request) {
         idea: true,
         content: true,
         category: true,
-        locale: true,
-        translationGroup: true,
       },
     });
-
-    const grouped = new Map<string, ArticleLike[]>();
-
-    for (const article of articles) {
-      const key = article.translationGroup || `single-${article.id}`;
-      const current = grouped.get(key) || [];
-      current.push(article);
-      grouped.set(key, current);
-    }
 
     const openai = await getOpenAI();
     let created = 0;
     let skipped = 0;
-    let missingGroups = 0;
 
-    for (const [key, group] of grouped.entries()) {
-      const de = group.find((item) => normalizeLocale(item.locale) === "de");
-      const en = group.find((item) => normalizeLocale(item.locale) === "en");
-
-      if (de && en) {
-        skipped += 1;
-        continue;
-      }
-
-      missingGroups += 1;
-
+    for (const source of articles) {
       if (created >= limit) {
-        continue;
-      }
-
-      const source = de || en;
-      if (!source) {
         skipped += 1;
         continue;
       }
 
-      const targetLocale = otherLocale(normalizeLocale(source.locale));
-      const translationGroup = key.startsWith("single-") ? randomUUID() : key;
-
-      if (!source.translationGroup) {
-        await prisma.article.update({
-          where: { id: source.id },
-          data: { translationGroup },
-        });
-      }
+      const sourceLocale = normalizeLocale(detectLocaleFromText(`${source.title}\n${source.idea}\n${source.content}`));
+      const targetLocale = otherLocale(sourceLocale);
 
       const translated = await translateArticle(openai, source, targetLocale);
       const translatedSlug = await createUniqueSlug(translated.title);
@@ -162,8 +138,6 @@ export async function POST(req: Request) {
           category: source.category,
           idea: translated.idea,
           content: translated.content,
-          locale: targetLocale,
-          translationGroup,
         },
       });
 
@@ -175,7 +149,7 @@ export async function POST(req: Request) {
       limit,
       created,
       skipped,
-      remainingMissing: Math.max(missingGroups - created, 0),
+      remainingMissing: Math.max(articles.length - created, 0),
     });
   } catch (error) {
     return NextResponse.json(

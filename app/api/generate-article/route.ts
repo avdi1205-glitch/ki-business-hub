@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { randomUUID } from "node:crypto";
 import { prisma } from "../../../lib/prisma";
 import { getOpenAI } from "@/lib/openai";
 import { localeFromCookie, normalizeLocale, otherLocale, type SupportedLocale } from "@/lib/article-locale";
@@ -104,7 +103,6 @@ Idee: ${idea}
       content: response.output_text,
     };
 
-    const translationGroup = randomUUID();
     const primarySlug = await createUniqueSlug(primaryArticle.title);
     const savedArticle = await prisma.article.create({
       data: {
@@ -113,8 +111,6 @@ Idee: ${idea}
         category,
         idea: primaryArticle.idea,
         content: primaryArticle.content,
-        locale,
-        translationGroup,
       },
     });
 
@@ -128,8 +124,6 @@ Idee: ${idea}
         category,
         idea: translatedArticle.idea,
         content: translatedArticle.content,
-        locale: secondaryLocale,
-        translationGroup,
       },
     });
 
