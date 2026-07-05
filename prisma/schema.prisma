@@ -123,3 +123,22 @@ model RevenuePlaybook {
 
   @@unique([weekStart, plan])
 }
+
+model InternalBotRun {
+  id               Int      @id @default(autoincrement())
+  bot              String
+  role             String   @default("owner")
+  playbook         String?
+  goal             String
+  context          String?
+  answer           String
+  tags             Json?
+  favorite         Boolean  @default(false)
+  recurringTaskKey String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([createdAt(sort: Desc)])
+  @@index([favorite, createdAt(sort: Desc)])
+  @@index([recurringTaskKey])
+}

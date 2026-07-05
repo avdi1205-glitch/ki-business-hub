@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type BotType = "sales" | "seo" | "content-ops" | "support";
 type TeamRole = "owner" | "growth" | "content" | "support";
@@ -9,17 +9,22 @@ type BotResponse = {
   success: boolean;
   answer?: string;
   error?: string;
+  persistenceAvailable?: boolean;
+  runId?: number | null;
 };
 
 type HistoryItem = {
-  id: string;
+  id: number;
   createdAt: string;
   bot: BotType;
   role: TeamRole;
-  playbook: string;
+  playbook: string | null;
   goal: string;
-  context: string;
+  context: string | null;
   answer: string;
+  tags?: unknown;
+  favorite: boolean;
+  recurringTaskKey: string | null;
 };
 
 const botLabels: Record<BotType, { title: string; subtitle: string }> = {
@@ -93,26 +98,14 @@ export default function InternalBotsPage() {
   const [playbook, setPlaybook] = useState("");
   const [goal, setGoal] = useState("");
   const [context, setContext] = useState("");
+  const [tagsInput, setTagsInput] = useState("");
+  const [recurringTaskKey, setRecurringTaskKey] = useState("");
   const [loading, setLoading] = useState(false);
   const [answer, setAnswer] = useState("");
   const [error, setError] = useState("");
-  const [history, setHistory] = useState<HistoryItem[]>(() => {
-    if (typeof window === "undefined") {
-      return [];
-    }
-
-    const raw = window.localStorage.getItem("internal-bots-history");
-    if (!raw) {
-      return [];
-    }
-
-    try {
-      const parsed = JSON.parse(raw) as HistoryItem[];
-      return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
-    }
-  });
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(true);
+  const [persistenceAvailable, setPersistenceAvailable] = useState(true);
 
   const allowedBots = useMemo(() => {
     if (role === "owner") return ["sales", "seo", "content-ops", "support"] as BotType[];
@@ -123,19 +116,63 @@ export default function InternalBotsPage() {
 
   const effectiveBot = allowedBots.includes(bot) ? bot : allowedBots[0];
 
+  const parseTags = (value: string) =>
+    value
+      .split(",")
+      .map((item) => item.trim().toLowerCase())
+      .filter(Boolean)
+      .slice(0, 10);
+
+  const toTagList = (value: unknown): string[] => {
+    if (!Array.isArray(value)) return [];
+    return value.map((item) => String(item || "")).filter(Boolean);
+  };
+
+  const loadHistory = async () => {
+    try {
+      const res = await fetch("/api/internal-bots/history?limit=50", { cache: "no-store" });
+      const json = (await res.json()) as { success: boolean; persistenceAvailable?: boolean; items?: HistoryItem[] };
+      if (json.success) {
+        setHistory(Array.isArray(json.items) ? json.items : []);
+      }
+      setPersistenceAvailable(json.persistenceAvailable !== false);
+    } catch {
+      setPersistenceAvailable(false);
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void loadHistory();
+  }, []);
+
   const applyPlaybook = (preset: { name: string; goal: string; context: string }) => {
     setPlaybook(preset.name);
     setGoal(preset.goal);
     setContext(preset.context);
   };
 
-  const persistHistory = (item: HistoryItem) => {
-    const next = [item, ...history].slice(0, 20);
-    setHistory(next);
-    localStorage.setItem("internal-bots-history", JSON.stringify(next));
-  };
+  const generate = async (overrides?: Partial<{
+    bot: BotType;
+    role: TeamRole;
+    playbook: string;
+    goal: string;
+    context: string;
+    tagsInput: string;
+    recurringTaskKey: string;
+  }>) => {
+    const payload = {
+      bot: overrides?.bot ?? effectiveBot,
+      role: overrides?.role ?? role,
+      playbook: overrides?.playbook ?? playbook,
+      goal: overrides?.goal ?? goal,
+      context: overrides?.context ?? context,
+      tagsInput: overrides?.tagsInput ?? tagsInput,
+      recurringTaskKey: overrides?.recurringTaskKey ?? recurringTaskKey,
+    };
 
-  const generate = async () => {
     setLoading(true);
     setError("");
     setAnswer("");
@@ -144,7 +181,15 @@ export default function InternalBotsPage() {
       const res = await fetch("/api/internal-bots", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bot: effectiveBot, role, playbook, goal, context }),
+        body: JSON.stringify({
+          bot: payload.bot,
+          role: payload.role,
+          playbook: payload.playbook,
+          goal: payload.goal,
+          context: payload.context,
+          tags: parseTags(payload.tagsInput),
+          recurringTaskKey: payload.recurringTaskKey,
+        }),
       });
 
       const json = (await res.json()) as BotResponse;
@@ -152,19 +197,9 @@ export default function InternalBotsPage() {
       if (!res.ok || !json.success) {
         setError(json.error || "Antwort konnte nicht generiert werden.");
       } else {
-        const responseText = json.answer || "";
-        setAnswer(responseText);
-
-        persistHistory({
-          id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-          createdAt: new Date().toISOString(),
-          bot: effectiveBot,
-          role,
-          playbook,
-          goal,
-          context,
-          answer: responseText,
-        });
+        setAnswer(json.answer || "");
+        setPersistenceAvailable(json.persistenceAvailable !== false);
+        await loadHistory();
       }
     } catch {
       setError("Antwort konnte nicht generiert werden.");
@@ -172,6 +207,32 @@ export default function InternalBotsPage() {
       setLoading(false);
     }
   };
+
+  const updateHistoryItem = async (id: number, patch: { favorite?: boolean; tags?: string[]; recurringTaskKey?: string | null }) => {
+    const res = await fetch(`/api/internal-bots/history/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(patch),
+    });
+
+    if (!res.ok) {
+      setError("Verlauf konnte nicht aktualisiert werden.");
+      return;
+    }
+
+    await loadHistory();
+  };
+
+  const recurringTasks = useMemo(() => {
+    const byKey = new Map<string, HistoryItem>();
+    for (const item of history) {
+      if (!item.recurringTaskKey) continue;
+      if (!byKey.has(item.recurringTaskKey)) {
+        byKey.set(item.recurringTaskKey, item);
+      }
+    }
+    return Array.from(byKey.values());
+  }, [history]);
 
   return (
     <div className="min-h-screen px-6 py-10" style={{ background: "var(--background)", color: "var(--text-dark)" }}>
@@ -250,6 +311,29 @@ export default function InternalBotsPage() {
             style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.15)", color: "var(--text-dark)" }}
           />
 
+          <div className="mt-4 grid gap-3 md:grid-cols-2">
+            <div>
+              <label className="mb-2 block text-sm font-semibold">Tags (Komma-getrennt)</label>
+              <input
+                value={tagsInput}
+                onChange={(e) => setTagsInput(e.target.value)}
+                placeholder="upsell, revenue, q3"
+                className="w-full rounded-lg border px-4 py-3"
+                style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.15)", color: "var(--text-dark)" }}
+              />
+            </div>
+            <div>
+              <label className="mb-2 block text-sm font-semibold">Recurring Task Key (optional)</label>
+              <input
+                value={recurringTaskKey}
+                onChange={(e) => setRecurringTaskKey(e.target.value)}
+                placeholder="weekly-upsell-sprint"
+                className="w-full rounded-lg border px-4 py-3"
+                style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.15)", color: "var(--text-dark)" }}
+              />
+            </div>
+          </div>
+
           <div className="mt-4 flex flex-wrap gap-3">
             <button
               onClick={generate}
@@ -260,6 +344,12 @@ export default function InternalBotsPage() {
             </button>
           </div>
         </div>
+
+        {!persistenceAvailable && (
+          <div className="mb-6 rounded-xl border border-yellow-500/40 bg-yellow-500/10 p-4 text-yellow-100">
+            Team-Verlauf ist aktuell nicht verfuegbar. Pruefe, ob die neue Datenbank-Migration bereits angewendet wurde.
+          </div>
+        )}
 
         {error && (
           <div className="mb-6 rounded-xl border border-red-500/40 bg-red-500/10 p-4 text-red-200">{error}</div>
@@ -272,30 +362,99 @@ export default function InternalBotsPage() {
           </div>
         )}
 
-        {history.length > 0 && (
+        {recurringTasks.length > 0 && (
+          <div className="mt-6 rounded-xl border p-5" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
+            <h2 className="mb-4 text-xl font-bold">Wiederkehrende Tasks (1-Klick)</h2>
+            <div className="space-y-3">
+              {recurringTasks.map((item) => (
+                <div key={`rec-${item.id}`} className="rounded-lg border p-3" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
+                  <p className="text-sm font-semibold">{item.recurringTaskKey}</p>
+                  <p className="text-sm" style={{ color: "var(--text-light)" }}>{item.goal}</p>
+                  <div className="mt-2">
+                    <button
+                      type="button"
+                      className="rounded-lg bg-cyan-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-cyan-500"
+                      onClick={() => {
+                        setBot(item.bot);
+                        setRole(item.role);
+                        setPlaybook(item.playbook || "");
+                        setGoal(item.goal);
+                        setContext(item.context || "");
+                        setTagsInput(toTagList(item.tags).join(", "));
+                        setRecurringTaskKey(item.recurringTaskKey || "");
+                        void generate({
+                          bot: item.bot,
+                          role: item.role,
+                          playbook: item.playbook || "",
+                          goal: item.goal,
+                          context: item.context || "",
+                          tagsInput: toTagList(item.tags).join(", "),
+                          recurringTaskKey: item.recurringTaskKey || "",
+                        });
+                      }}
+                    >
+                      1-Klick ausfuehren
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {historyLoading ? (
+          <div className="mt-6 rounded-xl border p-5" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
+            Verlauf wird geladen...
+          </div>
+        ) : history.length > 0 && (
           <div className="mt-6 rounded-xl border p-5" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
             <h2 className="mb-4 text-xl font-bold">Verlauf</h2>
             <div className="space-y-3">
               {history.map((item) => (
-                <button
+                <div
                   key={item.id}
-                  type="button"
-                  onClick={() => {
-                    setBot(item.bot);
-                    setRole(item.role);
-                    setPlaybook(item.playbook);
-                    setGoal(item.goal);
-                    setContext(item.context);
-                    setAnswer(item.answer);
-                  }}
-                  className="w-full rounded-lg border p-3 text-left"
+                  className="w-full rounded-lg border p-3"
                   style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.12)" }}
                 >
                   <p className="text-sm font-semibold">
                     {item.bot.toUpperCase()} · {item.role.toUpperCase()} · {item.playbook || "Freier Modus"}
                   </p>
                   <p className="text-sm" style={{ color: "var(--text-light)" }}>{item.goal}</p>
-                </button>
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    {toTagList(item.tags).map((tag) => (
+                      <span key={`${item.id}-${tag}`} className="rounded-full bg-white/10 px-2 py-0.5 text-xs">#{tag}</span>
+                    ))}
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      className="rounded-md border px-2 py-1 text-xs"
+                      style={{ borderColor: "rgba(255,255,255,0.2)" }}
+                      onClick={() => {
+                        setBot(item.bot);
+                        setRole(item.role);
+                        setPlaybook(item.playbook || "");
+                        setGoal(item.goal);
+                        setContext(item.context || "");
+                        setAnswer(item.answer);
+                        setTagsInput(toTagList(item.tags).join(", "));
+                        setRecurringTaskKey(item.recurringTaskKey || "");
+                      }}
+                    >
+                      Laden
+                    </button>
+                    <button
+                      type="button"
+                      className="rounded-md border px-2 py-1 text-xs"
+                      style={{ borderColor: "rgba(255,255,255,0.2)" }}
+                      onClick={() => {
+                        void updateHistoryItem(item.id, { favorite: !item.favorite });
+                      }}
+                    >
+                      {item.favorite ? "★ Favorit" : "☆ Favorisieren"}
+                    </button>
+                  </div>
+                </div>
               ))}
             </div>
           </div>

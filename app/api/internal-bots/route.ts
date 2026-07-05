@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getOpenAI } from "@/lib/openai";
+import { prisma } from "@/lib/prisma";
 
 type BotType = "sales" | "seo" | "content-ops" | "support";
 type TeamRole = "owner" | "growth" | "content" | "support";
@@ -34,6 +35,17 @@ function normalizeRole(value: unknown): TeamRole {
   return "owner";
 }
 
+function normalizeTags(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .map((item) => String(item || "").trim().toLowerCase())
+    .filter(Boolean)
+    .slice(0, 10);
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json().catch(() => ({}));
@@ -42,6 +54,8 @@ export async function POST(req: Request) {
     const goal = String(body?.goal || "").trim();
     const context = String(body?.context || "").trim();
     const playbook = String(body?.playbook || "").trim();
+    const tags = normalizeTags(body?.tags);
+    const recurringTaskKey = String(body?.recurringTaskKey || "").trim() || null;
 
     if (!bot) {
       return NextResponse.json({ success: false, error: "Ungueltiger Bot-Typ." }, { status: 400 });
@@ -80,11 +94,36 @@ Antworte auf Deutsch und strukturiere die Antwort so:
 `,
     });
 
+    let persistenceAvailable = true;
+    let runId: number | null = null;
+
+    try {
+      const saved = await prisma.internalBotRun.create({
+        data: {
+          bot,
+          role,
+          playbook: playbook || null,
+          goal,
+          context: context || null,
+          answer: response.output_text,
+          tags,
+          recurringTaskKey,
+        },
+      });
+      runId = saved.id;
+    } catch {
+      persistenceAvailable = false;
+    }
+
     return NextResponse.json({
       success: true,
       bot,
       role,
       answer: response.output_text,
+      tags,
+      recurringTaskKey,
+      runId,
+      persistenceAvailable,
     });
   } catch (error: unknown) {
     return NextResponse.json(
