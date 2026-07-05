@@ -109,7 +109,12 @@ export default function InternalBotsPage() {
   const [persistenceAvailable, setPersistenceAvailable] = useState(true);
   const [favoriteOnly, setFavoriteOnly] = useState(false);
   const [recurringOnly, setRecurringOnly] = useState(false);
-  const [trendScope, setTrendScope] = useState<"filtered" | "global">("filtered");
+  const [trendScope, setTrendScope] = useState<"filtered" | "global">(() => {
+    if (typeof window === "undefined") return "filtered";
+
+    const stored = window.localStorage.getItem("internal-bots-trend-scope");
+    return stored === "global" ? "global" : "filtered";
+  });
 
   const allowedBots = useMemo(() => {
     if (role === "owner") return ["sales", "seo", "content-ops", "support"] as BotType[];
@@ -175,6 +180,10 @@ export default function InternalBotsPage() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     void loadAllHistory();
   }, [loadAllHistory]);
+
+  useEffect(() => {
+    window.localStorage.setItem("internal-bots-trend-scope", trendScope);
+  }, [trendScope]);
 
   const historyKpis = useMemo(() => {
     const now = new Date();
