@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node --max-old-space-size=4096 ./node_modules/next/dist/bin/next dev",
     "build": "node scripts/build.mjs",
-    "start": "next start",
+    "start": "node --max-old-space-size=4096 ./node_modules/next/dist/bin/next start",
     "lint": "eslint",
-    "test:e2e": "playwright test",
-    "test:e2e:headed": "playwright test --headed"
+    "test:e2e": "node --max-old-space-size=4096 ./node_modules/@playwright/test/cli.js test",
+    "test:e2e:headed": "node --max-old-space-size=4096 ./node_modules/@playwright/test/cli.js test --headed"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
