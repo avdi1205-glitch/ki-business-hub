@@ -8,7 +8,8 @@
     "start": "node --max-old-space-size=4096 ./node_modules/next/dist/bin/next start",
     "lint": "eslint",
     "test:e2e": "node --max-old-space-size=4096 ./node_modules/@playwright/test/cli.js test",
-    "test:e2e:headed": "node --max-old-space-size=4096 ./node_modules/@playwright/test/cli.js test --headed"
+    "test:e2e:headed": "node --max-old-space-size=4096 ./node_modules/@playwright/test/cli.js test --headed",
+    "check:prod": "node scripts/prod-smoke.mjs"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
