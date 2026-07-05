@@ -112,25 +112,6 @@ export default function ConversionHero() {
           </div>
         </div>
 
-        {/* Social Proof - Numbers */}
-        <div className="grid grid-cols-3 md:grid-cols-3 gap-6 mb-12">
-          {[
-            { value: "1.247+", label: t("statUsers") },
-            { value: "50+", label: t("statArticles") },
-            { value: "39 EUR", label: t("statPrice") },
-          ].map((stat, idx) => (
-            <div
-              key={idx}
-              className="p-4 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all"
-            >
-              <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">
-                {stat.value}
-              </div>
-              <p className="text-sm text-gray-400 mt-1">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-
         {/* Social Proof - Testimonials */}
         <div className="space-y-3 mb-12">
           {[
