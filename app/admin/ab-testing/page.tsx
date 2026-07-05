@@ -154,10 +154,32 @@ export default function ABTestingPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <StatCard title="Active tests" value={activeTests.length} change="live on affiliate buttons" icon="⚙️" />
-          <StatCard title="Top CTR" value={`${averageRate}%`} change="best copy per active test" icon="📈" trend="up" />
-          <StatCard title="Applied winners" value={completedTests.length} change="already live" icon="🏆" />
-          <StatCard title="Affiliate links" value={affiliates.length} change="available test targets" icon="💰" trend="up" />
+          <StatCard
+            title="Active tests"
+            value={initialLoading ? "..." : activeTests.length}
+            change="live on affiliate buttons"
+            icon="⚙️"
+          />
+          <StatCard
+            title="Top CTR"
+            value={initialLoading ? "..." : `${averageRate}%`}
+            change="best copy per active test"
+            icon="📈"
+            trend="up"
+          />
+          <StatCard
+            title="Applied winners"
+            value={initialLoading ? "..." : completedTests.length}
+            change="already live"
+            icon="🏆"
+          />
+          <StatCard
+            title="Affiliate links"
+            value={initialLoading ? "..." : affiliates.length}
+            change="available test targets"
+            icon="💰"
+            trend="up"
+          />
         </div>
 
         <div className="mb-8 rounded-lg p-6" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
