@@ -83,6 +83,21 @@ export default async function BlogPage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-6 py-20">
+        <div className="mb-8 grid gap-4 rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur md:grid-cols-3">
+          <div>
+            <p className="text-sm font-bold text-cyan-300">Schnell starten</p>
+            <p className="mt-1 text-sm leading-6 text-slate-200">Die relevantesten Inhalte zuerst finden und schneller zu einer Entscheidung kommen.</p>
+          </div>
+          <div>
+            <p className="text-sm font-bold text-cyan-300">Mehr Klarheit</p>
+            <p className="mt-1 text-sm leading-6 text-slate-200">Jeder Beitrag fuehrt klarer zu Tools, Empfehlungen und naechsten Schritten.</p>
+          </div>
+          <div>
+            <p className="text-sm font-bold text-cyan-300">Weniger Umwege</p>
+            <p className="mt-1 text-sm leading-6 text-slate-200">Direkt zu passenden Seiten wechseln statt lange zu suchen.</p>
+          </div>
+        </div>
+
         {blogTopAdSlot && (
           <div className="mb-8 rounded-xl border border-white/10 bg-white/5 p-4">
             <GoogleAd slot={blogTopAdSlot} size="responsive" />

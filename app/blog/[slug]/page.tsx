@@ -192,6 +192,21 @@ export default async function BlogArticlePage({
             {article.idea}
           </p>
 
+          <div className="mt-8 grid gap-3 rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur md:grid-cols-3">
+            <div>
+              <p className="text-sm font-bold text-cyan-300">1. Schnell pruefen</p>
+              <p className="mt-1 text-sm leading-6 text-slate-200">Die wichtigsten Empfehlungen stehen direkt oben, damit du nicht suchen musst.</p>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-cyan-300">2. Passendes Tool waehlen</p>
+              <p className="mt-1 text-sm leading-6 text-slate-200">Die naechste gute Entscheidung ist meist eines der Top-Tools oder ein direkter Vergleich.</p>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-cyan-300">3. Mit einem Klick weiter</p>
+              <p className="mt-1 text-sm leading-6 text-slate-200">Wenn etwas passt, sofort in die passende Tool- oder Empfehlungsstrecke wechseln.</p>
+            </div>
+          </div>
+
           {/* Top CTA Section */}
           <div className="mt-8 rounded-xl border border-green-500/30 bg-green-500/10 p-6">
             <p className="mb-4 text-sm text-green-400">
