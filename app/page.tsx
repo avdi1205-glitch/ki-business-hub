@@ -191,34 +191,39 @@ export default async function Home() {
       </section>
 
       {/* Unique Value Proposition - Einzigartig */}
-      <section className="py-24" style={{ background: "var(--background)" }}>
+      <section
+        className="py-24"
+        style={{
+          background: "linear-gradient(180deg, #0f172a 0%, #111827 100%)",
+        }}
+      >
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
+            <h2 className="text-4xl font-bold mb-4" style={{ color: "#f8fafc" }}>
               🚀 {t("uniqueTitle")}
             </h2>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="p-8 rounded-xl" style={{ background: "rgba(59, 130, 246, 0.1)", border: "1px solid rgba(59, 130, 246, 0.3)", backdropFilter: "blur(10px)" }}>
+            <div className="p-8 rounded-xl" style={{ background: "rgba(30, 64, 175, 0.28)", border: "1px solid rgba(96, 165, 250, 0.45)", backdropFilter: "blur(10px)" }}>
               <div className="text-4xl mb-4">🤖</div>
-              <h3 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>{t("uniqueAi")}</h3>
-              <p className="leading-7" style={{ color: "var(--text-light)" }}>
+              <h3 className="text-2xl font-bold mb-2" style={{ color: "#f8fafc" }}>{t("uniqueAi")}</h3>
+              <p className="leading-7" style={{ color: "#dbeafe" }}>
                 {t("uniqueAiText")}
               </p>
             </div>
 
-            <div className="p-8 rounded-xl" style={{ background: "rgba(16, 185, 129, 0.1)", border: "1px solid rgba(16, 185, 129, 0.3)", backdropFilter: "blur(10px)" }}>
+            <div className="p-8 rounded-xl" style={{ background: "rgba(5, 150, 105, 0.26)", border: "1px solid rgba(74, 222, 128, 0.45)", backdropFilter: "blur(10px)" }}>
               <div className="text-4xl mb-4">📊</div>
-              <h3 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>{t("uniqueRoi")}</h3>
-              <p className="leading-7" style={{ color: "var(--text-light)" }}>
+              <h3 className="text-2xl font-bold mb-2" style={{ color: "#f8fafc" }}>{t("uniqueRoi")}</h3>
+              <p className="leading-7" style={{ color: "#dcfce7" }}>
                 {t("uniqueRoiText")}
               </p>
             </div>
 
-            <div className="p-8 rounded-xl" style={{ background: "rgba(139, 92, 246, 0.1)", border: "1px solid rgba(139, 92, 246, 0.3)", backdropFilter: "blur(10px)" }}>
+            <div className="p-8 rounded-xl" style={{ background: "rgba(91, 33, 182, 0.28)", border: "1px solid rgba(196, 181, 253, 0.45)", backdropFilter: "blur(10px)" }}>
               <div className="text-4xl mb-4">⚡</div>
-              <h3 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>{t("uniqueAutomation")}</h3>
-              <p className="leading-7" style={{ color: "var(--text-light)" }}>
+              <h3 className="text-2xl font-bold mb-2" style={{ color: "#f8fafc" }}>{t("uniqueAutomation")}</h3>
+              <p className="leading-7" style={{ color: "#ede9fe" }}>
                 {t("uniqueAutomationText")}
               </p>
             </div>

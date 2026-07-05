@@ -29,7 +29,7 @@ export function SocialProof() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 z-40 hidden max-w-sm animate-in fade-in slide-in-from-right-2 duration-500 md:block">
+    <div className="fixed bottom-4 right-4 z-40 hidden max-w-sm animate-in fade-in slide-in-from-right-2 duration-500 2xl:block">
       {/* Main Badge */}
       <div className="rounded-xl shadow-lg p-4 mb-3" style={{ background: "var(--background-elevated)", border: "1px solid rgba(16, 185, 129, 0.3)" }}>
         <div className="flex items-start gap-3">
