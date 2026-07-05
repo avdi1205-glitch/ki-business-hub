@@ -138,9 +138,9 @@ Idee: ${idea}
       locale,
       translatedLocale: secondaryLocale,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json({
-      error: String(error?.message || error),
+      error: error instanceof Error ? error.message : String(error),
     });
   }
 }

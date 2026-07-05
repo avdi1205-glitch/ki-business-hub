@@ -23,9 +23,13 @@ export default function GoogleAd({
     if (!adsEnabled || !adClientId) return;
 
     try {
+      const googleAds = window as Window & {
+        adsbygoogle?: Array<Record<string, unknown>>;
+      };
+
       // Push ads config
-      (window as any).adsbygoogle = (window as any).adsbygoogle || [];
-      (window as any).adsbygoogle.push({});
+      googleAds.adsbygoogle = googleAds.adsbygoogle || [];
+      googleAds.adsbygoogle.push({});
     } catch (error) {
       console.error("AdSense error:", error);
     }

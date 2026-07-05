@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { StatCard, ActionButton } from "@/app/components/ProUIComponents";
 
 type DraftArticle = {
@@ -36,7 +36,7 @@ export default function AutoPublishingPage() {
   const [time, setTime] = useState("09:00");
   const [recurring, setRecurring] = useState(false);
 
-  async function loadSchedule() {
+  const loadSchedule = useCallback(async () => {
     const response = await fetch("/api/auto-publishing", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -56,7 +56,7 @@ export default function AutoPublishingPage() {
     if (!selectedArticleId && data.drafts?.[0]?.id) {
       setSelectedArticleId(String(data.drafts[0].id));
     }
-  }
+  }, [selectedArticleId]);
 
   useEffect(() => {
     const init = async () => {
@@ -70,7 +70,7 @@ export default function AutoPublishingPage() {
     };
 
     init();
-  }, []);
+  }, [loadSchedule]);
 
   async function scheduleArticle() {
     if (!selectedArticleId) {

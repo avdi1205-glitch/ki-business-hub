@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
 
 type AffiliateButtonProps = {
@@ -25,8 +25,6 @@ export default function OptimizedAffiliateButton({
   const [activeTestId, setActiveTestId] = useState<number | null>(null);
   const [assignedVariant, setAssignedVariant] = useState<"A" | "B" | null>(null);
   const [activeText, setActiveText] = useState(buttonText || (locale === "en" ? "View now" : "Jetzt ansehen"));
-
-  const storageKey = useMemo(() => (activeTestId ? `ab-test-${activeTestId}` : null), [activeTestId]);
 
   useEffect(() => {
     let cancelled = false;

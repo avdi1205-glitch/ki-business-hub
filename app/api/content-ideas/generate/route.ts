@@ -87,10 +87,10 @@ Regeln:
       success: true,
       created,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json({
       success: false,
-      error: error.message,
+      error: error instanceof Error ? error.message : "Unknown error",
     });
   }
 }

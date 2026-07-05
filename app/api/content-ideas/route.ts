@@ -19,10 +19,10 @@ export async function GET() {
       success: true,
       ideas,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json({
       success: false,
-      error: error.message,
+      error: error instanceof Error ? error.message : "Unknown error",
     });
   }
 }
@@ -46,10 +46,10 @@ export async function POST(req: Request) {
       success: true,
       idea,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json({
       success: false,
-      error: error.message,
+      error: error instanceof Error ? error.message : "Unknown error",
     });
   }
 }

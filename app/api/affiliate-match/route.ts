@@ -4,7 +4,7 @@ import { getOpenAI } from "@/lib/openai";
 
 export async function POST(req: NextRequest) {
   try {
-    const { action, articleId, keywords } = await req.json();
+    const { action, articleId } = await req.json();
 
     if (action === "suggest-affiliates") {
       const openai = await getOpenAI();

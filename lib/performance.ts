@@ -32,8 +32,18 @@ export const generateMetadata = (title: string, description: string, image?: str
   };
 };
 
+type SchemaType = "Article" | "Organization" | "FAQPage";
+
+type ArticleSchemaData = {
+  title?: string;
+  description?: string;
+  image?: string;
+  date?: string;
+  content?: string;
+};
+
 // Schema.org structured data
-export const generateSchema = (type: "Article" | "Organization" | "FAQPage", data: any) => {
+export const generateSchema = (type: SchemaType, data: ArticleSchemaData) => {
   const baseSchema = {
     "@context": "https://schema.org",
     "@type": type,
@@ -79,12 +89,16 @@ export const trackWebVitals = () => {
     try {
       new PerformanceObserver((entryList) => {
         const entries = entryList.getEntries();
-        const lastEntry = entries[entries.length - 1] as any;
+        const lastEntry = entries[entries.length - 1] as PerformanceEntry | undefined;
         if (lastEntry) {
-          console.log("LCP:", lastEntry.renderTime || lastEntry.loadTime);
+            const timedEntry = lastEntry as PerformanceEntry & {
+              renderTime?: number;
+              loadTime?: number;
+            };
+            console.log("LCP:", timedEntry.renderTime || timedEntry.loadTime || 0);
         }
       }).observe({ entryTypes: ["largest-contentful-paint"] });
-    } catch (e) {
+      } catch {
       // LCP not supported
     }
 
@@ -92,11 +106,14 @@ export const trackWebVitals = () => {
     try {
       new PerformanceObserver((entryList) => {
         const entries = entryList.getEntries();
-        entries.forEach((entry: any) => {
-          console.log("FID:", entry.processingDuration);
+        entries.forEach((entry) => {
+          const timedEntry = entry as PerformanceEntry & {
+            processingDuration?: number;
+          };
+          console.log("FID:", timedEntry.processingDuration || 0);
         });
       }).observe({ entryTypes: ["first-input"] });
-    } catch (e) {
+    } catch {
       // FID not supported
     }
 
@@ -104,14 +121,18 @@ export const trackWebVitals = () => {
     try {
       new PerformanceObserver((entryList) => {
         let clsValue = 0;
-        entryList.getEntries().forEach((entry: any) => {
-          if (!entry.hadRecentInput) {
-            clsValue += entry.value;
+        entryList.getEntries().forEach((entry) => {
+          const layoutEntry = entry as PerformanceEntry & {
+            hadRecentInput?: boolean;
+            value?: number;
+          };
+          if (!layoutEntry.hadRecentInput) {
+            clsValue += layoutEntry.value || 0;
             console.log("CLS:", clsValue);
           }
         });
       }).observe({ entryTypes: ["layout-shift"] });
-    } catch (e) {
+    } catch {
       // CLS not supported
     }
   }

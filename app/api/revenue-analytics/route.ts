@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
     const dateRange = getDateRange(period);
 
     // Get all revenue sources
-    const [clicks, adImpressions, newsletterSubs, earnings] = await Promise.all([
+    const [clicks, adImpressions, newsletterSubs] = await Promise.all([
       prisma.affiliateClick.findMany({
         where: { createdAt: { gte: dateRange.start } },
       }),

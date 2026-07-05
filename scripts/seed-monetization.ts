@@ -174,7 +174,7 @@ async function seedMonetizationData() {
   // 5. Create earnings log
   const totalRevenue = clicks.reduce((sum, click) => sum + (click.revenue || 0), 0);
 
-  const earningsLog = await prisma.earningsLog.create({
+  await prisma.earningsLog.create({
     data: {
       date: today,
       affiliateRevenue: totalRevenue,

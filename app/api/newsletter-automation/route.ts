@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
 
       const resend = await getResend();
 
-      const results = [];
+      const results: Array<{ email: string; sent: boolean; error?: string }> = [];
       for (const subscriber of subscribers) {
         try {
           const html = renderTemplate(
@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-function renderTemplate(template: string, variables: Record<string, any>): string {
+function renderTemplate(template: string, variables: Record<string, unknown>): string {
   let html = template || "<h1>{{subject}}</h1>";
   Object.entries(variables).forEach(([key, value]) => {
     html = html.replace(new RegExp(`{{${key}}}`, "g"), String(value));

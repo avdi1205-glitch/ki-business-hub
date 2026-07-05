@@ -147,7 +147,7 @@ export function TestimonialsSection() {
 
               {/* Quote */}
               <p className="text-lg mb-6 italic" style={{ color: "var(--text-light)" }}>
-                "{testimonial.quote}"
+                &ldquo;{testimonial.quote}&rdquo;
               </p>
 
               {/* Earnings Badge */}

@@ -38,7 +38,7 @@ export default function CheckoutCtaButton({
     const nextVariant = stored === "A" || stored === "B" ? stored : (Math.random() >= 0.5 ? "A" : "B");
 
     window.localStorage.setItem(storageKey, nextVariant);
-    setVariant(nextVariant);
+    queueMicrotask(() => setVariant(nextVariant));
   }, [ctaKey]);
 
   const current = useMemo(() => {

@@ -2,9 +2,7 @@
 
 import {useLocale} from "next-intl";
 
-const SUPPORTED = ["de", "en"] as const;
-
-type Locale = (typeof SUPPORTED)[number];
+type Locale = "de" | "en";
 
 function setLangCookie(locale: Locale) {
   document.cookie = `kb_lang=${locale}; path=/; max-age=31536000; samesite=lax`;

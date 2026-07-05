@@ -51,8 +51,8 @@ export async function POST(request: Request) {
       clickId: click.id,
       estimatedRevenue: Number(estimatedRevenue.toFixed(2)),
     });
-  } catch (error) {
-    console.error("Affiliate Click Tracking Error:", error);
+    } catch {
+      console.error("Affiliate Click Tracking Error");
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -87,7 +87,7 @@ export async function GET() {
       revenue: totalRevenue.toFixed(2),
       average: todayClicks.length ? (totalRevenue / todayClicks.length).toFixed(2) : "0.00",
     });
-  } catch (error) {
+  } catch {
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }

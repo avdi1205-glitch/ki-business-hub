@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
  * Production: only allowed one time while the database is still empty.
  */
 
-export async function GET(request: Request) {
+export async function GET() {
   if (process.env.NODE_ENV === "production") {
     const [affiliateCount, articleCount, subscriberCount] = await Promise.all([
       prisma.affiliateLink.count(),

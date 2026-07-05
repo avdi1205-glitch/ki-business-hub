@@ -79,7 +79,7 @@ export async function GET(request: Request) {
 }
 
 // POST - Create earnings log (for daily summarization)
-export async function POST(request: Request) {
+export async function POST() {
   try {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -107,7 +107,7 @@ export async function POST(request: Request) {
     });
 
     return Response.json({ success: true });
-  } catch (error) {
+  } catch {
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }

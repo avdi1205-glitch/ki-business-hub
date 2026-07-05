@@ -79,6 +79,7 @@ export default async function AffiliateAdminPage() {
             style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}
           >
             {link.logo && (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={link.logo}
                 alt={link.name}

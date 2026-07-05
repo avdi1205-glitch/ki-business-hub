@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { StatCard, ActionButton } from "@/app/components/ProUIComponents";
 
 type AffiliateOption = {
@@ -45,7 +45,7 @@ export default function ABTestingPage() {
     ? (activeTests.reduce((sum, test) => sum + Math.max(test.rateA, test.rateB), 0) / activeTests.length).toFixed(2)
     : "0.00";
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     const response = await fetch("/api/ab-testing");
     const data = await response.json();
 
@@ -61,7 +61,7 @@ export default function ABTestingPage() {
       setVariantA(data.affiliates[0].buttonText || "Start free");
       setVariantB("Get started now");
     }
-  };
+  }, [selectedAffiliate]);
 
   useEffect(() => {
     const init = async () => {
@@ -75,13 +75,15 @@ export default function ABTestingPage() {
     };
 
     init();
-  }, []);
+  }, [loadData]);
 
   const selectedAffiliateData = affiliates.find((affiliate) => String(affiliate.id) === selectedAffiliate);
 
   useEffect(() => {
     if (selectedAffiliateData?.buttonText) {
-      setVariantA(selectedAffiliateData.buttonText);
+      queueMicrotask(() => {
+        setVariantA(selectedAffiliateData.buttonText as string);
+      });
     }
   }, [selectedAffiliateData?.buttonText]);
 
@@ -228,7 +230,7 @@ export default function ABTestingPage() {
                   <div className="rounded-lg p-4" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)" }}>
                       <h3 className="mb-3 font-semibold" style={{ color: "var(--text-dark)" }}>Variant A</h3>
                     <div className="mb-4 rounded-lg px-3 py-2 font-medium" style={{ background: "rgba(59, 130, 246, 0.18)", color: "#bfdbfe" }}>
-                      "{test.variantA}"
+                      &ldquo;{test.variantA}&rdquo;
                     </div>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between"><span style={{ color: "var(--text-light)" }}>Impressions</span><span style={{ color: "var(--text-dark)" }}>{test.impressionsA}</span></div>
@@ -247,7 +249,7 @@ export default function ABTestingPage() {
                       )}
                     </div>
                     <div className="mb-4 rounded-lg px-3 py-2 font-medium" style={{ background: "rgba(16, 185, 129, 0.18)", color: "#bbf7d0" }}>
-                      "{test.variantB}"
+                      &ldquo;{test.variantB}&rdquo;
                     </div>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between"><span style={{ color: "var(--text-light)" }}>Impressions</span><span style={{ color: "var(--text-dark)" }}>{test.impressionsB}</span></div>
@@ -289,7 +291,7 @@ export default function ABTestingPage() {
                   <div>
                     <p className="font-medium" style={{ color: "var(--text-dark)" }}>{test.affiliateName}</p>
                     <p className="text-sm" style={{ color: "var(--text-light)" }}>
-                      Winner: "{test.winner === "A" ? test.variantA : test.variantB}" • Live since {test.appliedAt ? new Date(test.appliedAt).toLocaleString() : "unknown"}
+                      Winner: &ldquo;{test.winner === "A" ? test.variantA : test.variantB}&rdquo; • Live since {test.appliedAt ? new Date(test.appliedAt).toLocaleString() : "unknown"}
                     </p>
                   </div>
                   <div className="text-right">

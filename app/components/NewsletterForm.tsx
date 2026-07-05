@@ -37,7 +37,7 @@ export default function NewsletterForm({ source = "newsletter-form" }: Newslette
         setStatus("error");
         setMessage(data.error || (locale === "en" ? "Sign-up failed" : "Fehler beim Anmelden"));
       }
-    } catch (error) {
+    } catch {
       setStatus("error");
       setMessage(locale === "en" ? "Connection error - Please try again later" : "Verbindungsfehler - Bitte versuche es später erneut");
     }

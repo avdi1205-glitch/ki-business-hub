@@ -62,8 +62,8 @@ export async function POST(request: Request) {
       success: true,
       message: "Erfolgreich angemeldet! 🎉",
     });
-  } catch (error) {
-    console.error("Newsletter Subscription Error:", error);
+  } catch {
+    console.error("Newsletter Subscription Error");
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -86,7 +86,7 @@ export async function GET() {
       subscriberCount: subscribers.length,
       sourceBreakdown,
     });
-  } catch (error) {
+  } catch {
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }

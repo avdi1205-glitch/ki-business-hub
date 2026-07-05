@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
   try {
-    const { action, articleId, content } = await req.json();
+    const { action, articleId } = await req.json();
 
     if (action === "analyze") {
       // SEO Analysis
@@ -59,6 +59,12 @@ export async function POST(req: NextRequest) {
   }
 }
 
+type SEOAnalyzedArticle = {
+  title: string;
+  content: string;
+  slug: string | null;
+};
+
 function calculateSEOScore(title: string, content: string, slug: string): number {
   let score = 50;
 
@@ -75,7 +81,7 @@ function calculateSEOScore(title: string, content: string, slug: string): number
   return Math.min(100, score);
 }
 
-function generateSEORecommendations(article: any): string[] {
+function generateSEORecommendations(article: SEOAnalyzedArticle): string[] {
   const recommendations = [];
 
   if (article.title.length < 30) recommendations.push("Title zu kurz (min. 30 Zeichen)");
@@ -90,7 +96,7 @@ function generateSEORecommendations(article: any): string[] {
 function calculateKeywordDensity(content: string, keyword: string): number {
   const wordCount = content.split(" ").length;
   const keywordCount = (content.toLowerCase().match(new RegExp(keyword.toLowerCase(), "g")) || []).length;
-  return ((keywordCount / wordCount) * 100).toFixed(2) as any;
+  return Number(((keywordCount / wordCount) * 100).toFixed(2));
 }
 
 function countHeadings(content: string): { h2: number; h3: number } {
