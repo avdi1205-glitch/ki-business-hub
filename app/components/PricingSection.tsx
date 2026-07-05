@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import CheckoutCtaButton from "./CheckoutCtaButton";
 
 const pricingPlans = [
   {
@@ -132,13 +133,30 @@ export function PricingSection() {
                 </div>
 
                 {/* CTA Button */}
-                <Link
-                  href={plan.href}
-                  className="block w-full rounded-lg px-4 py-3 text-center font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                  style={{ background: plan.color }}
-                >
-                  {plan.cta}
-                </Link>
+                {plan.name === "Pro" || plan.name === "Agency" ? (
+                  <CheckoutCtaButton
+                    href={plan.href}
+                    ctaKey={`pricing-${plan.name.toLowerCase()}`}
+                    variantA={{
+                      label: plan.cta,
+                      sourceSuffix: "variant-a",
+                      className: "block w-full rounded-lg px-4 py-3 text-center font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-lg",
+                    }}
+                    variantB={{
+                      label: plan.name === "Pro" ? "⚡ Mehr Umsatz mit Pro" : "🏢 Mehr Projekte mit Agency",
+                      sourceSuffix: "variant-b",
+                      className: "block w-full rounded-lg px-4 py-3 text-center font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-lg",
+                    }}
+                  />
+                ) : (
+                  <Link
+                    href={plan.href}
+                    className="block w-full rounded-lg px-4 py-3 text-center font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                    style={{ background: plan.color }}
+                  >
+                    {plan.cta}
+                  </Link>
+                )}
               </div>
             </div>
           ))}

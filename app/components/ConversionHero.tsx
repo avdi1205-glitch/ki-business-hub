@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
+import CheckoutCtaButton from "./CheckoutCtaButton";
 
 export default function ConversionHero() {
   const [seconds, setSeconds] = useState(3599); // 59:59 countdown
@@ -49,23 +50,36 @@ export default function ConversionHero() {
         {/* CTA Section */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
           {/* Primary CTA */}
-          <Link
+          <CheckoutCtaButton
             href="/content-factory"
-            className="group relative px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105 active:scale-95"
-          >
-            <span className="relative z-10 flex items-center justify-center gap-2">
-              🚀 Kostenlos starten
-            </span>
-            <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-emerald-700 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          </Link>
+            ctaKey="hero-start"
+            variantA={{
+              label: "🚀 Kostenlos starten",
+              sourceSuffix: "free-start",
+              className: "group relative px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105 active:scale-95",
+            }}
+            variantB={{
+              label: "⚡ Direkt loslegen",
+              sourceSuffix: "direct-start",
+              className: "group relative px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-emerald-500/50 transition-all duration-300 transform hover:scale-105 active:scale-95",
+            }}
+          />
 
           {/* Secondary CTA */}
-          <Link
-            href="/api/checkout?plan=pro&source=hero-secondary"
-            className="px-8 py-4 bg-blue-500/20 border-2 border-blue-400 text-blue-300 font-bold text-lg rounded-lg hover:bg-blue-500/30 transition-all duration-300"
-          >
-            💎 Pro fuer 39 EUR ansehen
-          </Link>
+          <CheckoutCtaButton
+            href="/api/checkout?plan=pro"
+            ctaKey="hero-pro"
+            variantA={{
+              label: "💎 Pro fuer 39 EUR ansehen",
+              sourceSuffix: "price-view",
+              className: "px-8 py-4 bg-blue-500/20 border-2 border-blue-400 text-blue-300 font-bold text-lg rounded-lg hover:bg-blue-500/30 transition-all duration-300",
+            }}
+            variantB={{
+              label: "🔥 Pro direkt testen",
+              sourceSuffix: "direct-pro",
+              className: "px-8 py-4 bg-cyan-500/20 border-2 border-cyan-400 text-cyan-200 font-bold text-lg rounded-lg hover:bg-cyan-500/30 transition-all duration-300",
+            }}
+          />
         </div>
 
         {/* Countdown Timer (Urgency) */}

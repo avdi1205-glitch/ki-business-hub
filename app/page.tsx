@@ -10,6 +10,7 @@ import { ComparisonTable } from "./components/ComparisonTable";
 import { FAQSection } from "./components/FAQSection";
 import { TestimonialsSection } from "./components/TestimonialsSection";
 import NewsletterForm from "./components/NewsletterForm";
+import CheckoutCtaButton from "./components/CheckoutCtaButton";
 import { getSiteUrl } from "../lib/site-url";
 
 export const metadata: Metadata = {
@@ -228,12 +229,20 @@ export default async function Home() {
               >
                 🚀 Kostenlos starten
               </Link>
-              <Link
-                href="/api/checkout?plan=pro&source=final-cta"
-                className="px-10 py-4 rounded-lg border border-cyan-400/30 bg-cyan-500/10 text-cyan-100 font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:bg-cyan-500/20"
-              >
-                💎 Pro fuer 39 EUR freischalten
-              </Link>
+              <CheckoutCtaButton
+                href="/api/checkout?plan=pro"
+                ctaKey="final-pro"
+                variantA={{
+                  label: "💎 Pro fuer 39 EUR freischalten",
+                  sourceSuffix: "variant-a",
+                  className: "px-10 py-4 rounded-lg border border-cyan-400/30 bg-cyan-500/10 text-cyan-100 font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:bg-cyan-500/20",
+                }}
+                variantB={{
+                  label: "⚡ Pro jetzt aktivieren",
+                  sourceSuffix: "variant-b",
+                  className: "px-10 py-4 rounded-lg border border-emerald-400/30 bg-emerald-500/10 text-emerald-100 font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:bg-emerald-500/20",
+                }}
+              />
             </div>
             <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-5 text-left">
               <p className="mb-3 text-sm font-semibold text-cyan-300">📧 Hol dir wöchentliche Conversion- und Tool-Updates</p>
