@@ -197,12 +197,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <FeaturesSection />
-
-      {/* Testimonials Section */}
-      <TestimonialsSection />
-
       {/* Top Tools Section */}
       <section className="py-24" style={{ background: "linear-gradient(135deg, var(--background) 0%, var(--background-alt) 100%)" }}>
         <div className="max-w-6xl mx-auto px-4">
@@ -233,6 +227,12 @@ export default async function Home() {
           <TopTools tools={tools} />
         </div>
       </section>
+
+      {/* Features Section */}
+      <FeaturesSection />
+
+      {/* Testimonials Section */}
+      <TestimonialsSection />
 
       {/* Unique Value Proposition - Einzigartig */}
       <section
