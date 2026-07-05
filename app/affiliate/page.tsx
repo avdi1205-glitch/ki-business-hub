@@ -49,17 +49,64 @@ export default async function AffiliatePage() {
           <p className="mb-10 max-w-3xl text-xl leading-8 text-slate-100">
             {t("subtitle")}
           </p>
+
+          <div className="mb-8 grid gap-3 text-sm text-slate-100 md:grid-cols-3">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <p className="font-bold text-emerald-300">Praxisnutzen zuerst</p>
+              <p className="mt-1 text-slate-200">Nur Tools, die in echten Workflows sinnvoll sind.</p>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <p className="font-bold text-emerald-300">Klare Entscheidung</p>
+              <p className="mt-1 text-slate-200">Rating, Preis und Nutzen auf einen Blick.</p>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <p className="font-bold text-emerald-300">Schnell zum passenden Tool</p>
+              <p className="mt-1 text-slate-200">Direkt zu Details oder zur Empfehlung wechseln.</p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="#affiliate-grid"
+              className="rounded-xl bg-emerald-500 px-5 py-3 font-bold text-white shadow-lg shadow-emerald-500/20 hover:bg-emerald-400"
+            >
+              Empfehlungen ansehen
+            </Link>
+            <Link
+              href="/tools"
+              className="rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-slate-100 hover:bg-white/10"
+            >
+              Zur Tool-Uebersicht
+            </Link>
+          </div>
         </div>
       </section>
 
       <section className="mx-auto max-w-6xl px-6 pb-20" style={{ background: "var(--background)" }}>
+        <div className="-mt-10 mb-8 rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur">
+          <div className="grid gap-4 md:grid-cols-3">
+            <div>
+              <p className="text-sm font-bold text-emerald-300">Bewertung</p>
+              <p className="mt-1 text-sm text-slate-200">Top-Ratings stehen oben, damit du schneller entscheiden kannst.</p>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-emerald-300">Preis-Leistung</p>
+              <p className="mt-1 text-sm text-slate-200">Preis und Nutzen sind direkt sichtbar, ohne Zusatzsuche.</p>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-emerald-300">Naechster Schritt</p>
+              <p className="mt-1 text-sm text-slate-200">Ueber Details oder Button direkt zum passenden Angebot gehen.</p>
+            </div>
+          </div>
+        </div>
+
         {links.length === 0 && (
           <div className="mb-6 rounded-2xl border border-yellow-500/30 bg-yellow-500/10 p-5 text-yellow-100">
             Affiliate-Daten sind gerade nicht verfuegbar. Bitte spaeter erneut laden.
           </div>
         )}
 
-        <div className="grid gap-6 md:grid-cols-3">
+        <div id="affiliate-grid" className="grid gap-6 md:grid-cols-3">
           {links.map((link) => (
             <div
               key={link.id}

@@ -48,17 +48,55 @@ export default async function ToolsPage() {
           <p className="mb-10 max-w-3xl text-xl leading-8 text-slate-100">
             {t("subtitle")}
           </p>
+
+          <div className="mb-8 flex flex-wrap gap-3 text-sm text-slate-100">
+            <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1">Schnelle Orientierung</span>
+            <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1">Klare Preis-Leistung</span>
+            <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1">Direkt zur Entscheidung</span>
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="/affiliate"
+              className="rounded-xl bg-cyan-500 px-5 py-3 font-bold text-white shadow-lg shadow-cyan-500/20 hover:bg-cyan-400"
+            >
+              Zu den besten Empfehlungen
+            </Link>
+            <Link
+              href="#tools-grid"
+              className="rounded-xl border border-white/15 bg-white/5 px-5 py-3 font-bold text-slate-100 hover:bg-white/10"
+            >
+              Alle Tools ansehen
+            </Link>
+          </div>
         </div>
       </section>
 
       <section className="mx-auto max-w-6xl px-6 pb-20" style={{ background: "var(--background)" }}>
+        <div className="-mt-10 mb-8 rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur">
+          <div className="grid gap-4 md:grid-cols-3">
+            <div>
+              <p className="text-sm font-bold text-cyan-300">1. Vergleichen</p>
+              <p className="mt-1 text-sm text-slate-200">Schnell sehen, welche Tools wirklich zu deinem Ziel passen.</p>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-cyan-300">2. Entscheiden</p>
+              <p className="mt-1 text-sm text-slate-200">Klare Ratings, Preise und Beschreibungen ohne unnötigen Lärm.</p>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-cyan-300">3. Starten</p>
+              <p className="mt-1 text-sm text-slate-200">Mit einem Klick tiefer einsteigen oder direkt zur Empfehlung wechseln.</p>
+            </div>
+          </div>
+        </div>
+
         {tools.length === 0 && (
           <div className="mb-6 rounded-2xl border border-yellow-500/30 bg-yellow-500/10 p-5 text-yellow-100">
             Tool-Daten sind gerade nicht verfuegbar. Bitte spaeter erneut laden.
           </div>
         )}
 
-        <div className="grid gap-6 md:grid-cols-3">
+        <div id="tools-grid" className="grid gap-6 md:grid-cols-3">
           {tools.map((tool) => (
             <Link
               key={tool.id}
