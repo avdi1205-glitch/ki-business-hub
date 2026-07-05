@@ -104,10 +104,12 @@ export default function InternalBotsPage() {
   const [answer, setAnswer] = useState("");
   const [error, setError] = useState("");
   const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [allHistory, setAllHistory] = useState<HistoryItem[]>([]);
   const [historyLoading, setHistoryLoading] = useState(true);
   const [persistenceAvailable, setPersistenceAvailable] = useState(true);
   const [favoriteOnly, setFavoriteOnly] = useState(false);
   const [recurringOnly, setRecurringOnly] = useState(false);
+  const [trendScope, setTrendScope] = useState<"filtered" | "global">("filtered");
 
   const allowedBots = useMemo(() => {
     if (role === "owner") return ["sales", "seo", "content-ops", "support"] as BotType[];
@@ -150,10 +152,29 @@ export default function InternalBotsPage() {
     }
   }, [favoriteOnly, recurringOnly]);
 
+  const loadAllHistory = useCallback(async () => {
+    try {
+      const params = new URLSearchParams();
+      params.set("limit", "200");
+      const res = await fetch(`/api/internal-bots/history?${params.toString()}`, { cache: "no-store" });
+      const json = (await res.json()) as { success: boolean; items?: HistoryItem[] };
+      if (json.success) {
+        setAllHistory(Array.isArray(json.items) ? json.items : []);
+      }
+    } catch {
+      setAllHistory([]);
+    }
+  }, []);
+
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     void loadHistory();
   }, [loadHistory]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void loadAllHistory();
+  }, [loadAllHistory]);
 
   const historyKpis = useMemo(() => {
     const now = new Date();
@@ -170,6 +191,8 @@ export default function InternalBotsPage() {
 
     return { totalRuns, favoriteRuns, recurringRuns, runsToday, favoriteRate };
   }, [history]);
+
+  const trendSource = trendScope === "global" ? allHistory : history;
 
   const sevenDayTrend = useMemo(() => {
     const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -191,7 +214,7 @@ export default function InternalBotsPage() {
       buckets.set(key, { label, runs: 0, favorites: 0 });
     }
 
-    for (const item of history) {
+    for (const item of trendSource) {
       const key = toKey(startOfDay(new Date(item.createdAt)));
       const existing = buckets.get(key);
       if (!existing) continue;
@@ -207,7 +230,7 @@ export default function InternalBotsPage() {
       favoriteRate: row.runs > 0 ? Math.round((row.favorites / row.runs) * 100) : 0,
       widthPct: Math.round((row.runs / maxRuns) * 100),
     }));
-  }, [history]);
+  }, [trendSource]);
 
   const applyPlaybook = (preset: { name: string; goal: string; context: string }) => {
     setPlaybook(preset.name);
@@ -260,7 +283,7 @@ export default function InternalBotsPage() {
       } else {
         setAnswer(json.answer || "");
         setPersistenceAvailable(json.persistenceAvailable !== false);
-        await loadHistory();
+        await Promise.all([loadHistory(), loadAllHistory()]);
       }
     } catch {
       setError("Antwort konnte nicht generiert werden.");
@@ -281,7 +304,7 @@ export default function InternalBotsPage() {
       return;
     }
 
-    await loadHistory();
+    await Promise.all([loadHistory(), loadAllHistory()]);
   };
 
   const recurringTasks = useMemo(() => {
@@ -449,9 +472,33 @@ export default function InternalBotsPage() {
         </div>
 
         <div className="mt-6 rounded-xl border p-5" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
-          <div className="mb-3 flex items-center justify-between gap-2">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-lg font-bold">7-Tage Trend</h2>
-            <p className="text-xs" style={{ color: "var(--text-light)" }}>Runs und Favoritenquote pro Tag</p>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                className="rounded-md border px-2 py-1 text-xs"
+                style={{
+                  borderColor: trendScope === "filtered" ? "rgba(16,185,129,0.7)" : "rgba(255,255,255,0.2)",
+                  background: trendScope === "filtered" ? "rgba(16,185,129,0.15)" : "transparent",
+                }}
+                onClick={() => setTrendScope("filtered")}
+              >
+                Aktuelle Filter
+              </button>
+              <button
+                type="button"
+                className="rounded-md border px-2 py-1 text-xs"
+                style={{
+                  borderColor: trendScope === "global" ? "rgba(16,185,129,0.7)" : "rgba(255,255,255,0.2)",
+                  background: trendScope === "global" ? "rgba(16,185,129,0.15)" : "transparent",
+                }}
+                onClick={() => setTrendScope("global")}
+              >
+                Alle Runs
+              </button>
+              <p className="text-xs" style={{ color: "var(--text-light)" }}>Runs und Favoritenquote pro Tag</p>
+            </div>
           </div>
           <div className="space-y-2">
             {sevenDayTrend.map((row) => (
