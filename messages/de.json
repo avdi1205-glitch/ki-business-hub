@@ -323,11 +323,6 @@
     "readMore": "Mehr erfahren",
     "cta": "Angebot ansehen"
   },
-  "contentFactory": {
-    "title": "Content Factory",
-    "statusTitle": "Status",
-    "createdArticlesTitle": "Erstellte Artikel"
-  },
   "footer": {
     "newsletter": "Hol dir wöchentliche Conversion- und Tool-Updates"
   }

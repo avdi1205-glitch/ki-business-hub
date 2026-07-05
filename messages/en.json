@@ -323,11 +323,6 @@
     "readMore": "Learn more",
     "cta": "View offer"
   },
-  "contentFactory": {
-    "title": "Content Factory",
-    "statusTitle": "Status",
-    "createdArticlesTitle": "Created articles"
-  },
   "footer": {
     "newsletter": "Get weekly conversion and tool updates"
   }
