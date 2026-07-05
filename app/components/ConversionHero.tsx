@@ -17,16 +17,16 @@ export default function ConversionHero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-6xl mx-auto px-4 py-20 text-center">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 py-14 md:py-16 text-center">
         {/* Main Headline */}
-        <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-cyan-400 to-green-400 bg-clip-text text-transparent leading-tight">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-5 bg-gradient-to-r from-blue-400 via-cyan-400 to-green-400 bg-clip-text text-transparent leading-tight">
           {t("heroTitle1")}
           <br />
           {t("heroTitle2")}
         </h1>
 
         {/* Subheading */}
-        <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-8">
+        <p className="text-lg md:text-xl text-gray-300 mb-6 max-w-3xl mx-auto leading-8">
           {t("heroSubtitle")}
           <span className="text-green-400 font-semibold"> {t("heroHighlight")}</span>
           {locale === "en"
@@ -35,7 +35,7 @@ export default function ConversionHero() {
         </p>
 
         {/* CTA Section */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
           {/* Primary CTA */}
           <CheckoutCtaButton
             href="/content-factory"
@@ -69,15 +69,15 @@ export default function ConversionHero() {
           />
         </div>
 
-        <div className="mb-10 text-sm text-gray-300">
-          <p className="mb-4">
+        <div className="mb-6 text-sm text-gray-300">
+          <p className="mb-3">
             {locale === "en"
               ? "Start free, compare tools, or go straight to recommendations."
               : "Kostenlos starten, Tools vergleichen oder direkt zu Empfehlungen gehen."}
           </p>
 
           <div className="grid gap-3 md:grid-cols-3">
-            <Link href="/content-factory" className="rounded-xl border border-white/10 bg-white/5 px-4 py-4 text-left transition hover:bg-white/10">
+            <Link href="/content-factory" className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-left transition hover:bg-white/10">
               <p className="font-bold text-green-300">{locale === "en" ? "Free start" : "Kostenlos starten"}</p>
               <p className="mt-1 text-sm leading-6 text-gray-300">
                 {locale === "en"
@@ -85,7 +85,7 @@ export default function ConversionHero() {
                   : "Nutze die Content-Factory fuer den ersten Workflow."}
               </p>
             </Link>
-            <Link href="/tools" className="rounded-xl border border-white/10 bg-white/5 px-4 py-4 text-left transition hover:bg-white/10">
+            <Link href="/tools" className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-left transition hover:bg-white/10">
               <p className="font-bold text-cyan-300">{locale === "en" ? "Compare tools" : "Tools vergleichen"}</p>
               <p className="mt-1 text-sm leading-6 text-gray-300">
                 {locale === "en"
@@ -93,7 +93,7 @@ export default function ConversionHero() {
                   : "Bewertungen, Preise und Passung an einem Ort sehen."}
               </p>
             </Link>
-            <Link href="/affiliate" className="rounded-xl border border-white/10 bg-white/5 px-4 py-4 text-left transition hover:bg-white/10">
+            <Link href="/affiliate" className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-left transition hover:bg-white/10">
               <p className="font-bold text-emerald-300">{locale === "en" ? "Best recommendations" : "Beste Empfehlungen"}</p>
               <p className="mt-1 text-sm leading-6 text-gray-300">
                 {locale === "en"
