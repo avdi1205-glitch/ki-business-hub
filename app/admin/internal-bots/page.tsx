@@ -336,7 +336,9 @@ export default function InternalBotsPage() {
 
           <div className="mt-4 flex flex-wrap gap-3">
             <button
-              onClick={generate}
+              onClick={() => {
+                void generate();
+              }}
               disabled={loading}
               className="rounded-lg bg-emerald-600 px-5 py-2 font-semibold text-white hover:bg-emerald-500"
             >

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 
 function normalizeTags(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
@@ -20,14 +21,14 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     }
 
     const body = await req.json().catch(() => ({}));
-    const data: { favorite?: boolean; tags?: unknown; recurringTaskKey?: string | null } = {};
+    const data: Prisma.InternalBotRunUpdateInput = {};
 
     if (typeof body?.favorite === "boolean") {
       data.favorite = body.favorite;
     }
 
     if (body?.tags !== undefined) {
-      data.tags = normalizeTags(body.tags);
+      data.tags = normalizeTags(body.tags) as Prisma.InputJsonValue;
     }
 
     if (body?.recurringTaskKey !== undefined) {
