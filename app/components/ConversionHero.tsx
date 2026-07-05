@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import CheckoutCtaButton from "./CheckoutCtaButton";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -85,6 +86,41 @@ export default function ConversionHero() {
               className: "px-8 py-4 bg-cyan-500/20 border-2 border-cyan-400 text-cyan-200 font-bold text-lg rounded-lg hover:bg-cyan-500/30 transition-all duration-300",
             }}
           />
+        </div>
+
+        <div className="mb-10 text-sm text-gray-300">
+          <p className="mb-4">
+            {locale === "en"
+              ? "Start free, compare tools, or jump directly to recommendations."
+              : "Starte kostenlos, vergleiche Tools oder gehe direkt zu Empfehlungen."}
+          </p>
+
+          <div className="grid gap-3 md:grid-cols-3">
+            <Link href="/content-factory" className="rounded-xl border border-white/10 bg-white/5 px-4 py-4 text-left transition hover:bg-white/10">
+              <p className="font-bold text-green-300">{locale === "en" ? "Free start" : "Kostenlos starten"}</p>
+              <p className="mt-1 text-sm leading-6 text-gray-300">
+                {locale === "en"
+                  ? "Use the content factory to create your first workflow."
+                  : "Nutze die Content-Factory fuer den ersten Workflow."}
+              </p>
+            </Link>
+            <Link href="/tools" className="rounded-xl border border-white/10 bg-white/5 px-4 py-4 text-left transition hover:bg-white/10">
+              <p className="font-bold text-cyan-300">{locale === "en" ? "Compare tools" : "Tools vergleichen"}</p>
+              <p className="mt-1 text-sm leading-6 text-gray-300">
+                {locale === "en"
+                  ? "Check ratings, pricing, and fit in one place."
+                  : "Bewertungen, Preise und Passung an einem Ort sehen."}
+              </p>
+            </Link>
+            <Link href="/affiliate" className="rounded-xl border border-white/10 bg-white/5 px-4 py-4 text-left transition hover:bg-white/10">
+              <p className="font-bold text-emerald-300">{locale === "en" ? "Best recommendations" : "Beste Empfehlungen"}</p>
+              <p className="mt-1 text-sm leading-6 text-gray-300">
+                {locale === "en"
+                  ? "Go directly to the strongest affiliate picks."
+                  : "Direkt zu den staerksten Affiliate-Empfehlungen."}
+              </p>
+            </Link>
+          </div>
         </div>
 
         {/* Countdown Timer (Urgency) */}
