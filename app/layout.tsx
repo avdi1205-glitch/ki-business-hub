@@ -121,6 +121,10 @@ export default function RootLayout({
 
         {/* Google AdSense */}
         {adClient && (
+          <meta name="google-adsense-account" content={adClient} />
+        )}
+
+        {adClient && (
           <Script
             async
             src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClient}`}
