@@ -171,6 +171,44 @@ export default function InternalBotsPage() {
     return { totalRuns, favoriteRuns, recurringRuns, runsToday, favoriteRate };
   }, [history]);
 
+  const sevenDayTrend = useMemo(() => {
+    const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const toKey = (date: Date) => {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    };
+
+    const buckets = new Map<string, { label: string; runs: number; favorites: number }>();
+    const today = startOfDay(new Date());
+
+    for (let i = 6; i >= 0; i -= 1) {
+      const day = new Date(today);
+      day.setDate(today.getDate() - i);
+      const key = toKey(day);
+      const label = day.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" });
+      buckets.set(key, { label, runs: 0, favorites: 0 });
+    }
+
+    for (const item of history) {
+      const key = toKey(startOfDay(new Date(item.createdAt)));
+      const existing = buckets.get(key);
+      if (!existing) continue;
+      existing.runs += 1;
+      if (item.favorite) existing.favorites += 1;
+    }
+
+    const rows = Array.from(buckets.values());
+    const maxRuns = Math.max(1, ...rows.map((row) => row.runs));
+
+    return rows.map((row) => ({
+      ...row,
+      favoriteRate: row.runs > 0 ? Math.round((row.favorites / row.runs) * 100) : 0,
+      widthPct: Math.round((row.runs / maxRuns) * 100),
+    }));
+  }, [history]);
+
   const applyPlaybook = (preset: { name: string; goal: string; context: string }) => {
     setPlaybook(preset.name);
     setGoal(preset.goal);
@@ -407,6 +445,29 @@ export default function InternalBotsPage() {
           <div className="rounded-xl border p-4" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
             <p className="text-xs uppercase tracking-wide" style={{ color: "var(--text-light)" }}>Recurring</p>
             <p className="mt-1 text-2xl font-bold">{historyKpis.recurringRuns}</p>
+          </div>
+        </div>
+
+        <div className="mt-6 rounded-xl border p-5" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
+          <div className="mb-3 flex items-center justify-between gap-2">
+            <h2 className="text-lg font-bold">7-Tage Trend</h2>
+            <p className="text-xs" style={{ color: "var(--text-light)" }}>Runs und Favoritenquote pro Tag</p>
+          </div>
+          <div className="space-y-2">
+            {sevenDayTrend.map((row) => (
+              <div key={row.label} className="grid grid-cols-[56px_1fr_auto] items-center gap-3">
+                <p className="text-xs font-semibold" style={{ color: "var(--text-light)" }}>{row.label}</p>
+                <div className="h-2.5 w-full overflow-hidden rounded-full bg-white/10">
+                  <div
+                    className="h-full rounded-full bg-emerald-500"
+                    style={{ width: `${row.widthPct}%` }}
+                  />
+                </div>
+                <p className="text-xs" style={{ color: "var(--text-light)" }}>
+                  {row.runs} Runs · {row.favoriteRate}% Fav
+                </p>
+              </div>
+            ))}
           </div>
         </div>
 
