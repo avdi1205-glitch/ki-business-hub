@@ -96,7 +96,7 @@ export function PricingSection() {
   });
 
   return (
-    <div style={{ background: "var(--background)" }} className="py-24">
+    <div style={{ background: "linear-gradient(180deg, #111827 0%, #0f172a 100%)" }} className="py-24">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16">
@@ -115,7 +115,7 @@ export function PricingSection() {
               key={idx}
               className="relative rounded-2xl overflow-hidden transition-all duration-300 transform hover:scale-105"
               style={{
-                background: "var(--background-elevated)",
+                background: "#1e293b",
                 border: plan.highlight ? `2px solid ${plan.color}` : `1px solid rgba(255,255,255,0.1)`,
                 transform: plan.highlight ? "scale(1.05)" : "scale(1)",
               }}
@@ -192,7 +192,7 @@ export function PricingSection() {
         </div>
 
         {/* Money-Back Guarantee */}
-        <div className="max-w-2xl mx-auto p-8 rounded-xl text-center" style={{ background: "rgba(16, 185, 129, 0.1)", border: "1px solid var(--success)" }}>
+        <div className="max-w-2xl mx-auto p-8 rounded-xl text-center" style={{ background: "rgba(5, 150, 105, 0.16)", border: "1px solid var(--success)" }}>
           <h3 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>
             {t("pricingGuaranteeTitle")}
           </h3>

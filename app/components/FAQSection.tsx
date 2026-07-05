@@ -42,7 +42,7 @@ export function FAQSection() {
   const [openIdx, setOpenIdx] = useState(0);
 
   return (
-    <div style={{ background: "var(--background)" }} className="py-24">
+    <div style={{ background: "linear-gradient(180deg, #0f172a 0%, #111827 100%)" }} className="py-24">
       <div className="max-w-4xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16">
@@ -61,7 +61,7 @@ export function FAQSection() {
               key={idx}
               className="rounded-xl overflow-hidden transition-all duration-300"
               style={{
-                background: "var(--background-elevated)",
+                background: "#1f2937",
                 border: `1px solid ${faq.color}40`,
               }}
             >
@@ -109,7 +109,7 @@ export function FAQSection() {
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-16 text-center p-12 rounded-2xl" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
+        <div className="mt-16 text-center p-12 rounded-2xl" style={{ background: "#1e293b", border: "1px solid rgba(255,255,255,0.1)" }}>
           <h3 className="text-2xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
             {t("faqFooterTitle")}
           </h3>

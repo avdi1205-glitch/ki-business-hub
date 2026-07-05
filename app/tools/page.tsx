@@ -30,8 +30,11 @@ export default async function ToolsPage() {
 
   return (
     <main style={{ background: "var(--background)" }}>
-      <section className="relative overflow-hidden px-6 py-20">
-        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-purple-500/10 to-transparent" />
+      <section
+        className="relative overflow-hidden px-6 py-20"
+        style={{ background: "linear-gradient(160deg, #0b1220 0%, #172554 100%)" }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/12 via-blue-500/10 to-transparent" />
 
         <div className="relative mx-auto max-w-6xl">
           <p className="mb-4 font-bold text-cyan-300">
@@ -48,7 +51,7 @@ export default async function ToolsPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 pb-20">
+      <section className="mx-auto max-w-6xl px-6 pb-20" style={{ background: "var(--background)" }}>
         {tools.length === 0 && (
           <div className="mb-6 rounded-2xl border border-yellow-500/30 bg-yellow-500/10 p-5 text-yellow-100">
             Tool-Daten sind gerade nicht verfuegbar. Bitte spaeter erneut laden.

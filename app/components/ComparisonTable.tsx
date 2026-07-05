@@ -102,7 +102,7 @@ export function ComparisonTable() {
   }));
 
   return (
-    <div style={{ background: "var(--background)" }} className="py-24">
+    <div style={{ background: "linear-gradient(180deg, #0f172a 0%, #111827 100%)" }} className="py-24">
       <div className="max-w-6xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16">
@@ -118,7 +118,7 @@ export function ComparisonTable() {
         <div className="hidden md:block overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr style={{ background: "var(--background-elevated)", borderBottom: "2px solid rgba(255,255,255,0.1)" }}>
+              <tr style={{ background: "#1f2937", borderBottom: "2px solid rgba(255,255,255,0.1)" }}>
                 <th className="px-6 py-4 text-left font-bold" style={{ color: "var(--text-dark)" }}>
                   {t("comparisonHeaderFeature")}
                 </th>
@@ -127,7 +127,7 @@ export function ComparisonTable() {
                   <div className="font-bold" style={{ color: "var(--text-dark)" }}>{t("comparisonStarter")}</div>
                   <div className="text-sm" style={{ color: "var(--text-light)" }}>{t("comparisonStarterPrice")}</div>
                 </th>
-                <th className="px-6 py-4 text-center" style={{ background: "rgba(139, 92, 246, 0.12)", borderLeft: "2px solid rgba(139, 92, 246, 0.3)", borderRight: "2px solid rgba(139, 92, 246, 0.3)" }}>
+                <th className="px-6 py-4 text-center" style={{ background: "rgba(109, 40, 217, 0.26)", borderLeft: "2px solid rgba(139, 92, 246, 0.35)", borderRight: "2px solid rgba(139, 92, 246, 0.35)" }}>
                   <div className="text-2xl mb-2">💎</div>
                   <div className="font-bold" style={{ color: "var(--text-dark)" }}>{t("comparisonPro")}</div>
                   <div className="text-sm" style={{ color: "var(--text-light)" }}>{t("comparisonProPrice")}</div>
@@ -144,7 +144,7 @@ export function ComparisonTable() {
                 <tr
                   key={idx}
                   style={{
-                    background: idx % 2 === 0 ? "var(--background)" : "rgba(255,255,255,0.02)",
+                    background: idx % 2 === 0 ? "#0f172a" : "#111827",
                     borderBottom: "1px solid rgba(255,255,255,0.05)",
                   }}
                 >
@@ -154,7 +154,7 @@ export function ComparisonTable() {
                   <td className="px-6 py-4 text-center" style={{ color: "var(--text-light)" }}>
                     {row.starter}
                   </td>
-                  <td className="px-6 py-4 text-center font-bold" style={{ background: "rgba(139, 92, 246, 0.12)", color: "var(--text-dark)" }}>
+                  <td className="px-6 py-4 text-center font-bold" style={{ background: "rgba(109, 40, 217, 0.22)", color: "var(--text-dark)" }}>
                     {row.pro}
                   </td>
                   <td className="px-6 py-4 text-center" style={{ color: "var(--text-light)" }}>
