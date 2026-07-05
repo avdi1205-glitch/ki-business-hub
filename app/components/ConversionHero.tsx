@@ -112,23 +112,6 @@ export default function ConversionHero() {
           </div>
         </div>
 
-        {/* Social Proof - Testimonials */}
-        <div className="space-y-3 mb-12">
-          {[
-            `✅ ${t("trustFree")}`,
-            `✅ ${t("trustPro")}`,
-            `✅ ${t("trustAgency")}`,
-          ].map((text, idx) => (
-            <div
-              key={idx}
-              className="text-sm text-green-300 animate-fade-in"
-              style={{ animationDelay: `${idx * 0.5}s` }}
-            >
-              {text}
-            </div>
-          ))}
-        </div>
-
         {/* Trust Badges */}
         <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-400">
           <div className="flex items-center gap-2">
