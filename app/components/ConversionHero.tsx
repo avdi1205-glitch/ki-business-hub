@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 import CheckoutCtaButton from "./CheckoutCtaButton";
 import { useLocale, useTranslations } from "next-intl";
@@ -8,17 +8,6 @@ import { useLocale, useTranslations } from "next-intl";
 export default function ConversionHero() {
   const t = useTranslations("home");
   const locale = useLocale();
-  const [seconds, setSeconds] = useState(3599); // 59:59 countdown
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setSeconds((s) => (s > 0 ? s - 1 : 3599));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
 
   return (
     <div className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
@@ -120,16 +109,6 @@ export default function ConversionHero() {
                   : "Direkt zu den staerksten Affiliate-Empfehlungen."}
               </p>
             </Link>
-          </div>
-        </div>
-
-        {/* Countdown Timer (Urgency) */}
-        <div className="inline-block mb-12 p-6 bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/30 rounded-lg">
-          <p className="text-gray-400 text-sm mb-2">🔥 {t("heroCountdownLabel")}</p>
-          <div className="flex gap-4 justify-center text-3xl font-bold font-mono">
-            <div className="text-red-400">
-              {String(mins).padStart(2, "0")}:{String(secs).padStart(2, "0")}
-            </div>
           </div>
         </div>
 
