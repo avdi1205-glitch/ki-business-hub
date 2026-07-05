@@ -155,6 +155,12 @@ export default function InternalBotsPage() {
     const stored = window.localStorage.getItem("internal-bots-trend-scope");
     return stored === "global" ? "global" : "filtered";
   });
+  const [moneyMode, setMoneyMode] = useState(() => {
+    if (typeof window === "undefined") return true;
+
+    const stored = window.localStorage.getItem("internal-bots-money-mode");
+    return stored === null ? true : stored === "1";
+  });
 
   const allowedBots = useMemo(() => {
     if (role === "owner") return ["sales", "seo", "content-ops", "support"] as BotType[];
@@ -224,6 +230,10 @@ export default function InternalBotsPage() {
   useEffect(() => {
     window.localStorage.setItem("internal-bots-trend-scope", trendScope);
   }, [trendScope]);
+
+  useEffect(() => {
+    window.localStorage.setItem("internal-bots-money-mode", moneyMode ? "1" : "0");
+  }, [moneyMode]);
 
   const historyKpis = useMemo(() => {
     const now = new Date();
@@ -389,6 +399,16 @@ export default function InternalBotsPage() {
     return insights.slice(0, 3);
   }, [sevenDayTrend, topMoneyTasks]);
 
+  const recommendedPlaybookPreset = useMemo(() => {
+    const candidates = playbooks[effectiveBot];
+    const bestMoneyTaskForBot = topMoneyTasks.find((item) => item.bot === effectiveBot);
+    const taskPreset = bestMoneyTaskForBot?.playbook
+      ? candidates.find((preset) => preset.name === bestMoneyTaskForBot.playbook)
+      : undefined;
+
+    return taskPreset || candidates[0];
+  }, [effectiveBot, topMoneyTasks]);
+
   const applyPlaybook = (preset: { name: string; goal: string; context: string }) => {
     setPlaybook(preset.name);
     setGoal(preset.goal);
@@ -404,12 +424,17 @@ export default function InternalBotsPage() {
     tagsInput: string;
     recurringTaskKey: string;
   }>) => {
+    const resolvedPlaybook = overrides?.playbook ?? playbook;
+    const resolvedGoal = overrides?.goal ?? goal;
+    const resolvedContext = overrides?.context ?? context;
+    const fallbackPreset = moneyMode && (!resolvedPlaybook || !resolvedGoal || !resolvedContext) ? recommendedPlaybookPreset : undefined;
+
     const payload = {
       bot: overrides?.bot ?? effectiveBot,
       role: overrides?.role ?? role,
-      playbook: overrides?.playbook ?? playbook,
-      goal: overrides?.goal ?? goal,
-      context: overrides?.context ?? context,
+      playbook: resolvedPlaybook || fallbackPreset?.name || "",
+      goal: resolvedGoal || fallbackPreset?.goal || "",
+      context: resolvedContext || fallbackPreset?.context || "",
       tagsInput: overrides?.tagsInput ?? tagsInput,
       recurringTaskKey: overrides?.recurringTaskKey ?? recurringTaskKey,
     };
@@ -515,6 +540,41 @@ export default function InternalBotsPage() {
             ))}
           </select>
 
+          <div className="mb-4 rounded-xl border px-4 py-3" style={{ background: "rgba(16,185,129,0.08)", borderColor: "rgba(16,185,129,0.25)" }}>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <p className="text-sm font-semibold">Money Mode</p>
+                <p className="text-xs" style={{ color: "var(--text-light)" }}>
+                  Nutzt die profitabelste Vorlage und faellt bei leeren Eingaben auf Revenue-Playbooks zurueck.
+                </p>
+              </div>
+              <button
+                type="button"
+                className="rounded-md border px-3 py-1.5 text-xs font-semibold"
+                style={{
+                  borderColor: moneyMode ? "rgba(16,185,129,0.7)" : "rgba(255,255,255,0.2)",
+                  background: moneyMode ? "rgba(16,185,129,0.2)" : "transparent",
+                }}
+                onClick={() => setMoneyMode((prev) => !prev)}
+              >
+                {moneyMode ? "An" : "Aus"}
+              </button>
+            </div>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                className="rounded-lg bg-emerald-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-emerald-500"
+                onClick={() => {
+                  if (!recommendedPlaybookPreset) return;
+                  applyPlaybook(recommendedPlaybookPreset);
+                }}
+              >
+                Empfohlene Money-Vorlage laden
+              </button>
+              <span className="rounded-full bg-white/10 px-2 py-1 text-xs">{recommendedPlaybookPreset?.name || "Keine Empfehlung"}</span>
+            </div>
+          </div>
+
           <label className="mb-2 block text-sm font-semibold">Playbook-Quickstart</label>
           <div className="mb-4 grid gap-2 md:grid-cols-2">
             {playbooks[effectiveBot].map((preset) => (
@@ -528,7 +588,12 @@ export default function InternalBotsPage() {
                   background: playbook === preset.name ? "rgba(16,185,129,0.15)" : "rgba(255,255,255,0.03)",
                 }}
               >
-                {preset.name}
+                <span className="flex items-center justify-between gap-2">
+                  <span>{preset.name}</span>
+                  {recommendedPlaybookPreset?.name === preset.name && (
+                    <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[11px] font-semibold text-emerald-100">Empfohlen</span>
+                  )}
+                </span>
               </button>
             ))}
           </div>
