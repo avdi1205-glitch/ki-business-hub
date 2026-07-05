@@ -4,7 +4,14 @@ import { getSiteUrl } from "../lib/site-url";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getSiteUrl();
-  const articles = await prisma.article.findMany();
+  let articles: Awaited<ReturnType<typeof prisma.article.findMany>> = [];
+
+  try {
+    articles = await prisma.article.findMany();
+  } catch {
+    // Keep sitemap generation working in environments without a live DB connection.
+    articles = [];
+  }
 
   const articleUrls = articles
     .filter((article) => Boolean(article.slug))

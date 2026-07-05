@@ -52,7 +52,7 @@ export default async function EditAffiliatePage({
   return (
     <main style={{ background: "var(--background)", minHeight: "100vh" }} className="p-10">
       <h1 className="text-4xl font-bold mb-8" style={{ color: "var(--text-dark)" }}>
-        ✏️ Affiliate bearbeiten
+        ✏️ Edit affiliate
       </h1>
 
       <form
@@ -114,7 +114,7 @@ export default async function EditAffiliatePage({
           className="px-6 py-3 rounded-xl"
           style={{ background: "var(--success)", color: "white" }}
         >
-          Änderungen speichern
+          Save changes
         </button>
       </form>
     </main>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "../../lib/prisma";
+import { getTranslations } from "next-intl/server";
 
 function createSlug(name: string) {
   return name
@@ -15,6 +16,7 @@ function createSlug(name: string) {
 }
 
 export default async function ToolsPage() {
+  const t = await getTranslations("tools");
   const tools = await prisma.affiliateLink.findMany({
     orderBy: { rating: "desc" },
   });
@@ -26,16 +28,15 @@ export default async function ToolsPage() {
 
         <div className="relative mx-auto max-w-6xl">
           <p className="mb-4 font-bold text-cyan-300">
-            🤖 KI Business Hub Tools
+            🤖 {t("eyebrow")}
           </p>
 
           <h1 className="mb-6 text-5xl font-bold tracking-tight md:text-7xl">
-            Tools für dein Online-Business
+            {t("title")}
           </h1>
 
           <p className="mb-10 max-w-3xl text-xl leading-8 text-slate-100">
-            Entdecke KI-Tools, Hosting-Lösungen, VPNs und Automatisierungs-Tools
-            für dein digitales Business.
+            {t("subtitle")}
           </p>
         </div>
       </section>
@@ -73,7 +74,7 @@ export default async function ToolsPage() {
               )}
 
               <p className="mt-6 inline-flex rounded-full bg-cyan-500/10 px-3 py-2 font-bold text-cyan-200">
-                Mehr erfahren →
+                {t("readMore")}
               </p>
             </Link>
           ))}

@@ -2,61 +2,64 @@
 
 import Link from "next/link";
 import React from "react";
+import { useTranslations } from "next-intl";
 
 const features = [
   {
     icon: "🤖",
-    title: "AI Content Factory",
-    description: "Erstelle in kurzer Zeit SEO-taugliche Inhalte fuer deinen Funnel und Blog.",
-    benefits: ["+2.000 Wörter pro Artikel", "SEO-optimiert", "Deutsche Qualität"],
+    titleKey: "feature1Title",
+    descriptionKey: "feature1Description",
+    benefitsKeys: ["feature1Benefit1", "feature1Benefit2", "feature1Benefit3"],
     color: "#3b82f6",
-    badge: "AM BELIEBTESTEN",
+    badgeKey: "feature1Badge",
     href: "/content-factory",
-    cta: "Content Factory starten",
+    ctaKey: "feature1Cta",
   },
   {
     icon: "💰",
-    title: "Affiliate Income",
-    description: "Monetarisiere Inhalte mit passenden Tools und nachvollziehbaren Klicks.",
-    benefits: ["47 Premium Partner", "€1.25 Durchschnitt", "Real-Time Tracking"],
+    titleKey: "feature2Title",
+    descriptionKey: "feature2Description",
+    benefitsKeys: ["feature2Benefit1", "feature2Benefit2", "feature2Benefit3"],
     color: "#10b981",
-    badge: "UMSATZHEBEL",
+    badgeKey: "feature2Badge",
     href: "/affiliate",
-    cta: "Affiliate-Setup ansehen",
+    ctaKey: "feature2Cta",
   },
   {
     icon: "📧",
-    title: "Newsletter Automation",
-    description: "Baue Reichweite auf und halte Kontakte mit automatisierten Sequenzen warm.",
-    benefits: ["35% Öffnungsrate", "Segmentierung", "A/B Testing"],
+    titleKey: "feature3Title",
+    descriptionKey: "feature3Description",
+    benefitsKeys: ["feature3Benefit1", "feature3Benefit2", "feature3Benefit3"],
     color: "#8b5cf6",
-    badge: "MEHR BINDUNG",
+    badgeKey: "feature3Badge",
     href: "/content-factory",
-    cta: "Automationen entdecken",
+    ctaKey: "feature3Cta",
   },
   {
     icon: "🔍",
-    title: "SEO Analytics",
-    description: "Verbessere Rankings, interne Verlinkung und Themenpriorisierung systematisch.",
-    benefits: ["Score bis 100", "Keyword-Analyse", "Auto-Linking"],
+    titleKey: "feature4Title",
+    descriptionKey: "feature4Description",
+    benefitsKeys: ["feature4Benefit1", "feature4Benefit2", "feature4Benefit3"],
     color: "#f59e0b",
-    badge: "MEHR SICHTBARKEIT",
+    badgeKey: "feature4Badge",
     href: "/stats",
-    cta: "SEO-Daten prüfen",
+    ctaKey: "feature4Cta",
   },
 ];
 
 export function FeaturesSection() {
+  const t = useTranslations("home");
+
   return (
     <div style={{ background: "var(--background)" }} className="py-24">
       <div className="max-w-6xl mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
-            Die 4 Säulen deines Erfolgs
+            {t("featuresTitle")}
           </h2>
           <p className="text-xl max-w-2xl mx-auto" style={{ color: "var(--text-light)" }}>
-            Vier konkrete Hebel, mit denen du Inhalte, Reichweite und Umsatz Schritt fuer Schritt ausbaust.
+            {t("featuresSubtitle")}
           </p>
         </div>
 
@@ -77,7 +80,7 @@ export function FeaturesSection() {
               {/* Badge */}
               <div className="absolute top-4 right-4">
                 <span className="px-3 py-1 rounded-full text-xs font-semibold text-white" style={{ background: feature.color }}>
-                  {feature.badge}
+                  {t(feature.badgeKey)}
                 </span>
               </div>
 
@@ -90,20 +93,20 @@ export function FeaturesSection() {
 
                 {/* Title */}
                 <h3 className="text-2xl font-bold mb-2" style={{ color: feature.color }}>
-                  {feature.title}
+                  {t(feature.titleKey)}
                 </h3>
 
                 {/* Description */}
                 <p className="mb-6 leading-7" style={{ color: "var(--text-light)" }}>
-                  {feature.description}
+                  {t(feature.descriptionKey)}
                 </p>
 
                 {/* Benefits */}
                 <ul className="space-y-2 mb-6">
-                  {feature.benefits.map((benefit, bidx) => (
+                  {feature.benefitsKeys.map((benefitKey, bidx) => (
                     <li key={bidx} className="flex items-center gap-2 text-sm" style={{ color: "var(--text-muted)" }}>
                       <span className="w-1.5 h-1.5 rounded-full" style={{ background: feature.color }} />
-                      {benefit}
+                      {t(benefitKey)}
                     </li>
                   ))}
                 </ul>
@@ -114,7 +117,7 @@ export function FeaturesSection() {
                   className="block w-full rounded-lg px-4 py-3 text-center font-semibold text-white transition-all duration-300 hover:shadow-lg group-hover:scale-105"
                   style={{ background: feature.color }}
                 >
-                  {feature.cta} →
+                  {t(feature.ctaKey)} →
                 </Link>
               </div>
             </div>
@@ -124,14 +127,14 @@ export function FeaturesSection() {
         {/* Bottom CTA */}
         <div className="mt-16 text-center">
           <p className="mb-4 text-lg" style={{ color: "var(--text-light)" }}>
-            🚀 Starte kostenlos und schalte Pro erst frei, wenn du regelmaessig output und Umsatz brauchst.
+            🚀 {t("featuresBottomCopy")}
           </p>
           <Link
             href="/content-factory"
             className="inline-block rounded-lg px-8 py-4 text-lg font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
             style={{ background: "var(--primary)" }}
           >
-            Kostenlos starten
+            {t("featuresBottomCta")}
           </Link>
         </div>
       </div>

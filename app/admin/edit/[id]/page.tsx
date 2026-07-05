@@ -57,7 +57,7 @@ export default async function EditArticlePage({
 
   return (
     <main style={{ background: "var(--background)", minHeight: "100vh" }} className="p-10">
-      <h1 className="text-4xl font-bold mb-8" style={{ color: "var(--text-dark)" }}>✏️ Artikel bearbeiten</h1>
+      <h1 className="text-4xl font-bold mb-8" style={{ color: "var(--text-dark)" }}>✏️ Edit article</h1>
 
       <form
         action={updateArticle}
@@ -65,7 +65,7 @@ export default async function EditArticlePage({
         style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}
       >
         <div>
-          <label className="font-bold" style={{ color: "var(--text-dark)" }}>Titel</label>
+          <label className="font-bold" style={{ color: "var(--text-dark)" }}>Title</label>
           <input
             name="title"
             defaultValue={article.title}
@@ -75,7 +75,7 @@ export default async function EditArticlePage({
         </div>
 
         <div>
-          <label className="font-bold" style={{ color: "var(--text-dark)" }}>Idee</label>
+          <label className="font-bold" style={{ color: "var(--text-dark)" }}>Idea</label>
           <input
             name="idea"
             defaultValue={article.idea}
@@ -85,7 +85,7 @@ export default async function EditArticlePage({
         </div>
 
         <div>
-          <label className="font-bold" style={{ color: "var(--text-dark)" }}>Kategorie</label>
+          <label className="font-bold" style={{ color: "var(--text-dark)" }}>Category</label>
           <input
             name="category"
             defaultValue={article.category || ""}
@@ -95,7 +95,7 @@ export default async function EditArticlePage({
         </div>
 
         <div>
-          <label className="font-bold" style={{ color: "var(--text-dark)" }}>Inhalt</label>
+          <label className="font-bold" style={{ color: "var(--text-dark)" }}>Content</label>
           <textarea
             name="content"
             defaultValue={article.content}
@@ -109,7 +109,7 @@ export default async function EditArticlePage({
           className="px-6 py-3 rounded-xl font-bold"
           style={{ background: "var(--success)", color: "white" }}
         >
-          Speichern
+          Save
         </button>
       </form>
     </main>

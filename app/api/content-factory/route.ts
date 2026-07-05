@@ -1,6 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { randomUUID } from "node:crypto";
 import { prisma } from "../../../lib/prisma";
 import { getOpenAI } from "@/lib/openai";
+import { localeFromCookie, normalizeLocale, otherLocale, type SupportedLocale } from "@/lib/article-locale";
 
 function createSlug(title: string) {
   return title
@@ -31,7 +33,58 @@ function extractJsonArray(text: string) {
   return cleaned.slice(start, end + 1);
 }
 
-export async function POST(req: Request) {
+type GeneratedArticle = {
+  title: string;
+  idea: string;
+  content: string;
+};
+
+async function createUniqueSlug(title: string) {
+  const baseSlug = createSlug(title) || `artikel-${Date.now()}`;
+  let candidate = baseSlug;
+  let counter = 2;
+
+  while (true) {
+    const exists = await prisma.article.findUnique({
+      where: { slug: candidate },
+      select: { id: true },
+    });
+
+    if (!exists) return candidate;
+
+    candidate = `${baseSlug}-${counter}`;
+    counter += 1;
+  }
+}
+
+async function translateArticle(client: Awaited<ReturnType<typeof getOpenAI>>, article: GeneratedArticle, targetLocale: SupportedLocale): Promise<GeneratedArticle> {
+  const response = await client.responses.create({
+    model: "gpt-4o-mini",
+    input: `
+Übersetze den folgenden Blogartikel vollständig ins ${targetLocale === "de" ? "Deutsche" : "Englische"}.
+Antworte ausschließlich mit gültigem JSON im Format:
+{
+  "title": "...",
+  "idea": "...",
+  "content": "..."
+}
+
+Titel: ${article.title}
+Idee: ${article.idea}
+Inhalt: ${article.content}
+`,
+  });
+
+  const translated = JSON.parse(response.output_text);
+
+  return {
+    title: String(translated.title || article.title),
+    idea: String(translated.idea || article.idea),
+    content: String(translated.content || article.content),
+  };
+}
+
+export async function POST(req: NextRequest) {
   try {
     if (!process.env.OPENAI_API_KEY) {
       return NextResponse.json({
@@ -49,7 +102,13 @@ export async function POST(req: Request) {
       affiliateTool,
       seoStrength,
       articleType,
+      locale: requestedLocale,
     } = await req.json();
+
+    const locale = requestedLocale
+      ? normalizeLocale(requestedLocale)
+      : localeFromCookie(req.headers.get("cookie"));
+    const secondaryLocale = otherLocale(locale);
 
     const client = await getOpenAI();
 
@@ -58,7 +117,7 @@ export async function POST(req: Request) {
     const response = await client.responses.create({
       model: "gpt-4o-mini",
       input: `
-Erstelle ${safeCount} deutsche SEO-Blogartikel.
+    Erstelle ${safeCount} SEO-Blogartikel auf ${locale === "de" ? "Deutsch" : "Englisch"}.
 
 WICHTIG:
 Antworte ausschließlich mit gültigem JSON.
@@ -103,6 +162,7 @@ Artikel-Regeln:
       title: string;
       slug: string | null;
       category: string | null;
+      locale: string;
     }[] = [];
 
     for (const article of articles) {
@@ -112,13 +172,8 @@ Artikel-Regeln:
 
       if (!title || !content) continue;
 
-      const slug = createSlug(title);
-
-      const exists = await prisma.article.findUnique({
-        where: { slug },
-      });
-
-      if (exists) continue;
+      const translationGroup = randomUUID();
+      const slug = await createUniqueSlug(title);
 
       const savedArticle = await prisma.article.create({
         data: {
@@ -127,6 +182,23 @@ Artikel-Regeln:
           category,
           idea,
           content,
+          locale,
+          translationGroup,
+        },
+      });
+
+      const translated = await translateArticle(client, { title, idea, content }, secondaryLocale);
+      const translatedSlug = await createUniqueSlug(translated.title);
+
+      await prisma.article.create({
+        data: {
+          title: translated.title,
+          slug: translatedSlug,
+          category,
+          idea: translated.idea,
+          content: translated.content,
+          locale: secondaryLocale,
+          translationGroup,
         },
       });
 
@@ -137,6 +209,7 @@ Artikel-Regeln:
         title: savedArticle.title,
         slug: savedArticle.slug ?? slug,
         category: savedArticle.category ?? category,
+        locale: savedArticle.locale,
       });
     }
 

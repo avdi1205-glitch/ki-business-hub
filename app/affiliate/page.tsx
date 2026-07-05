@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "../../lib/prisma";
 import AffiliateButton from "../blog/[slug]/AffiliateButton";
+import { getTranslations } from "next-intl/server";
 
 function createSlug(name: string) {
   return name
@@ -16,6 +17,7 @@ function createSlug(name: string) {
 }
 
 export default async function AffiliatePage() {
+  const t = await getTranslations("affiliate");
   const links = await prisma.affiliateLink.findMany({
     orderBy: { rating: "desc" },
   });
@@ -27,16 +29,15 @@ export default async function AffiliatePage() {
 
         <div className="relative mx-auto max-w-6xl">
           <p className="mb-4 font-bold text-green-400">
-            💰 Affiliate Empfehlungen
+            💰 {t("eyebrow")}
           </p>
 
           <h1 className="mb-6 text-5xl font-bold tracking-tight md:text-7xl">
-            Empfohlene Tools für dein Online-Business
+            {t("title")}
           </h1>
 
           <p className="mb-10 max-w-3xl text-xl leading-8 text-slate-100">
-            Hier findest du ausgewählte Tools für KI, Hosting, VPN,
-            Automatisierung und Affiliate-Marketing.
+            {t("subtitle")}
           </p>
         </div>
       </section>
@@ -77,13 +78,13 @@ export default async function AffiliatePage() {
                   href={`/tools/${createSlug(link.name)}`}
                   className="block rounded-xl border border-blue-400/30 bg-blue-600 px-4 py-3 text-center font-bold text-white shadow-sm hover:bg-blue-700"
                 >
-                  Mehr erfahren
+                  {t("readMore")}
                 </Link>
 
                 <AffiliateButton
                   id={link.id}
                   url={link.url}
-                  text={link.buttonText || "🚀 Angebot ansehen"}
+                  text={link.buttonText || `🚀 ${t("cta")}`}
                   clickSource="affiliate-directory"
                 />
               </div>

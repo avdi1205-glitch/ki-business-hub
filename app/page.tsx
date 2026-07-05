@@ -12,67 +12,129 @@ import { TestimonialsSection } from "./components/TestimonialsSection";
 import NewsletterForm from "./components/NewsletterForm";
 import CheckoutCtaButton from "./components/CheckoutCtaButton";
 import { getSiteUrl } from "../lib/site-url";
+import { getLocale, getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "KI Business Hub | KI-Tools, Content-Factory und Affiliate-Workflow",
-  description:
-    "Nutze KI-Content, Affiliate-Tools und Automatisierung in einem klaren Workflow. Starte kostenlos und upgrade bei Bedarf auf Pro oder Agency.",
-  alternates: {
-    canonical: "/",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+
+  if (locale === "en") {
+    return {
+      title: "KI Business Hub | AI tools, content factory, and affiliate workflow",
+      description:
+        "Use AI content, affiliate tools, and automation in one clear workflow. Start free and upgrade to Pro or Agency when you need it.",
+      alternates: {
+        canonical: "/",
+      },
+    };
+  }
+
+  return {
+    title: "KI Business Hub | KI-Tools, Content-Factory und Affiliate-Workflow",
+    description:
+      "Nutze KI-Content, Affiliate-Tools und Automatisierung in einem klaren Workflow. Starte kostenlos und upgrade bei Bedarf auf Pro oder Agency.",
+    alternates: {
+      canonical: "/",
+    },
+  };
+}
 
 export default async function Home() {
   const siteUrl = getSiteUrl();
+  const locale = await getLocale();
+  const t = await getTranslations("home");
 
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "Wie viel kann ich wirklich verdienen?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Das haengt von Nische, Reichweite und Umsetzung ab. Die Plattform hilft dir, Inhalte schneller zu erstellen und Monetarisierung strukturierter umzusetzen.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Ist das wirklich kostenlos?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Ja, du kannst kostenlos starten. Fuer mehr Volumen, Automatisierung und Reports gibt es Pro fuer 39 EUR pro Monat.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Wie funktioniert die Affiliate-Bezahlung?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Du platzierst passende Empfehlungen und kannst Klicks tracken. Die Verguetung kommt vom jeweiligen Partnerprogramm und ist unterschiedlich.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Ist meine Seite wirklich sicher?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Es gibt technische Schutzmechanismen fuer Infrastruktur und Datenzugriff. Zusaetzlich solltest du starke Zugangsdaten und saubere Prozesse nutzen.",
-        },
-      },
-    ],
+    mainEntity:
+      locale === "en"
+        ? [
+            {
+              "@type": "Question",
+              name: "How much can I really earn?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "It depends on niche, reach, and execution. The platform helps you create content faster and implement monetization in a more structured way.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Is it really free?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Yes, you can start for free. For more volume, automation, and reporting, Pro is available for EUR 39 per month.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "How does affiliate payout work?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "You place relevant recommendations and can track clicks. Compensation comes from each partner program and varies.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Is my site really secure?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "There are technical protection mechanisms for infrastructure and data access. You should also use strong credentials and clean processes.",
+              },
+            },
+          ]
+        : [
+            {
+              "@type": "Question",
+              name: "Wie viel kann ich wirklich verdienen?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Das haengt von Nische, Reichweite und Umsetzung ab. Die Plattform hilft dir, Inhalte schneller zu erstellen und Monetarisierung strukturierter umzusetzen.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Ist das wirklich kostenlos?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Ja, du kannst kostenlos starten. Fuer mehr Volumen, Automatisierung und Reports gibt es Pro fuer 39 EUR pro Monat.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Wie funktioniert die Affiliate-Bezahlung?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Du platzierst passende Empfehlungen und kannst Klicks tracken. Die Verguetung kommt vom jeweiligen Partnerprogramm und ist unterschiedlich.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "Ist meine Seite wirklich sicher?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "Es gibt technische Schutzmechanismen fuer Infrastruktur und Datenzugriff. Zusaetzlich solltest du starke Zugangsdaten und saubere Prozesse nutzen.",
+              },
+            },
+          ],
   };
 
-  const tools = await prisma.affiliateLink.findMany({
-    orderBy: { rating: "desc" },
-    take: 3,
-  });
+  let tools: Awaited<ReturnType<typeof prisma.affiliateLink.findMany>> = [];
+  let articles: Awaited<ReturnType<typeof prisma.article.findMany>> = [];
 
-  const articles = await prisma.article.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 3,
-  });
+  try {
+    tools = await prisma.affiliateLink.findMany({
+      orderBy: { rating: "desc" },
+      take: 3,
+    });
+
+    articles = await prisma.article.findMany({
+      where: { locale } as any,
+      orderBy: { createdAt: "desc" },
+      take: 3,
+    });
+  } catch {
+    // Keep rendering the customer-facing page even if the local DB is unavailable.
+  }
 
   return (
     <>
@@ -91,7 +153,7 @@ export default async function Home() {
             "@type": "WebSite",
             name: "KI Business Hub",
             url: siteUrl,
-            inLanguage: "de-DE",
+            inLanguage: locale === "en" ? "en-US" : "de-DE",
           }),
         }}
       />
@@ -111,10 +173,10 @@ export default async function Home() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
-              🏆 Beste Tools 2026
+              🏆 {t("topToolsTitle")}
             </h2>
-            <p className="text-xl leading-8" style={{ color: "#e2e8f0" }}>
-              Die Top-Affiliate-Tools für maximale Konversion
+            <p className="text-xl leading-8" style={{ color: "var(--text-light)" }}>
+              {t("topToolsSubtitle")}
             </p>
           </div>
 
@@ -127,31 +189,31 @@ export default async function Home() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
-              🚀 Was uns EINZIGARTIG macht
+              🚀 {t("uniqueTitle")}
             </h2>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="p-8 rounded-xl" style={{ background: "rgba(59, 130, 246, 0.1)", border: "1px solid rgba(59, 130, 246, 0.3)", backdropFilter: "blur(10px)" }}>
               <div className="text-4xl mb-4">🤖</div>
-              <h3 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>Live AI Demo</h3>
-              <p className="leading-7" style={{ color: "#e2e8f0" }}>
-                Sieh LIVE wie die KI einen Artikel in 8 Sekunden schreibt
+              <h3 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>{t("uniqueAi")}</h3>
+              <p className="leading-7" style={{ color: "var(--text-light)" }}>
+                {t("uniqueAiText")}
               </p>
             </div>
 
             <div className="p-8 rounded-xl" style={{ background: "rgba(16, 185, 129, 0.1)", border: "1px solid rgba(16, 185, 129, 0.3)", backdropFilter: "blur(10px)" }}>
               <div className="text-4xl mb-4">📊</div>
-              <h3 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>Personalisierter ROI</h3>
-              <p className="leading-7" style={{ color: "#e2e8f0" }}>
-                Kalkulator zeigt DEIN Potential - nicht 0815 Durchschnitte
+              <h3 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>{t("uniqueRoi")}</h3>
+              <p className="leading-7" style={{ color: "var(--text-light)" }}>
+                {t("uniqueRoiText")}
               </p>
             </div>
 
             <div className="p-8 rounded-xl" style={{ background: "rgba(139, 92, 246, 0.1)", border: "1px solid rgba(139, 92, 246, 0.3)", backdropFilter: "blur(10px)" }}>
               <div className="text-4xl mb-4">⚡</div>
-              <h3 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>Full Automation</h3>
-              <p className="leading-7" style={{ color: "#e2e8f0" }}>
-                Von KI → SEO → Affiliate → Newsletter → Geld
+              <h3 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>{t("uniqueAutomation")}</h3>
+              <p className="leading-7" style={{ color: "var(--text-light)" }}>
+                {t("uniqueAutomationText")}
               </p>
             </div>
           </div>
@@ -163,7 +225,7 @@ export default async function Home() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
-              📝 Neueste AI-Artikel
+              📝 {t("latestArticlesTitle")}
             </h2>
           </div>
 
@@ -180,11 +242,11 @@ export default async function Home() {
                   <h3 className="text-xl font-bold mb-2 group-hover:text-blue-400 transition-colors" style={{ color: "var(--text-dark)" }}>
                     {article.title}
                   </h3>
-                  <p className="mb-4 leading-7" style={{ color: "#e2e8f0" }}>
+                  <p className="mb-4 leading-7" style={{ color: "var(--text-light)" }}>
                     {article.content.substring(0, 100)}...
                   </p>
                   <div className="flex items-center gap-2 text-blue-400 font-semibold group-hover:translate-x-1 transition-transform">
-                    Lesen →
+                    {t("articleReadMore")}
                   </div>
                 </div>
               </Link>
@@ -197,7 +259,7 @@ export default async function Home() {
               className="px-8 py-4 font-bold rounded-lg transition-all duration-300 transform hover:scale-105 inline-block"
               style={{ background: "var(--primary)", color: "white" }}
             >
-              Alle Artikel anschauen
+              {t("latestArticlesLink")}
             </Link>
           </div>
         </div>
@@ -216,10 +278,10 @@ export default async function Home() {
       <section className="py-24 bg-gradient-to-r from-slate-900 to-slate-800 text-white">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Bereit fuer den naechsten Schritt?
+            {t("finalTitle")}
           </h2>
           <p className="text-xl leading-8 mb-8" style={{ color: "#e2e8f0" }}>
-            Starte kostenlos oder geh direkt in Pro, wenn du deinen Content- und Affiliate-Workflow heute produktiv einsetzen willst.
+            {t("finalSubtitle")}
           </p>
           <div className="flex flex-col items-center gap-4">
             <div className="flex flex-col gap-4 sm:flex-row">
@@ -227,25 +289,25 @@ export default async function Home() {
                 href="/content-factory"
                 className="px-10 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105"
               >
-                🚀 Kostenlos starten
+                🚀 {t("finalFreeCta")}
               </Link>
               <CheckoutCtaButton
                 href="/api/checkout?plan=pro"
                 ctaKey="final-pro"
                 variantA={{
-                  label: "💎 Pro fuer 39 EUR freischalten",
+                  label: `💎 ${t("finalProCta")}`,
                   sourceSuffix: "variant-a",
                   className: "px-10 py-4 rounded-lg border border-cyan-400/30 bg-cyan-500/10 text-cyan-100 font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:bg-cyan-500/20",
                 }}
                 variantB={{
-                  label: "⚡ Pro jetzt aktivieren",
+                  label: `⚡ ${t("finalProAltCta")}`,
                   sourceSuffix: "variant-b",
                   className: "px-10 py-4 rounded-lg border border-emerald-400/30 bg-emerald-500/10 text-emerald-100 font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:bg-emerald-500/20",
                 }}
               />
             </div>
             <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-5 text-left">
-              <p className="mb-3 text-sm font-semibold text-cyan-300">📧 Hol dir wöchentliche Conversion- und Tool-Updates</p>
+              <p className="mb-3 text-sm font-semibold text-cyan-300">📧 {t("newsletterTitle")}</p>
               <NewsletterForm source="homepage-final-cta" />
             </div>
           </div>

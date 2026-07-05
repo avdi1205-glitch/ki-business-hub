@@ -3,27 +3,37 @@ export default async function KontaktPage({
 }: {
   searchParams: Promise<{ plan?: string; source?: string; intent?: string }>;
 }) {
+  const t = {
+    title: "Contact",
+    intro: "Questions, feedback, or want to get in touch?",
+    request: "Request",
+    source: "Source",
+    howEarn: "How you get paid",
+    email: "Email",
+    website: "Website",
+    note: "Note",
+  };
   const { plan, source, intent } = await searchParams;
   const planLabel = plan?.toLowerCase() === "agency"
-    ? "Agency Plan"
+    ? "Agency plan"
     : plan?.toLowerCase() === "pro"
-      ? "Pro Plan"
+      ? "Pro plan"
       : plan?.toUpperCase();
 
   const sourceLabels: Record<string, string> = {
-    "hero-start-free-start": "Startseite Hero - Kostenlos starten",
-    "hero-start-direct-start": "Startseite Hero - Direkt loslegen",
-    "hero-pro-price-view": "Startseite Hero - Pro ansehen",
-    "hero-pro-direct-pro": "Startseite Hero - Pro direkt",
-    "pricing-pro-variant-a": "Preisbereich - Pro Variante A",
-    "pricing-pro-variant-b": "Preisbereich - Pro Variante B",
-    "pricing-agency-variant-a": "Preisbereich - Agency Variante A",
-    "pricing-agency-variant-b": "Preisbereich - Agency Variante B",
-    "final-pro-variant-a": "Final CTA - Pro Variante A",
-    "final-pro-variant-b": "Final CTA - Pro Variante B",
-    "pricing-card-pro": "Preiskarte Pro",
-    "pricing-card-agency": "Preiskarte Agency",
-    "hero-secondary": "Startseite Hero Secondary",
+    "hero-start-free-start": "Homepage Hero - Start free",
+    "hero-start-direct-start": "Homepage Hero - Get started",
+    "hero-pro-price-view": "Homepage Hero - View Pro",
+    "hero-pro-direct-pro": "Homepage Hero - Go Pro",
+    "pricing-pro-variant-a": "Pricing section - Pro variant A",
+    "pricing-pro-variant-b": "Pricing section - Pro variant B",
+    "pricing-agency-variant-a": "Pricing section - Agency variant A",
+    "pricing-agency-variant-b": "Pricing section - Agency variant B",
+    "final-pro-variant-a": "Final CTA - Pro variant A",
+    "final-pro-variant-b": "Final CTA - Pro variant B",
+    "pricing-card-pro": "Pricing card Pro",
+    "pricing-card-agency": "Pricing card Agency",
+    "hero-secondary": "Homepage Hero secondary",
     "final-cta": "Final CTA",
   };
 
@@ -35,51 +45,51 @@ export default async function KontaktPage({
     <main className="min-h-screen p-10" style={{ background: "var(--background)", color: "var(--text-dark)" }}>
       <section className="mx-auto max-w-4xl rounded-2xl p-10" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
         <h1 className="mb-8 text-5xl font-bold" style={{ color: "var(--text-dark)" }}>
-          Kontakt
+          {t.title}
         </h1>
 
         <p className="mb-6" style={{ color: "var(--text-light)" }}>
-          Du hast Fragen, Feedback oder möchtest mit uns Kontakt aufnehmen?
+          {t.intro}
         </p>
 
         {(plan || intent === "upgrade") && (
           <div className="mb-8 rounded-xl p-5" style={{ background: "rgba(59, 130, 246, 0.08)", border: "1px solid rgba(59, 130, 246, 0.24)" }}>
             <p className="font-semibold" style={{ color: "var(--text-dark)" }}>
-              Anfrage: {plan ? `${planLabel} Plan` : "Upgrade"}
+              {t.request}: {plan ? planLabel : "Upgrade"}
             </p>
             <p className="mt-2 text-sm" style={{ color: "var(--text-light)" }}>
-              Quelle: {sourceLabel}. Hinterlege `PRO_CHECKOUT_URL` und `AGENCY_CHECKOUT_URL` in Vercel, damit Kunden direkt bezahlen können.
+              {t.source}: {sourceLabel}. Set PRO_CHECKOUT_URL and AGENCY_CHECKOUT_URL in Vercel so customers can pay directly.
             </p>
           </div>
         )}
 
         <div className="space-y-4" style={{ color: "var(--text-light)" }}>
           <p>
-            <strong>E-Mail:</strong><br />
+            <strong>{t.email}:</strong><br />
             deine@email.de
           </p>
 
           <p>
-            <strong>Website:</strong><br />
+            <strong>{t.website}:</strong><br />
             KI Business Hub
           </p>
 
           <div className="pt-6">
             <p className="text-sm" style={{ color: "#fbbf24" }}>
-              Hinweis: Vor dem Livegang bitte deine echte Kontakt-E-Mail eintragen.
+              {t.note}: Before launch, replace this with your real contact email.
             </p>
             <p className="mt-2 text-sm" style={{ color: "var(--text-muted)" }}>
-              Wenn du Stripe Payment Links oder Lemon Squeezy Links hast, trage sie in Vercel als `PRO_CHECKOUT_URL` und `AGENCY_CHECKOUT_URL` ein. Dann funktionieren die Upgrade-Buttons direkt.
+              If you have Stripe Payment Links or Lemon Squeezy links, add them in Vercel as PRO_CHECKOUT_URL and AGENCY_CHECKOUT_URL. Then the upgrade buttons work directly.
             </p>
           </div>
         </div>
 
         <div className="mt-8 rounded-xl p-6" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
-          <h2 className="mb-3 text-2xl font-bold" style={{ color: "var(--text-dark)" }}>Wie du Geld bekommst</h2>
+          <h2 className="mb-3 text-2xl font-bold" style={{ color: "var(--text-dark)" }}>{t.howEarn}</h2>
           <div className="space-y-2 text-sm" style={{ color: "var(--text-light)" }}>
-            <p>1. Affiliate-Klicks und Verkäufe laufen über deine Partnerprogramme.</p>
-            <p>2. Direkte Plan-Umsätze laufen über deinen Zahlungsanbieter, z. B. Stripe Payment Links.</p>
-            <p>3. Newsletter und A/B-Tests helfen dir, mehr Klicks und mehr bezahlte Conversions zu erzeugen.</p>
+            <p>1. Affiliate clicks and sales run through your partner programs.</p>
+            <p>2. Direct plan revenue runs through your payment provider, for example Stripe Payment Links.</p>
+            <p>3. Newsletters and A/B tests help you generate more clicks and more paid conversions.</p>
           </div>
         </div>
       </section>

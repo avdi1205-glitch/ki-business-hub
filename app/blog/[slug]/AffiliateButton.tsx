@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLocale } from "next-intl";
 
 type Props = {
   id: number;
@@ -17,6 +18,7 @@ export default function AffiliateButton({
   articleSlug,
   clickSource,
 }: Props) {
+  const locale = useLocale();
   const [clicked, setClicked] = useState(false);
   const [activeTestId, setActiveTestId] = useState<number | null>(null);
   const [assignedVariant, setAssignedVariant] = useState<"A" | "B" | null>(null);
@@ -95,7 +97,7 @@ export default function AffiliateButton({
       }`}
       style={{ color: clicked ? "#bbf7d0" : "#f8fafc", textShadow: clicked ? "none" : "0 1px 1px rgba(0,0,0,0.25)" }}
     >
-      {clicked ? "✅ Wird geöffnet..." : activeText}
+      {clicked ? (locale === "en" ? "✅ Opening..." : "✅ Wird geöffnet...") : activeText}
     </a>
   );
 }

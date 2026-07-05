@@ -6,7 +6,7 @@ type Props = {
 
 export default function DeleteButton({ id }: Props) {
   async function deleteArticle() {
-    if (!confirm("Artikel wirklich löschen?")) {
+    if (!confirm("Delete this article?")) {
       return;
     }
 
@@ -26,7 +26,7 @@ export default function DeleteButton({ id }: Props) {
       onClick={deleteArticle}
       className="mt-4 bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg"
     >
-      Löschen
+      Delete
     </button>
   );
 }

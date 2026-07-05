@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useLocale } from "next-intl";
 
 type AffiliateButtonProps = {
   toolId: number;
@@ -17,12 +18,13 @@ export default function OptimizedAffiliateButton({
   toolUrl,
   articleSlug,
   clickSource,
-  buttonText = "Jetzt ansehen",
+  buttonText,
 }: AffiliateButtonProps) {
+  const locale = useLocale();
   const [clicked, setClicked] = useState(false);
   const [activeTestId, setActiveTestId] = useState<number | null>(null);
   const [assignedVariant, setAssignedVariant] = useState<"A" | "B" | null>(null);
-  const [activeText, setActiveText] = useState(buttonText);
+  const [activeText, setActiveText] = useState(buttonText || (locale === "en" ? "View now" : "Jetzt ansehen"));
 
   const storageKey = useMemo(() => (activeTestId ? `ab-test-${activeTestId}` : null), [activeTestId]);
 
@@ -111,7 +113,7 @@ export default function OptimizedAffiliateButton({
           : "bg-gradient-to-r from-cyan-500 to-purple-500 text-white hover:from-cyan-600 hover:to-purple-600"
       }`}
     >
-      {clicked ? "✅ Weiterleitung..." : `🔗 ${activeText} → ${toolName}`}
+      {clicked ? (locale === "en" ? "✅ Redirecting..." : "✅ Weiterleitung...") : `🔗 ${activeText} → ${toolName}`}
     </a>
   );
 }

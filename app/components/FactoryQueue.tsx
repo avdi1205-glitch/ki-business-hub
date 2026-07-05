@@ -1,3 +1,7 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+
 type QueueItem = {
   title: string;
   progress: number;
@@ -9,15 +13,17 @@ type Props = {
 };
 
 export default function FactoryQueue({ queue }: Props) {
+  const t = useTranslations("contentFactory");
+
   return (
     <div className="mt-6 rounded-2xl border border-white/10 bg-white/10 p-6">
       <h2 className="mb-6 text-2xl font-bold">
-        📋 Produktions-Warteschlange
+        📋 {t("queueTitle")}
       </h2>
 
       {queue.length === 0 ? (
         <p className="text-gray-400">
-          Noch keine Artikel in der Warteschlange.
+          {t("queueEmpty")}
         </p>
       ) : (
         <div className="space-y-5">
@@ -38,7 +44,11 @@ export default function FactoryQueue({ queue }: Props) {
                       : "text-gray-400"
                   }
                 >
-                  {item.status}
+                  {item.status === "Fertig"
+                    ? t("statusDone")
+                    : item.status === "In Arbeit"
+                      ? t("statusInProgress")
+                      : t("statusWaiting")}
                 </span>
               </div>
 
@@ -52,7 +62,7 @@ export default function FactoryQueue({ queue }: Props) {
               </div>
 
               <p className="mt-2 text-sm text-gray-400">
-                {item.progress}% abgeschlossen
+                {item.progress}% {t("done")}
               </p>
             </div>
           ))}

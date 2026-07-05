@@ -3,24 +3,27 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const t = useTranslations("nav");
 
   const links = [
-    { href: "/", label: "Home" },
-    { href: "/blog", label: "Blog" },
-    { href: "/tools", label: "KI Tools" },
-    { href: "/beste-tools", label: "Beste Tools" },
-    { href: "/affiliate", label: "Affiliate" },
+    { href: "/", label: t("home") },
+    { href: "/blog", label: t("blog") },
+    { href: "/tools", label: t("tools") },
+    { href: "/beste-tools", label: t("bestTools") },
+    { href: "/affiliate", label: t("affiliate") },
   ];
 
   const adminLinks = [
-    { href: "/admin/dashboard", label: "Dashboard" },
-    { href: "/admin", label: "Artikel" },
-    { href: "/admin/affiliate", label: "Affiliate Manager" },
-    { href: "/create-article", label: "Create Article" },
+    { href: "/admin/dashboard", label: t("dashboard") },
+    { href: "/admin", label: t("articles") },
+    { href: "/admin/affiliate", label: t("affiliateManager") },
+    { href: "/create-article", label: t("createArticle") },
   ];
 
   return (
@@ -40,7 +43,7 @@ export default function Navbar() {
             </span>
             <span className="flex flex-col leading-tight">
               <span className="text-sm font-semibold uppercase tracking-[0.22em] text-slate-300">KI Business Hub</span>
-              <span className="text-xs text-slate-400 hidden sm:block">Verdienen, testen, optimieren</span>
+              <span className="text-xs text-slate-400 hidden sm:block">{t("brandTag")}</span>
             </span>
           </Link>
 
@@ -84,8 +87,10 @@ export default function Navbar() {
               href="/content-factory"
               className="rounded-full border border-emerald-400/30 bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-2 text-sm font-bold text-slate-950 shadow-lg shadow-emerald-500/20 transition-transform hover:-translate-y-0.5"
             >
-              Kostenlos starten
+              {t("freeStart")}
             </Link>
+
+            <LanguageSwitcher />
           </div>
 
           <div className="flex items-center gap-2 lg:hidden">
@@ -93,13 +98,15 @@ export default function Navbar() {
               href="/content-factory"
               className="rounded-full border border-emerald-400/30 bg-emerald-500 px-3 py-2 text-xs font-bold text-slate-950 shadow-sm shadow-emerald-500/20"
             >
-              Starten
+              {t("mobileStart")}
             </Link>
+
+            <LanguageSwitcher />
 
             <button
               onClick={() => setOpen(true)}
               className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-lg font-bold text-slate-100 shadow-sm"
-              aria-label="Menü öffnen"
+              aria-label={t("openMenu")}
             >
               ☰
             </button>
@@ -123,16 +130,16 @@ export default function Navbar() {
             <div className="mb-8 flex items-center justify-between">
               <div>
                 <p className="text-xl font-bold" style={{ color: "var(--text-dark)" }}>
-                  📋 Menü
+                  📋 {t("menu")}
                 </p>
                 <p className="text-sm" style={{ color: "var(--text-light)" }}>
-                  Schnell zu den wichtigsten Bereichen
+                  {t("quickNav")}
                 </p>
               </div>
               <button
                 onClick={() => setOpen(false)}
                 className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-2xl font-bold text-slate-100"
-                aria-label="Menü schließen"
+                aria-label={t("closeMenu")}
               >
                 ×
               </button>
@@ -158,7 +165,7 @@ export default function Navbar() {
 
             <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-4">
               <p className="mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
-                Admin Panel
+                {t("adminPanel")}
               </p>
               {adminLinks.map((link) => (
                 <Link
@@ -185,7 +192,7 @@ export default function Navbar() {
                 className="rounded-lg px-3 py-2 transition-colors hover:bg-white/5"
                 style={{ color: "var(--text-light)" }}
               >
-                Impressum
+                {t("imprint")}
               </Link>
               <Link
                 href="/datenschutz"
@@ -193,7 +200,7 @@ export default function Navbar() {
                 className="rounded-lg px-3 py-2 transition-colors hover:bg-white/5"
                 style={{ color: "var(--text-light)" }}
               >
-                Datenschutz
+                {t("privacy")}
               </Link>
               <Link
                 href="/kontakt"
@@ -201,7 +208,7 @@ export default function Navbar() {
                 className="rounded-lg px-3 py-2 transition-colors hover:bg-white/5"
                 style={{ color: "var(--text-light)" }}
               >
-                Kontakt
+                {t("contact")}
               </Link>
             </div>
           </div>

@@ -18,11 +18,11 @@ export default function SEOAnalyzerPage() {
       });
       const data = await response.json();
       if (!response.ok || !data.success) {
-        throw new Error(data.error || "Analyse fehlgeschlagen");
+        throw new Error(data.error || "Analysis failed");
       }
-      setStatus(`${data.results.length} Artikel analysiert. Neuer Durchschnitt: ${data.average} Punkte.`);
+      setStatus(`${data.results.length} articles analyzed. New average: ${data.average} points.`);
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Analyse fehlgeschlagen");
+      setStatus(error instanceof Error ? error.message : "Analysis failed");
     } finally {
       setLoading(false);
     }
@@ -33,30 +33,30 @@ export default function SEOAnalyzerPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>🔍 SEO-Analyzer</h1>
-          <p style={{ color: "var(--text-light)" }}>Optimiere deine Artikel für bessere Rankings</p>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>🔍 SEO analyzer</h1>
+          <p style={{ color: "var(--text-light)" }}>Optimize your articles for better rankings</p>
         </div>
 
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <StatCard
-            title="Durchschn. SEO-Score"
+            title="Avg. SEO score"
             value="78"
-            change="+5 von letztem Monat"
+            change="+5 vs last month"
             icon="📊"
             trend="up"
           />
           <StatCard
-            title="Artikel analysiert"
+            title="Articles analyzed"
             value="39"
-            change="100% der Artikel"
+            change="100% of articles"
             icon="📝"
             trend="up"
           />
           <StatCard
-            title="Optimierungspotential"
+            title="Optimization potential"
             value="245 Punkte"
-            change="über alle Artikel"
+            change="across all articles"
             icon="⚡"
             trend="up"
           />
@@ -65,17 +65,17 @@ export default function SEOAnalyzerPage() {
         {/* Analysis */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <SimpleChart
-            title="SEO-Score Verteilung"
+            title="SEO score distribution"
             data={[
-              { label: "Exzellent (90-100)", value: 12 },
-              { label: "Sehr gut (80-89)", value: 18 },
-              { label: "Gut (70-79)", value: 7 },
+              { label: "Excellent (90-100)", value: 12 },
+              { label: "Very good (80-89)", value: 18 },
+              { label: "Good (70-79)", value: 7 },
               { label: "Okay (60-69)", value: 2 },
             ]}
           />
 
           <SimpleChart
-            title="Top Keywords Rankings"
+            title="Top keyword rankings"
             data={[
               { label: "KI Business Tools", value: 95 },
               { label: "Content Factory", value: 87 },
@@ -87,18 +87,18 @@ export default function SEOAnalyzerPage() {
 
         {/* Top Performers */}
         <div className="rounded-lg p-6 mb-8" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
-          <h2 className="text-xl font-semibold mb-4" style={{ color: "var(--text-dark)" }}>⭐ Top Artikel</h2>
+          <h2 className="text-xl font-semibold mb-4" style={{ color: "var(--text-dark)" }}>⭐ Top articles</h2>
           
           <div className="space-y-3">
             {[
-              { title: "10 beste KI Tools für 2026", score: 94, words: "2.450", keywords: 8 },
+              { title: "10 best AI tools for 2026", score: 94, words: "2,450", keywords: 8 },
               { title: "Affiliate Marketing Guide", score: 91, words: "2.120", keywords: 6 },
               { title: "Content Factory Automation", score: 88, words: "1.890", keywords: 5 },
             ].map((article, idx) => (
               <div key={idx} className="flex items-center justify-between p-4 rounded-lg transition-colors cursor-pointer" style={{ background: "rgba(59, 130, 246, 0.05)", border: "1px solid rgba(59, 130, 246, 0.2)" }}>
                 <div className="flex-1">
                   <p className="font-medium" style={{ color: "var(--text-dark)" }}>{article.title}</p>
-                  <p className="text-sm" style={{ color: "var(--text-light)" }}>{article.words} Wörter • {article.keywords} Keywords</p>
+                  <p className="text-sm" style={{ color: "var(--text-light)" }}>{article.words} words • {article.keywords} keywords</p>
                 </div>
                 <div className="text-right">
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-blue-500">
@@ -112,26 +112,26 @@ export default function SEOAnalyzerPage() {
 
         {/* Recommendations */}
         <div className="rounded-lg p-6" style={{ background: "rgba(59, 130, 246, 0.08)", border: "1px solid rgba(59, 130, 246, 0.3)" }}>
-          <h2 className="text-xl font-semibold mb-4" style={{ color: "var(--text-dark)" }}>💡 Empfehlungen</h2>
+          <h2 className="text-xl font-semibold mb-4" style={{ color: "var(--text-dark)" }}>💡 Recommendations</h2>
           
           <ul className="space-y-2">
             <li className="flex items-start gap-3">
               <span className="font-bold" style={{ color: "var(--success)" }}>✓</span>
-              <span style={{ color: "var(--text-light)" }}>Alle Artikel haben 1.500+ Wörter (Best Practice erfüllt)</span>
+              <span style={{ color: "var(--text-light)" }}>All articles have 1,500+ words (best practice met)</span>
             </li>
             <li className="flex items-start gap-3">
               <span className="font-bold" style={{ color: "var(--accent)" }}>⚠</span>
-              <span style={{ color: "var(--text-light)" }}>3 Artikel könnten mit H2-Überschriften optimiert werden</span>
+              <span style={{ color: "var(--text-light)" }}>3 articles could be improved with H2 headings</span>
             </li>
             <li className="flex items-start gap-3">
               <span className="font-bold" style={{ color: "var(--accent)" }}>⚠</span>
-              <span style={{ color: "var(--text-light)" }}>Fokus-Keyword-Dichte bei 5 Artikeln optimierbar</span>
+              <span style={{ color: "var(--text-light)" }}>Focus keyword density could be improved on 5 articles</span>
             </li>
           </ul>
 
           <div className="mt-6">
             <ActionButton
-              label={loading ? "Analysiere..." : "Alle Artikel analysieren"}
+              label={loading ? "Analyzing..." : "Analyze all articles"}
               onClick={handleAnalyze}
               disabled={loading}
             />

@@ -3,8 +3,11 @@
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import CheckoutCtaButton from "./CheckoutCtaButton";
+import { useLocale, useTranslations } from "next-intl";
 
 export default function ConversionHero() {
+  const t = useTranslations("home");
+  const locale = useLocale();
   const [seconds, setSeconds] = useState(3599); // 59:59 countdown
 
   useEffect(() => {
@@ -31,20 +34,23 @@ export default function ConversionHero() {
         {/* Urgency Badge */}
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/20 border border-red-500/50 rounded-full mb-8 animate-pulse">
           <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-          <span className="text-sm font-semibold text-red-300">⏰ Kostenlos testen, erst dann upgraden</span>
+          <span className="text-sm font-semibold text-red-300">⏰ {t("heroBadge")}</span>
         </div>
 
         {/* Main Headline */}
         <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-cyan-400 to-green-400 bg-clip-text text-transparent leading-tight">
-          Baue dir mit KI-Content
+          {t("heroTitle1")}
           <br />
-          ein planbares Online-Einkommen auf
+          {t("heroTitle2")}
         </h1>
 
         {/* Subheading */}
         <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-8">
-          Erstelle KI-Artikel, setze Affiliate-Links sinnvoll ein und automatisiere deinen Content-Workflow.
-          <span className="text-green-400 font-semibold"> Starte kostenlos</span> und wechsle erst auf Pro oder Agency, wenn sich der Output fuer dich lohnt.
+          {t("heroSubtitle")}
+          <span className="text-green-400 font-semibold"> {t("heroHighlight")}</span>
+          {locale === "en"
+            ? " and only switch to Pro or Agency when the output is worth it for you."
+            : " und wechsle erst auf Pro oder Agency, wenn sich der Output fuer dich lohnt."}
         </p>
 
         {/* CTA Section */}
@@ -54,12 +60,12 @@ export default function ConversionHero() {
             href="/content-factory"
             ctaKey="hero-start"
             variantA={{
-              label: "🚀 Kostenlos starten",
+              label: `🚀 ${t("heroPrimaryCta")}`,
               sourceSuffix: "free-start",
               className: "group relative px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105 active:scale-95",
             }}
             variantB={{
-              label: "⚡ Direkt loslegen",
+              label: `⚡ ${t("heroPrimaryAltCta")}`,
               sourceSuffix: "direct-start",
               className: "group relative px-8 py-4 bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-emerald-500/50 transition-all duration-300 transform hover:scale-105 active:scale-95",
             }}
@@ -70,12 +76,12 @@ export default function ConversionHero() {
             href="/api/checkout?plan=pro"
             ctaKey="hero-pro"
             variantA={{
-              label: "💎 Pro fuer 39 EUR ansehen",
+              label: `💎 ${t("heroSecondaryCta")}`,
               sourceSuffix: "price-view",
               className: "px-8 py-4 bg-blue-500/20 border-2 border-blue-400 text-blue-300 font-bold text-lg rounded-lg hover:bg-blue-500/30 transition-all duration-300",
             }}
             variantB={{
-              label: "🔥 Pro direkt testen",
+              label: `🔥 ${t("heroSecondaryAltCta")}`,
               sourceSuffix: "direct-pro",
               className: "px-8 py-4 bg-cyan-500/20 border-2 border-cyan-400 text-cyan-200 font-bold text-lg rounded-lg hover:bg-cyan-500/30 transition-all duration-300",
             }}
@@ -84,7 +90,7 @@ export default function ConversionHero() {
 
         {/* Countdown Timer (Urgency) */}
         <div className="inline-block mb-12 p-6 bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/30 rounded-lg">
-          <p className="text-gray-400 text-sm mb-2">🔥 Nächste Preisprüfung in:</p>
+          <p className="text-gray-400 text-sm mb-2">🔥 {t("heroCountdownLabel")}</p>
           <div className="flex gap-4 justify-center text-3xl font-bold font-mono">
             <div className="text-red-400">
               {String(mins).padStart(2, "0")}:{String(secs).padStart(2, "0")}
@@ -95,9 +101,9 @@ export default function ConversionHero() {
         {/* Social Proof - Numbers */}
         <div className="grid grid-cols-3 md:grid-cols-3 gap-6 mb-12">
           {[
-            { value: "1.247+", label: "Aktive Nutzer" },
-            { value: "50+", label: "Artikel pro Monat mit Pro" },
-            { value: "39 EUR", label: "Startpreis fuer Pro" },
+            { value: "1.247+", label: t("statUsers") },
+            { value: "50+", label: t("statArticles") },
+            { value: "39 EUR", label: t("statPrice") },
           ].map((stat, idx) => (
             <div
               key={idx}
@@ -114,9 +120,9 @@ export default function ConversionHero() {
         {/* Social Proof - Testimonials */}
         <div className="space-y-3 mb-12">
           {[
-            "✅ Kostenlos testen und erst bei echtem Nutzen upgraden",
-            "✅ Pro passt fuer Solo-Business und Creator-Workflows",
-            "✅ Agency lohnt sich bei Kundenprojekten und Team-Content",
+            `✅ ${t("trustFree")}`,
+            `✅ ${t("trustPro")}`,
+            `✅ ${t("trustAgency")}`,
           ].map((text, idx) => (
             <div
               key={idx}
@@ -132,15 +138,15 @@ export default function ConversionHero() {
         <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-400">
           <div className="flex items-center gap-2">
             <span>🔒</span>
-            <span>100% Sicher</span>
+            <span>{t("trustSecure")}</span>
           </div>
           <div className="flex items-center gap-2">
             <span>💳</span>
-            <span>Monatlich kündbar</span>
+            <span>{t("trustMonthly")}</span>
           </div>
           <div className="flex items-center gap-2">
             <span>⭐</span>
-            <span>Live mit Stripe Checkout</span>
+            <span>{t("trustStripe")}</span>
           </div>
         </div>
       </div>

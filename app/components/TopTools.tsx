@@ -1,5 +1,6 @@
 import Link from "next/link";
 import AffiliateButton from "../blog/[slug]/AffiliateButton";
+import { useTranslations } from "next-intl";
 
 type Tool = {
   id: number;
@@ -26,13 +27,12 @@ function createSlug(name: string) {
 }
 
 export default function TopTools({ tools }: { tools: Tool[] }) {
+  const t = useTranslations("home");
   const topTools = tools.slice(0, 3);
 
   return (
     <section className="mb-12">
-      <h2 className="text-3xl font-bold mb-6">
-        🏆 Unsere Top 3 Empfehlungen
-      </h2>
+      <h2 className="text-3xl font-bold mb-6">🏆 {t("topToolsSectionTitle")}</h2>
 
       <div className="grid md:grid-cols-3 gap-6">
         {topTools.map((tool, index) => (
@@ -41,7 +41,7 @@ export default function TopTools({ tools }: { tools: Tool[] }) {
             className="bg-white/10 border border-white/10 rounded-2xl p-6"
           >
             <p className="text-green-400 font-bold mb-3">
-              #{index + 1} Empfehlung
+              #{index + 1} {t("topToolsRecommendation")}
             </p>
 
             {tool.badge && (
@@ -64,7 +64,7 @@ export default function TopTools({ tools }: { tools: Tool[] }) {
               </p>
             )}
 
-            <p className="mt-2 leading-7" style={{ color: "#cbd5e1" }}>
+            <p className="mt-2 leading-7" style={{ color: "var(--text-light)" }}>
               {tool.category}
             </p>
 
@@ -74,13 +74,13 @@ export default function TopTools({ tools }: { tools: Tool[] }) {
                 className="block rounded-lg border border-blue-400/30 bg-blue-600 px-4 py-3 text-center font-bold text-white hover:bg-blue-700"
                 style={{ color: "#f8fafc", textShadow: "0 1px 1px rgba(0,0,0,0.25)" }}
               >
-                Mehr erfahren
+                {t("topToolsLearnMore")}
               </Link>
 
               <AffiliateButton
                 id={tool.id}
                 url={tool.url}
-                text={tool.buttonText || "🚀 Angebot ansehen"}
+                text={tool.buttonText || `🚀 ${t("topToolsOfferCta")}`}
                 clickSource="homepage-top-tools"
               />
             </div>

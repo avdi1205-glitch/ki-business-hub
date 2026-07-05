@@ -7,6 +7,7 @@ import GoogleAd from "../../components/GoogleAd";
 import NewsletterForm from "@/app/components/NewsletterForm";
 import OptimizedAffiliateButton from "@/app/components/OptimizedAffiliateButton";
 import { Metadata } from "next";
+import { getLocale, getTranslations } from "next-intl/server";
 
 function getExcerpt(text: string, maxLength = 160): string {
   if (!text) return "";
@@ -14,12 +15,12 @@ function getExcerpt(text: string, maxLength = 160): string {
   if (cleaned.length <= maxLength) return cleaned;
   return `${cleaned.slice(0, maxLength - 1)}…`;
 }
-
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+  const t = await getTranslations("blogArticle");
   const { slug } = await params;
   const article = await prisma.article.findUnique({ where: { slug } });
 
@@ -31,7 +32,7 @@ export async function generateMetadata({
   const ogImage = `${siteUrl}/og-image.png`;
 
   return {
-    title: `${article.title} | KI Business Hub`,
+    title: `${article.title} | ${t("siteName")}`,
     description,
     alternates: {
       canonical: `/blog/${slug}`,
@@ -68,6 +69,8 @@ export default async function BlogArticlePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  const t = await getTranslations("blogArticle");
+  const locale = await getLocale();
   const articleTopAdSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE_TOP;
   const articleInlineAdSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE_INLINE;
   const articleSidebarAdSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE_SIDEBAR;
@@ -82,6 +85,7 @@ export default async function BlogArticlePage({
 
   const siteUrl = getSiteUrl();
   const articleUrl = `${siteUrl}/blog/${slug}`;
+  const dateLocale = locale === "en" ? "en-US" : "de-DE";
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -91,7 +95,7 @@ export default async function BlogArticlePage({
     headline: article.title,
     description: getExcerpt(article.idea || article.content, 170),
     datePublished: article.createdAt.toISOString(),
-    inLanguage: "de-DE",
+    inLanguage: locale === "en" ? "en-US" : "de-DE",
     articleSection: article.category || "Blog",
     isAccessibleForFree: true,
     image: [`${siteUrl}/og-image.png`],
@@ -119,13 +123,13 @@ export default async function BlogArticlePage({
       {
         "@type": "ListItem",
         position: 1,
-        name: "Startseite",
+        name: t("breadcrumbHome"),
         item: siteUrl,
       },
       {
         "@type": "ListItem",
         position: 2,
-        name: "Blog",
+        name: t("breadcrumbBlog"),
         item: `${siteUrl}/blog`,
       },
       {
@@ -173,7 +177,7 @@ export default async function BlogArticlePage({
       <section className="relative overflow-hidden px-6 py-20" style={{ background: "linear-gradient(135deg, var(--background) 0%, var(--background-alt) 100%)" }}>
         <div className="relative mx-auto max-w-4xl">
           <p className="mb-4 inline-flex items-center rounded-full border border-cyan-400/20 bg-cyan-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-cyan-200">
-            KI erstellt
+            {t("aiGenerated")}
           </p>
 
           <p className="mb-4 font-bold" style={{ color: "var(--primary)" }}>
@@ -191,7 +195,7 @@ export default async function BlogArticlePage({
           {/* Top CTA Section */}
           <div className="mt-8 rounded-xl border border-green-500/30 bg-green-500/10 p-6">
             <p className="mb-4 text-sm text-green-400">
-              💡 Schnelle Empfehlung:
+              💡 {t("quickRecommendation")}
             </p>
             {mainTools[0] && (
               <OptimizedAffiliateButton
@@ -200,7 +204,7 @@ export default async function BlogArticlePage({
                 toolUrl={mainTools[0].url}
                 articleSlug={slug}
                 clickSource={`blog-${slug}-hero`}
-                buttonText={mainTools[0].buttonText || "Ausprobieren"}
+                buttonText={mainTools[0].buttonText || t("tryIt")}
               />
             )}
           </div>
@@ -234,10 +238,10 @@ export default async function BlogArticlePage({
             {mainTools[1] && (
               <div className="mt-10 rounded-2xl border border-cyan-500/30 bg-cyan-500/10 p-8">
                 <h3 className="mb-4 text-2xl font-bold">
-                  ⚡ Weiter geht's: {mainTools[1].name}
+                  ⚡ {t("continueWith", { name: mainTools[1].name })}
                 </h3>
                 <p className="mb-6 leading-7 text-slate-100">
-                  {mainTools[1].description || "Eines der besten Tools in dieser Kategorie"}
+                  {mainTools[1].description || t("toolFallbackDescription")}
                 </p>
                 <OptimizedAffiliateButton
                   toolId={mainTools[1].id}
@@ -245,7 +249,7 @@ export default async function BlogArticlePage({
                   toolUrl={mainTools[1].url}
                   articleSlug={slug}
                   clickSource={`blog-${slug}-mid`}
-                  buttonText="Jetzt vergleichen"
+                  buttonText={t("compareNow")}
                 />
               </div>
             )}
@@ -254,7 +258,7 @@ export default async function BlogArticlePage({
             {mainTools.length > 0 && (
               <section className="mt-10 rounded-2xl border border-purple-500/30 bg-purple-500/10 p-8">
                 <h2 className="mb-6 text-3xl font-bold">
-                  🏆 Die Best Rated Tools
+                  🏆 {t("bestRatedTools")}
                 </h2>
 
                 <div className="grid gap-6 md:grid-cols-2">
@@ -292,7 +296,7 @@ export default async function BlogArticlePage({
                         toolUrl={tool.url}
                         articleSlug={slug}
                         clickSource={`blog-${slug}-grid`}
-                        buttonText={tool.buttonText || "Besuchen"}
+                        buttonText={tool.buttonText || t("visit")}
                       />
                     </div>
                   ))}
@@ -303,11 +307,10 @@ export default async function BlogArticlePage({
             {/* Bottom Newsletter CTA */}
             <section className="mt-10 rounded-2xl border border-orange-500/30 bg-orange-500/10 p-8">
               <h3 className="mb-2 text-2xl font-bold">
-                📬 Mehr Tipps wie diese?
+                📬 {t("newsletterHeading")}
               </h3>
               <p className="mb-6 leading-7 text-slate-100">
-                Melde dich zu unserem Newsletter an und erhalte wöchentlich die
-                besten Tools & Tricks für dein Business!
+                {t("newsletterBody")}
               </p>
               <NewsletterForm source={`blog-${slug}`} />
             </section>
@@ -325,7 +328,7 @@ export default async function BlogArticlePage({
             {sidebarTools.length > 0 && (
               <div className="rounded-2xl border border-white/10 bg-white/10 p-6">
                 <h3 className="mb-4 font-bold text-cyan-300">
-                  🎯 Weitere Empfehlungen
+                  🎯 {t("moreRecommendations")}
                 </h3>
                 <div className="space-y-3">
                   {sidebarTools.map((tool) => (
@@ -336,7 +339,7 @@ export default async function BlogArticlePage({
                       <p className="font-bold text-white">{tool.name}</p>
                       <p className="text-xs text-slate-300">{tool.category}</p>
                       <p className="mt-2 text-sm text-yellow-400">
-                        ⭐ {tool.rating.toFixed(1)}/10 ({tool.clicks} Klicks)
+                        ⭐ {tool.rating.toFixed(1)}/10 ({tool.clicks} {t("clicks")})
                       </p>
                       <a
                         href={tool.url}
@@ -357,7 +360,7 @@ export default async function BlogArticlePage({
                         }}
                         className="mt-3 inline-block rounded-full bg-cyan-500/10 px-3 py-2 text-xs font-bold text-cyan-200 hover:bg-cyan-500/20 hover:text-cyan-100"
                       >
-                        Besuchen →
+                        {t("visit")}
                       </a>
                     </div>
                   ))}
@@ -367,24 +370,33 @@ export default async function BlogArticlePage({
 
             {/* Article Info Box */}
             <div className="rounded-2xl border border-white/10 bg-white/10 p-6">
-              <h4 className="mb-4 font-bold">📊 Artikel Info</h4>
+              <h4 className="mb-4 font-bold">📊 {t("articleInfo")}</h4>
               <div className="space-y-2 text-sm text-slate-300">
-                <p>🤖 Kennzeichnung: KI erstellt</p>
-                <p>📁 Kategorie: {article.category || "Allgemein"}</p>
-                <p>📅 Veröffentlicht: {new Date(article.createdAt).toLocaleDateString("de-DE")}</p>
+                <p>🤖 {t("labelAi")}</p>
+                <p>📁 {t("labelCategory")}: {article.category || t("general")}</p>
+                <p>📅 {t("published")}: {new Date(article.createdAt).toLocaleDateString(dateLocale)}</p>
                 <p>🎯 SEO Score: {article.seoScore || 0}%</p>
-                <p>📝 Status: {article.status}</p>
+                <p>
+                  📝 {t("status")}: {article.status === "Veröffentlicht"
+                    ? locale === "en"
+                      ? "Published"
+                      : "Veröffentlicht"
+                    : article.status === "Geplant"
+                      ? locale === "en"
+                        ? "Scheduled"
+                        : "Geplant"
+                      : article.status}
+                </p>
               </div>
             </div>
 
             {/* CTA Box */}
             <div className="rounded-2xl border border-green-500/30 bg-green-500/10 p-6">
               <h4 className="mb-3 font-bold text-green-300">
-                ✨ Professioneller Tipp
+                ✨ {t("proTip")}
               </h4>
               <p className="text-sm text-gray-300">
-                Nutze die Tools in Kombination für maximale Effizienz. Viele
-                bieten kostenlose Trials an!
+                {t("proTipBody")}
               </p>
             </div>
           </div>
@@ -396,7 +408,7 @@ export default async function BlogArticlePage({
             href="/blog"
             className="inline-block rounded-xl border border-white/20 bg-white/10 px-6 py-3 font-bold hover:bg-white/20"
           >
-            ← Zurück zum Blog
+            ← {t("backToBlog")}
           </Link>
         </div>
       </section>

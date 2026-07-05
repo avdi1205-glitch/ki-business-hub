@@ -36,8 +36,8 @@ export default function ABTestingPage() {
   const [tests, setTests] = useState<ABTest[]>([]);
   const [affiliates, setAffiliates] = useState<AffiliateOption[]>([]);
   const [selectedAffiliate, setSelectedAffiliate] = useState("");
-  const [variantA, setVariantA] = useState("Kostenlos testen");
-  const [variantB, setVariantB] = useState("Jetzt starten");
+  const [variantA, setVariantA] = useState("Start free");
+  const [variantB, setVariantB] = useState("Get started now");
 
   const activeTests = useMemo(() => tests.filter((test) => test.status === "active"), [tests]);
   const completedTests = useMemo(() => tests.filter((test) => test.status === "complete"), [tests]);
@@ -50,7 +50,7 @@ export default function ABTestingPage() {
     const data = await response.json();
 
     if (!response.ok || !data.success) {
-      throw new Error(data.error || "A/B-Testdaten konnten nicht geladen werden");
+      throw new Error(data.error || "Could not load A/B test data");
     }
 
     setTests(data.tests || []);
@@ -58,8 +58,8 @@ export default function ABTestingPage() {
 
     if (!selectedAffiliate && data.affiliates?.[0]?.id) {
       setSelectedAffiliate(String(data.affiliates[0].id));
-      setVariantA(data.affiliates[0].buttonText || "Kostenlos testen");
-      setVariantB("Jetzt starten");
+      setVariantA(data.affiliates[0].buttonText || "Start free");
+      setVariantB("Get started now");
     }
   };
 
@@ -68,7 +68,7 @@ export default function ABTestingPage() {
       try {
         await loadData();
       } catch (error) {
-        setStatus(error instanceof Error ? error.message : "A/B-Testdaten konnten nicht geladen werden");
+        setStatus(error instanceof Error ? error.message : "Could not load A/B test data");
       } finally {
         setInitialLoading(false);
       }
@@ -87,7 +87,7 @@ export default function ABTestingPage() {
 
   const createTest = async () => {
     if (!selectedAffiliate) {
-      setStatus("Bitte zuerst einen Affiliate-Link auswählen.");
+      setStatus("Please select an affiliate link first.");
       return;
     }
 
@@ -107,13 +107,13 @@ export default function ABTestingPage() {
       });
       const data = await response.json();
       if (!response.ok || !data.success) {
-        throw new Error(data.error || "A/B-Test konnte nicht erstellt werden");
+        throw new Error(data.error || "Could not create A/B test");
       }
 
       setStatus(data.message);
       await loadData();
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "A/B-Test konnte nicht erstellt werden");
+      setStatus(error instanceof Error ? error.message : "Could not create A/B test");
     } finally {
       setLoading(false);
     }
@@ -131,13 +131,13 @@ export default function ABTestingPage() {
       });
       const data = await response.json();
       if (!response.ok || !data.success) {
-        throw new Error(data.error || "Gewinner konnte nicht übernommen werden");
+        throw new Error(data.error || "Could not apply winner");
       }
 
       setStatus(data.message);
       await loadData();
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Gewinner konnte nicht übernommen werden");
+      setStatus(error instanceof Error ? error.message : "Could not apply winner");
     } finally {
       setLoading(false);
     }
@@ -147,29 +147,29 @@ export default function ABTestingPage() {
     <div className="min-h-screen p-8" style={{ background: "var(--background)" }}>
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>🧪 A/B-Testing</h1>
-          <p style={{ color: "var(--text-light)" }}>Teste echte CTA-Texte auf deinen Affiliate-Buttons und rolle Gewinner live aus.</p>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>🧪 A/B testing</h1>
+          <p style={{ color: "var(--text-light)" }}>Test real CTA copy on your affiliate buttons and roll winners out live.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <StatCard title="Aktive Tests" value={activeTests.length} change="live auf Affiliate-Buttons" icon="⚙️" />
-          <StatCard title="Top CTR" value={`${averageRate}%`} change="bester Text pro aktivem Test" icon="📈" trend="up" />
-          <StatCard title="Übernommene Gewinner" value={completedTests.length} change="bereits live gesetzt" icon="🏆" />
-          <StatCard title="Affiliate-Links" value={affiliates.length} change="verfügbare Testziele" icon="💰" trend="up" />
+          <StatCard title="Active tests" value={activeTests.length} change="live on affiliate buttons" icon="⚙️" />
+          <StatCard title="Top CTR" value={`${averageRate}%`} change="best copy per active test" icon="📈" trend="up" />
+          <StatCard title="Applied winners" value={completedTests.length} change="already live" icon="🏆" />
+          <StatCard title="Affiliate links" value={affiliates.length} change="available test targets" icon="💰" trend="up" />
         </div>
 
         <div className="mb-8 rounded-lg p-6" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
-          <h2 className="mb-4 text-xl font-semibold" style={{ color: "var(--text-dark)" }}>➕ Neuen CTA-Test anlegen</h2>
+          <h2 className="mb-4 text-xl font-semibold" style={{ color: "var(--text-dark)" }}>➕ Create new CTA test</h2>
           <div className="grid gap-4 md:grid-cols-3">
             <div>
-              <label className="mb-2 block text-sm font-medium" style={{ color: "var(--text-light)" }}>Affiliate-Link</label>
+              <label className="mb-2 block text-sm font-medium" style={{ color: "var(--text-light)" }}>Affiliate link</label>
               <select
                 value={selectedAffiliate}
                 onChange={(event) => setSelectedAffiliate(event.target.value)}
                 className="w-full rounded-lg px-4 py-2"
                 style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-dark)" }}
               >
-                <option value="">-- Wähle Link --</option>
+                <option value="">-- Choose link --</option>
                 {affiliates.map((affiliate) => (
                   <option key={affiliate.id} value={affiliate.id}>
                     {affiliate.name}
@@ -178,7 +178,7 @@ export default function ABTestingPage() {
               </select>
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium" style={{ color: "var(--text-light)" }}>Variante A</label>
+              <label className="mb-2 block text-sm font-medium" style={{ color: "var(--text-light)" }}>Variant A</label>
               <input
                 value={variantA}
                 onChange={(event) => setVariantA(event.target.value)}
@@ -187,7 +187,7 @@ export default function ABTestingPage() {
               />
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium" style={{ color: "var(--text-light)" }}>Variante B</label>
+              <label className="mb-2 block text-sm font-medium" style={{ color: "var(--text-light)" }}>Variant B</label>
               <input
                 value={variantB}
                 onChange={(event) => setVariantB(event.target.value)}
@@ -197,7 +197,7 @@ export default function ABTestingPage() {
             </div>
           </div>
           <div className="mt-4 flex items-center gap-3">
-            <ActionButton label={loading ? "Erstelle..." : "A/B-Test starten"} onClick={createTest} disabled={loading} />
+            <ActionButton label={loading ? "Creating..." : "Start A/B test"} onClick={createTest} disabled={loading} />
             {status && <p className="text-sm" style={{ color: "var(--text-light)" }}>{status}</p>}
           </div>
         </div>
@@ -205,11 +205,11 @@ export default function ABTestingPage() {
         <div className="space-y-6 mb-8">
           {initialLoading ? (
             <div className="rounded-lg p-6" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-light)" }}>
-              Lade Tests...
+              Loading tests...
             </div>
           ) : activeTests.length === 0 ? (
             <div className="rounded-lg p-6" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-light)" }}>
-              Noch keine aktiven Tests. Erstelle den ersten CTA-Test für einen Affiliate-Link.
+              No active tests yet. Create the first CTA test for an affiliate link.
             </div>
           ) : (
             activeTests.map((test) => (
@@ -217,32 +217,32 @@ export default function ABTestingPage() {
                 <div className="mb-6 flex items-start justify-between gap-4">
                   <div>
                     <h2 className="mb-2 text-xl font-semibold" style={{ color: "var(--text-dark)" }}>{test.affiliateName}</h2>
-                    <p className="text-sm" style={{ color: "var(--text-light)" }}>Aktueller Live-Text: {test.currentButtonText || "Nicht gesetzt"}</p>
+                    <p className="text-sm" style={{ color: "var(--text-light)" }}>Current live copy: {test.currentButtonText || "Not set"}</p>
                   </div>
                   <span className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium" style={{ background: "rgba(59, 130, 246, 0.18)", color: "#93c5fd" }}>
-                    🔄 Aktiv
+                    🔄 Active
                   </span>
                 </div>
 
                 <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
                   <div className="rounded-lg p-4" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                    <h3 className="mb-3 font-semibold" style={{ color: "var(--text-dark)" }}>Variante A</h3>
+                      <h3 className="mb-3 font-semibold" style={{ color: "var(--text-dark)" }}>Variant A</h3>
                     <div className="mb-4 rounded-lg px-3 py-2 font-medium" style={{ background: "rgba(59, 130, 246, 0.18)", color: "#bfdbfe" }}>
                       "{test.variantA}"
                     </div>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between"><span style={{ color: "var(--text-light)" }}>Impressions</span><span style={{ color: "var(--text-dark)" }}>{test.impressionsA}</span></div>
-                      <div className="flex justify-between"><span style={{ color: "var(--text-light)" }}>Klicks</span><span style={{ color: "var(--text-dark)" }}>{test.clicksA}</span></div>
+                      <div className="flex justify-between"><span style={{ color: "var(--text-light)" }}>Clicks</span><span style={{ color: "var(--text-dark)" }}>{test.clicksA}</span></div>
                       <div className="flex justify-between"><span style={{ color: "var(--text-light)" }}>CTR</span><span style={{ color: "var(--text-dark)" }}>{test.rateA}%</span></div>
                     </div>
                   </div>
 
                   <div className="rounded-lg border-2 p-4" style={{ background: "rgba(16, 185, 129, 0.08)", borderColor: test.winner === "B" ? "rgba(16, 185, 129, 0.45)" : "rgba(255,255,255,0.12)" }}>
                     <div className="mb-3 flex items-center justify-between">
-                      <h3 className="font-semibold" style={{ color: "var(--text-dark)" }}>Variante B</h3>
+                      <h3 className="font-semibold" style={{ color: "var(--text-dark)" }}>Variant B</h3>
                       {test.winner === "B" && (
                         <span className="inline-flex items-center rounded px-2 py-1 text-xs font-bold" style={{ background: "rgba(16, 185, 129, 0.18)", color: "#86efac" }}>
-                          🏆 Führt
+                          🏆 Winning
                         </span>
                       )}
                     </div>
@@ -251,7 +251,7 @@ export default function ABTestingPage() {
                     </div>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between"><span style={{ color: "var(--text-light)" }}>Impressions</span><span style={{ color: "var(--text-dark)" }}>{test.impressionsB}</span></div>
-                      <div className="flex justify-between"><span style={{ color: "var(--text-light)" }}>Klicks</span><span style={{ color: "var(--text-dark)" }}>{test.clicksB}</span></div>
+                      <div className="flex justify-between"><span style={{ color: "var(--text-light)" }}>Clicks</span><span style={{ color: "var(--text-dark)" }}>{test.clicksB}</span></div>
                       <div className="flex justify-between"><span style={{ color: "var(--text-light)" }}>CTR</span><span style={{ color: "var(--success-light)" }}>{test.rateB}%</span></div>
                     </div>
                   </div>
@@ -259,7 +259,7 @@ export default function ABTestingPage() {
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="mb-1 text-sm" style={{ color: "var(--text-light)" }}>Signifikanz</p>
+                    <p className="mb-1 text-sm" style={{ color: "var(--text-light)" }}>Significance</p>
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-32 rounded-full" style={{ background: "rgba(255,255,255,0.12)" }}>
                         <div className="h-2 rounded-full bg-green-600" style={{ width: `${test.confidence}%` }} />
@@ -268,7 +268,7 @@ export default function ABTestingPage() {
                     </div>
                   </div>
                   <ActionButton
-                    label={loading ? "Übernehme..." : `Gewinner ${test.winner || "ermitteln"} live setzen`}
+                    label={loading ? "Applying..." : `Apply ${test.winner || "winner"} live`}
                     onClick={() => applyWinner(test)}
                     disabled={loading}
                   />
@@ -279,22 +279,22 @@ export default function ABTestingPage() {
         </div>
 
         <div className="rounded-lg p-6" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
-          <h2 className="mb-4 text-xl font-semibold" style={{ color: "var(--text-dark)" }}>✅ Abgeschlossene Tests</h2>
+          <h2 className="mb-4 text-xl font-semibold" style={{ color: "var(--text-dark)" }}>✅ Completed tests</h2>
           <div className="space-y-3">
             {completedTests.length === 0 ? (
-              <p style={{ color: "var(--text-light)" }}>Noch keine Gewinner übernommen.</p>
+              <p style={{ color: "var(--text-light)" }}>No winners applied yet.</p>
             ) : (
               completedTests.map((test) => (
                 <div key={test.id} className="flex items-center justify-between rounded-lg p-4" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
                   <div>
                     <p className="font-medium" style={{ color: "var(--text-dark)" }}>{test.affiliateName}</p>
                     <p className="text-sm" style={{ color: "var(--text-light)" }}>
-                      Gewinner: "{test.winner === "A" ? test.variantA : test.variantB}" • Live seit {test.appliedAt ? new Date(test.appliedAt).toLocaleString("de-DE") : "unbekannt"}
+                      Winner: "{test.winner === "A" ? test.variantA : test.variantB}" • Live since {test.appliedAt ? new Date(test.appliedAt).toLocaleString() : "unknown"}
                     </p>
                   </div>
                   <div className="text-right">
                     <div className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium" style={{ background: "rgba(16, 185, 129, 0.18)", color: "#86efac" }}>
-                      ✅ {test.confidence}% Konfidenz
+                      ✅ {test.confidence}% confidence
                     </div>
                   </div>
                 </div>

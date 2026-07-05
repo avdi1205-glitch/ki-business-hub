@@ -49,11 +49,11 @@ export default function NewsletterAutomationPage() {
       });
       const data = await response.json();
       if (!response.ok || !data.success) {
-        throw new Error(data.error || "Newsletter-Versand fehlgeschlagen");
+        throw new Error(data.error || "Newsletter send failed");
       }
-      setStatus(`Newsletter an ${data.sent} Abos versendet.`);
+      setStatus(`Newsletter sent to ${data.sent} subscribers.`);
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Newsletter-Versand fehlgeschlagen");
+      setStatus(error instanceof Error ? error.message : "Newsletter send failed");
     } finally {
       setLoading(false);
     }
@@ -64,8 +64,8 @@ export default function NewsletterAutomationPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>📧 Newsletter-Automatisierung</h1>
-          <p style={{ color: "var(--text-light)" }}>Verwalte automatisierte Email-Kampagnen an deine Subscriber</p>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>📧 Newsletter automation</h1>
+          <p style={{ color: "var(--text-light)" }}>Manage automated email campaigns for your subscribers</p>
         </div>
 
         {/* Stats */}
@@ -73,21 +73,21 @@ export default function NewsletterAutomationPage() {
           <StatCard
             title="Gesamt Abos"
             value={metrics.totalSubscribers}
-            change="+45 diese Woche"
+            change="+45 this week"
             icon="👥"
             trend="up"
           />
           <StatCard
-            title="Wöchentliche Steigerung"
+            title="Weekly growth"
             value={metrics.weeklyGrowth}
             change="+12%"
             icon="📈"
             trend="up"
           />
           <StatCard
-            title="Geschätzte Einnahmen"
+            title="Estimated revenue"
             value={`€${metrics.estimatedRevenue}`}
-            change="+€125 diese Woche"
+            change="+€125 this week"
             icon="💰"
             trend="up"
           />
@@ -95,11 +95,11 @@ export default function NewsletterAutomationPage() {
 
         {/* Campaign Manager */}
         <div className="rounded-lg border p-6 mb-8" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
-          <h2 className="text-xl font-semibold mb-4" style={{ color: "var(--text-dark)" }}>📤 Kampagne versenden</h2>
+          <h2 className="text-xl font-semibold mb-4" style={{ color: "var(--text-dark)" }}>📤 Send campaign</h2>
           
           <div className="space-y-4 mb-6">
             <div>
-              <label className="block text-sm font-medium mb-2" style={{ color: "var(--text-light)" }}>Betreff</label>
+              <label className="block text-sm font-medium mb-2" style={{ color: "var(--text-light)" }}>Subject</label>
               <input
                 type="text"
                 defaultValue="Weekly AI Business Tips 🚀"
@@ -120,15 +120,15 @@ export default function NewsletterAutomationPage() {
             <div>
               <label className="block text-sm font-medium mb-2" style={{ color: "var(--text-light)" }}>Segment</label>
               <select className="w-full px-4 py-2 rounded-lg" style={{ background: "rgba(59, 130, 246, 0.05)", border: "1px solid rgba(59, 130, 246, 0.2)", color: "var(--text-dark)" }}>
-                <option>Alle (1.250)</option>
-                <option>Aktive Nutzer (892)</option>
-                <option>Neue (358)</option>
+                <option>All (1,250)</option>
+                <option>Active users (892)</option>
+                <option>New (358)</option>
               </select>
             </div>
           </div>
 
           <ActionButton
-            label={loading ? "Wird versendet..." : "Jetzt versenden"}
+            label={loading ? "Sending..." : "Send now"}
             onClick={handleSendNewsletter}
             disabled={loading}
           />
@@ -141,7 +141,7 @@ export default function NewsletterAutomationPage() {
 
         {/* Recent Campaigns */}
         <div className="rounded-lg border p-6" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
-          <h2 className="text-xl font-semibold mb-4" style={{ color: "var(--text-dark)" }}>📊 Letzte Kampagnen</h2>
+          <h2 className="text-xl font-semibold mb-4" style={{ color: "var(--text-dark)" }}>📊 Recent campaigns</h2>
           
           <div className="space-y-3">
             {[
@@ -152,11 +152,11 @@ export default function NewsletterAutomationPage() {
               <div key={idx} className="flex items-center justify-between p-3 rounded-lg transition-colors" style={{ background: "rgba(59, 130, 246, 0.05)", border: "1px solid rgba(59, 130, 246, 0.2)" }}>
                 <div>
                   <p className="font-medium" style={{ color: "var(--text-dark)" }}>{campaign.subject}</p>
-                  <p className="text-sm" style={{ color: "var(--text-light)" }}>{campaign.sent} versendet</p>
+                  <p className="text-sm" style={{ color: "var(--text-light)" }}>{campaign.sent} sent</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-medium" style={{ color: "var(--text-dark)" }}>{campaign.opens} Öffnungen</p>
-                  <p className="text-sm" style={{ color: "var(--success-light)" }}>{campaign.rate} Öffnungsrate</p>
+                  <p className="font-medium" style={{ color: "var(--text-dark)" }}>{campaign.opens} opens</p>
+                  <p className="text-sm" style={{ color: "var(--success-light)" }}>{campaign.rate} open rate</p>
                 </div>
               </div>
             ))}
@@ -164,10 +164,10 @@ export default function NewsletterAutomationPage() {
         </div>
 
         <div className="mt-8 rounded-lg border p-6" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
-          <h2 className="mb-4 text-xl font-semibold" style={{ color: "var(--text-dark)" }}>🎯 Lead-Quellen</h2>
+          <h2 className="mb-4 text-xl font-semibold" style={{ color: "var(--text-dark)" }}>🎯 Lead sources</h2>
           <div className="space-y-3">
             {Object.keys(sources).length === 0 ? (
-              <p style={{ color: "var(--text-light)" }}>Noch keine Quell-Daten vorhanden.</p>
+              <p style={{ color: "var(--text-light)" }}>No source data yet.</p>
             ) : (
               Object.entries(sources)
                 .sort((left, right) => right[1] - left[1])

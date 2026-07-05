@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import ContentStrategist from "../components/ContentStrategist";
 import FactoryForm from "../components/FactoryForm";
 import FactoryStats from "../components/FactoryStats";
@@ -22,20 +23,23 @@ type QueueItem = {
 };
 
 export default function ContentFactoryPage() {
-  const [category, setCategory] = useState("KI Tools");
+  const t = useTranslations("contentFactory");
+  const locale = useLocale();
+  const isEn = locale === "en";
+  const [category, setCategory] = useState(isEn ? "AI tools" : "KI Tools");
   const [count, setCount] = useState("1");
   const [words, setWords] = useState("1500");
-  const [style, setStyle] = useState("Professionell");
-  const [audience, setAudience] = useState("Anfänger");
-  const [affiliateTool, setAffiliateTool] = useState("Automatisch");
-  const [seoStrength, setSeoStrength] = useState("Stark");
-  const [articleType, setArticleType] = useState("Ratgeber");
+  const [style, setStyle] = useState(isEn ? "Professional" : "Professionell");
+  const [audience, setAudience] = useState(isEn ? "Beginners" : "Anfänger");
+  const [affiliateTool, setAffiliateTool] = useState(isEn ? "Automatic" : "Automatisch");
+  const [seoStrength, setSeoStrength] = useState(isEn ? "Strong" : "Stark");
+  const [articleType, setArticleType] = useState(isEn ? "Guide" : "Ratgeber");
 
-  const [status, setStatus] = useState("Bereit");
+  const [status, setStatus] = useState(t("ready"));
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [step, setStep] = useState("Bereit");
+  const [step, setStep] = useState(t("ready"));
   const [logs, setLogs] = useState<string[]>([]);
   const [statsRefreshKey, setStatsRefreshKey] = useState(0);
   const [queue, setQueue] = useState<QueueItem[]>([]);
@@ -44,11 +48,11 @@ export default function ContentFactoryPage() {
     setCategory("Hosting");
     setCount("1");
     setWords("2000");
-    setStyle("Professionell");
-    setAudience("Anfänger");
+    setStyle(isEn ? "Professional" : "Professionell");
+    setAudience(isEn ? "Beginners" : "Anfänger");
     setAffiliateTool("Hostinger");
-    setSeoStrength("Maximal");
-    setArticleType("Testbericht");
+    setSeoStrength(isEn ? "Maximum" : "Maximal");
+    setArticleType(isEn ? "Review" : "Testbericht");
   }
 
   async function startFactory() {
@@ -59,21 +63,21 @@ export default function ContentFactoryPage() {
 
     setQueue([
       {
-        title: `${category} Artikel wird vorbereitet`,
+        title: t("queuePreparing", { category }),
         progress: 10,
         status: "In Arbeit",
       },
     ]);
 
-    setStep("🤖 KI analysiert Thema...");
-    setStatus("⏳ Content Factory läuft...");
-    setLogs(["🤖 KI analysiert Thema..."]);
+    setStep(`🤖 ${t("stepAnalyzing")}`);
+    setStatus(`⏳ ${t("running")}`);
+    setLogs([`🤖 ${t("stepAnalyzing")}`]);
 
     setProgress(10);
     await new Promise((r) => setTimeout(r, 400));
 
-    setStep("📝 SEO-Struktur wird vorbereitet...");
-    setLogs((prev) => [...prev, "📝 SEO-Struktur vorbereitet"]);
+    setStep(`📝 ${t("stepSeo")}`);
+    setLogs((prev) => [...prev, `📝 ${t("stepSeoDone")}`]);
     setProgress(30);
     setQueue((prev) =>
       prev.map((item) => ({ ...item, progress: 30 }))
@@ -81,8 +85,8 @@ export default function ContentFactoryPage() {
 
     await new Promise((r) => setTimeout(r, 400));
 
-    setStep("📄 Artikel werden geschrieben...");
-    setLogs((prev) => [...prev, "📄 Artikel werden geschrieben"]);
+    setStep(`📄 ${t("stepWriting")}`);
+    setLogs((prev) => [...prev, `📄 ${t("stepWriting")}`]);
     setProgress(60);
     setQueue((prev) =>
       prev.map((item) => ({ ...item, progress: 60 }))
@@ -105,8 +109,8 @@ export default function ContentFactoryPage() {
       }),
     });
 
-    setStep("💾 Speichere Artikel...");
-    setLogs((prev) => [...prev, "💾 Artikel werden gespeichert"]);
+    setStep(`💾 ${t("stepSaving")}`);
+    setLogs((prev) => [...prev, `💾 ${t("stepSaving")}`]);
     setProgress(90);
     setQueue((prev) =>
       prev.map((item) => ({ ...item, progress: 90 }))
@@ -118,11 +122,11 @@ export default function ContentFactoryPage() {
     setProgress(100);
 
     if (data.success) {
-      setStatus(`✅ ${data.created} Artikel erstellt.`);
+      setStatus(t("createdCount", { count: data.created }));
       setArticles(data.articles || []);
-      setStep("🎉 Fertig");
+      setStep(`🎉 ${t("finished")}`);
       setStatsRefreshKey((prev) => prev + 1);
-      setLogs((prev) => [...prev, "✅ Fertig"]);
+      setLogs((prev) => [...prev, `✅ ${t("finished")}`]);
 
       setQueue(
         (data.articles || []).map((article: Article) => ({
@@ -133,8 +137,8 @@ export default function ContentFactoryPage() {
       );
     } else {
       setStatus(`❌ ${data.error}`);
-      setStep("Fehler");
-      setLogs((prev) => [...prev, "❌ Fehler aufgetreten"]);
+      setStep(t("error"));
+      setLogs((prev) => [...prev, `❌ ${t("errorOccurred")}`]);
       setQueue((prev) =>
         prev.map((item) => ({ ...item, status: "Wartend" }))
       );
@@ -144,7 +148,7 @@ export default function ContentFactoryPage() {
   return (
     <main style={{ background: "var(--background)" }}>
       <section className="mx-auto max-w-6xl px-6 py-16">
-        <h1 className="mb-10 text-5xl font-bold">🤖 Content Factory</h1>
+        <h1 className="mb-10 text-5xl font-bold">🤖 {t("title")}</h1>
 
         <ContentStrategist onApply={applyStrategy} />
 
@@ -175,7 +179,7 @@ export default function ContentFactoryPage() {
           </div>
 
           <div className="rounded-2xl border border-white/10 bg-white/10 p-8">
-            <h2 className="mb-5 text-2xl font-bold">Status</h2>
+            <h2 className="mb-5 text-2xl font-bold">{t("statusTitle")}</h2>
 
             <div className="mb-4 rounded-xl bg-black/30 p-4">{status}</div>
 
@@ -195,7 +199,7 @@ export default function ContentFactoryPage() {
 
             {articles.length > 0 && (
               <>
-                <h3 className="mb-4 mt-6 font-bold">Erstellte Artikel</h3>
+                <h3 className="mb-4 mt-6 font-bold">{t("createdArticlesTitle")}</h3>
 
                 <div className="space-y-3">
                   {articles.map((article) => (

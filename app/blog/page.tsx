@@ -2,21 +2,28 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { prisma } from "../../lib/prisma";
 import GoogleAd from "../components/GoogleAd";
+import { getLocale, getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "KI Business Hub Blog | KI-Tools, Vergleiche und Praxisguides",
-  description:
-    "Aktuelle Artikel, Tests und Vergleiche zu KI-Tools, Automatisierung und Affiliate-Strategien mit Fokus auf praktische Umsetzung.",
-  alternates: {
-    canonical: "/blog",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("blog");
+
+  return {
+    title: `${t("title")} | ${t("eyebrow")}`,
+    description: t("subtitle"),
+    alternates: {
+      canonical: "/blog",
+    },
+  };
+}
 
 export default async function BlogPage() {
+  const locale = await getLocale();
+  const t = await getTranslations("blog");
   const blogTopAdSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_TOP;
   const blogGridAdSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_GRID;
 
   const articles = await prisma.article.findMany({
+    where: { locale },
     orderBy: {
       createdAt: "desc",
     },
@@ -28,21 +35,19 @@ export default async function BlogPage() {
       <section className="relative overflow-hidden px-6 py-20" style={{ background: "linear-gradient(135deg, var(--background) 0%, var(--background-alt) 100%)" }}>
         <div className="mx-auto max-w-6xl">
           <p className="mb-4 font-bold" style={{ color: "var(--primary)" }}>
-            📰 KI Business Hub Blog
+            📰 {t("eyebrow")}
           </p>
 
           <h1 className="mb-6 text-5xl font-bold tracking-tight md:text-7xl" style={{ color: "var(--text-dark)" }}>
-            Artikel, Tests und Vergleiche
+            {t("title")}
           </h1>
 
           <p className="mb-10 max-w-3xl text-xl leading-8" style={{ color: "#e2e8f0" }}>
-            Lerne mehr über KI-Tools, Hosting, VPN, Automatisierung und
-            digitale Geschäftsmodelle.
+            {t("subtitle")}
           </p>
         </div>
       </section>
 
-      {/* Articles Grid */}
       <section className="mx-auto max-w-6xl px-6 py-20">
         {blogTopAdSlot && (
           <div className="mb-8 rounded-xl border border-white/10 bg-white/5 p-4">
@@ -58,7 +63,7 @@ export default async function BlogPage() {
               className="card hover:shadow-lg transition-all"
             >
               <p className="mb-3 inline-flex items-center rounded-full border border-cyan-400/20 bg-cyan-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-cyan-200">
-                KI erstellt
+                {t("badge")}
               </p>
 
               <p className="mb-3 text-sm font-bold badge-primary" style={{
@@ -80,7 +85,7 @@ export default async function BlogPage() {
               </p>
 
               <p className="mt-6 font-bold" style={{ color: "var(--primary)" }}>
-                Artikel lesen →
+                {t("readMore")}
               </p>
             </Link>
           ))}

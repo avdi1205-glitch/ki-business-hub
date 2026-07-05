@@ -46,7 +46,7 @@ export default function AutoPublishingPage() {
     const data = await response.json();
 
     if (!response.ok || !data.success) {
-      throw new Error(data.error || "Auto-Publishing-Daten konnten nicht geladen werden");
+      throw new Error(data.error || "Could not load auto-publishing data");
     }
 
     setDrafts(data.drafts || []);
@@ -63,7 +63,7 @@ export default function AutoPublishingPage() {
       try {
         await loadSchedule();
       } catch (error) {
-        setStatus(error instanceof Error ? error.message : "Auto-Publishing-Daten konnten nicht geladen werden");
+        setStatus(error instanceof Error ? error.message : "Could not load auto-publishing data");
       } finally {
         setInitialLoading(false);
       }
@@ -74,7 +74,7 @@ export default function AutoPublishingPage() {
 
   async function scheduleArticle() {
     if (!selectedArticleId) {
-      setStatus("Bitte zuerst einen Entwurf auswählen.");
+      setStatus("Please select a draft first.");
       return;
     }
 
@@ -96,13 +96,13 @@ export default function AutoPublishingPage() {
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        throw new Error(data.error || "Planung fehlgeschlagen");
+        throw new Error(data.error || "Could not schedule article");
       }
 
       setStatus(data.message);
       await loadSchedule();
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Planung fehlgeschlagen");
+      setStatus(error instanceof Error ? error.message : "Could not schedule article");
     } finally {
       setLoading(false);
     }
@@ -121,13 +121,13 @@ export default function AutoPublishingPage() {
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        throw new Error(data.error || "Planung konnte nicht entfernt werden");
+        throw new Error(data.error || "Could not cancel schedule");
       }
 
       setStatus(data.message);
       await loadSchedule();
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Planung konnte nicht entfernt werden");
+      setStatus(error instanceof Error ? error.message : "Could not cancel schedule");
     } finally {
       setLoading(false);
     }
@@ -146,13 +146,13 @@ export default function AutoPublishingPage() {
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        throw new Error(data.error || "Auto-Publishing fehlgeschlagen");
+        throw new Error(data.error || "Auto-publishing failed");
       }
 
-      setStatus(`${data.publishedCount} geplante Artikel veröffentlicht.`);
+      setStatus(`${data.publishedCount} scheduled articles published.`);
       await loadSchedule();
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Auto-Publishing fehlgeschlagen");
+      setStatus(error instanceof Error ? error.message : "Auto-publishing failed");
     } finally {
       setLoading(false);
     }
@@ -168,23 +168,23 @@ export default function AutoPublishingPage() {
     <div className="min-h-screen p-8" style={{ background: "var(--background)" }}>
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>📅 Auto-Publishing</h1>
-          <p style={{ color: "var(--text-light)" }}>Automatische Veröffentlichung deiner Artikel nach Zeitplan</p>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>📅 Auto-publishing</h1>
+          <p style={{ color: "var(--text-light)" }}>Automatically publish your articles on schedule</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <StatCard title="Geplant" value={scheduled.length} change="aktive Veröffentlichungen" icon="📋" />
-          <StatCard title="Veröffentlicht diesen Monat" value={publishedThisMonth} change="über Auto-Publishing" icon="✅" trend="up" />
-          <StatCard title="Entwürfe verfügbar" value={drafts.length} change="bereit für Planung" icon="⚡" />
+          <StatCard title="Scheduled" value={scheduled.length} change="active publications" icon="📋" />
+          <StatCard title="Published this month" value={publishedThisMonth} change="via auto-publishing" icon="✅" trend="up" />
+          <StatCard title="Drafts available" value={drafts.length} change="ready to schedule" icon="⚡" />
         </div>
 
         <div className="mb-8 rounded-lg p-6" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
-          <h2 className="mb-4 text-xl font-semibold" style={{ color: "var(--text-dark)" }}>📝 Geplante Artikel</h2>
+          <h2 className="mb-4 text-xl font-semibold" style={{ color: "var(--text-dark)" }}>📝 Scheduled articles</h2>
           <div className="space-y-3">
             {initialLoading ? (
-              <p style={{ color: "var(--text-light)" }}>Lade Planungen...</p>
+              <p style={{ color: "var(--text-light)" }}>Loading schedules...</p>
             ) : scheduled.length === 0 ? (
-              <p style={{ color: "var(--text-light)" }}>Noch keine Artikel geplant.</p>
+              <p style={{ color: "var(--text-light)" }}>No articles scheduled yet.</p>
             ) : (
               scheduled.map((article) => {
                 const publishDate = article.publishAt ? new Date(article.publishAt) : null;
@@ -198,13 +198,13 @@ export default function AutoPublishingPage() {
                     <div className="flex-1">
                       <p className="mb-1 font-medium" style={{ color: "var(--text-dark)" }}>{article.title}</p>
                       <div className="flex gap-3 text-sm" style={{ color: "var(--text-light)" }}>
-                        <span>📅 {publishDate ? publishDate.toLocaleString("de-DE") : "Kein Datum"}</span>
+                        <span>📅 {publishDate ? publishDate.toLocaleString() : "No date"}</span>
                         <span>•</span>
-                        <span>🏷️ {article.category || "Ohne Kategorie"}</span>
+                        <span>🏷️ {article.category || "No category"}</span>
                         {article.recurring && (
                           <>
                             <span>•</span>
-                            <span>🔁 Wiederkehrend</span>
+                            <span>🔁 Recurring</span>
                           </>
                         )}
                       </div>
@@ -215,7 +215,7 @@ export default function AutoPublishingPage() {
                       onClick={() => cancelSchedule(article.id)}
                       disabled={loading}
                     >
-                      Planung entfernen
+                      Remove schedule
                     </button>
                   </div>
                 );
@@ -225,17 +225,17 @@ export default function AutoPublishingPage() {
         </div>
 
         <div className="mb-8 rounded-lg p-6" style={{ background: "rgba(16, 185, 129, 0.08)", border: "1px solid rgba(16, 185, 129, 0.25)" }}>
-          <h2 className="mb-4 text-xl font-semibold" style={{ color: "var(--text-dark)" }}>⏰ Neuen Artikel planen</h2>
+          <h2 className="mb-4 text-xl font-semibold" style={{ color: "var(--text-dark)" }}>⏰ Schedule new article</h2>
           <div className="space-y-4">
             <div>
-              <label className="mb-2 block text-sm font-medium" style={{ color: "var(--text-light)" }}>Artikel</label>
+              <label className="mb-2 block text-sm font-medium" style={{ color: "var(--text-light)" }}>Article</label>
               <select
                 className="w-full rounded-lg px-4 py-2"
                 style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-dark)" }}
                 value={selectedArticleId}
                 onChange={(event) => setSelectedArticleId(event.target.value)}
               >
-                <option value="">-- Wähle Artikel --</option>
+                <option value="">-- Choose article --</option>
                 {drafts.map((article) => (
                   <option key={article.id} value={article.id}>
                     {article.title}
@@ -246,7 +246,7 @@ export default function AutoPublishingPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="mb-2 block text-sm font-medium" style={{ color: "var(--text-light)" }}>Datum</label>
+                <label className="mb-2 block text-sm font-medium" style={{ color: "var(--text-light)" }}>Date</label>
                 <input
                   type="date"
                   className="w-full rounded-lg px-4 py-2"
@@ -256,7 +256,7 @@ export default function AutoPublishingPage() {
                 />
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium" style={{ color: "var(--text-light)" }}>Uhrzeit</label>
+                <label className="mb-2 block text-sm font-medium" style={{ color: "var(--text-light)" }}>Time</label>
                 <input
                   type="time"
                   className="w-full rounded-lg px-4 py-2"
@@ -270,30 +270,30 @@ export default function AutoPublishingPage() {
             <div>
               <label className="flex cursor-pointer items-center gap-2 text-sm font-medium" style={{ color: "var(--text-light)" }}>
                 <input type="checkbox" className="w-4 h-4 rounded" checked={recurring} onChange={(event) => setRecurring(event.target.checked)} />
-                <span>Wöchentlich wiederholen</span>
+                <span>Repeat weekly</span>
               </label>
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <ActionButton label={loading ? "Plane..." : "Artikel planen"} onClick={scheduleArticle} disabled={loading || drafts.length === 0} />
-              <ActionButton label={loading ? "Veröffentliche..." : "Fällige Artikel veröffentlichen"} onClick={publishDueArticles} disabled={loading} variant="secondary" />
+              <ActionButton label={loading ? "Scheduling..." : "Schedule article"} onClick={scheduleArticle} disabled={loading || drafts.length === 0} />
+              <ActionButton label={loading ? "Publishing..." : "Publish due articles"} onClick={publishDueArticles} disabled={loading} variant="secondary" />
             </div>
             {status && <p className="text-sm" style={{ color: "var(--text-light)" }}>{status}</p>}
           </div>
         </div>
 
         <div className="rounded-lg p-6" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
-          <h2 className="mb-4 text-xl font-semibold" style={{ color: "var(--text-dark)" }}>📊 Veröffentlichungsverlauf</h2>
+          <h2 className="mb-4 text-xl font-semibold" style={{ color: "var(--text-dark)" }}>📊 Publishing history</h2>
           <div className="space-y-3">
             {history.length === 0 ? (
-              <p style={{ color: "var(--text-light)" }}>Noch keine automatisch veröffentlichten Artikel sichtbar.</p>
+              <p style={{ color: "var(--text-light)" }}>No automatically published articles yet.</p>
             ) : (
               history.map((item) => (
                 <div key={item.id} className="flex justify-between rounded-lg p-3" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
                   <div>
                     <p className="font-medium" style={{ color: "var(--text-dark)" }}>{item.title}</p>
                     <p className="text-sm" style={{ color: "var(--text-light)" }}>
-                      Veröffentlicht am {new Date(item.createdAt).toLocaleString("de-DE")}
+                      Published on {new Date(item.createdAt).toLocaleString()}
                     </p>
                   </div>
                   <p className="text-right font-medium" style={{ color: "var(--success-light)" }}>Live</p>

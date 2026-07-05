@@ -1,39 +1,45 @@
-export default function ImpressumPage() {
+import { getLocale } from "next-intl/server";
+
+export default async function ImpressumPage() {
+  const locale = await getLocale();
+  const isEn = locale === "en";
+
   return (
     <main className="min-h-screen p-10" style={{ background: "var(--background)", color: "var(--text-dark)" }}>
       <section className="max-w-4xl mx-auto bg-white/10 rounded-2xl p-10">
         <h1 className="text-5xl font-bold mb-8">
-          Impressum
+          {isEn ? "Imprint" : "Impressum"}
         </h1>
 
         <p className="text-gray-300 mb-6">
-          Diese Website befindet sich aktuell im Aufbau.
+          {isEn ? "This website is currently under construction." : "Diese Website befindet sich aktuell im Aufbau."}
         </p>
 
         <div className="space-y-4 text-gray-300">
           <p>
             <strong>Name:</strong><br />
-            Dein Name
+            {isEn ? "Your name" : "Dein Name"}
           </p>
 
           <p>
-            <strong>Adresse:</strong><br />
-            Deine Adresse
+            <strong>Address:</strong><br />
+            {isEn ? "Your address" : "Deine Adresse"}
           </p>
 
           <p>
-            <strong>E-Mail:</strong><br />
+            <strong>Email:</strong><br />
             deine@email.de
           </p>
 
           <p>
-            <strong>Verantwortlich nach § 18 Abs. 2 MStV:</strong><br />
-            Dein Name
+            <strong>Responsible under § 18 Abs. 2 MStV:</strong><br />
+            {isEn ? "Your name" : "Dein Name"}
           </p>
 
           <p className="pt-6 text-sm text-gray-500">
-            Hinweis: Vor dem Livegang müssen alle Platzhalter durch deine echten
-            Daten ersetzt werden.
+            {isEn
+              ? "Note: Before launch, replace all placeholders with your real information."
+              : "Hinweis: Ersetze vor dem Launch alle Platzhalter durch deine echten Angaben."}
           </p>
         </div>
       </section>

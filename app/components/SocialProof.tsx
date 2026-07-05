@@ -1,13 +1,16 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useLocale } from "next-intl";
 
 export function SocialProof() {
+  const locale = useLocale();
+  const isEn = locale === "en";
   const [isVisible, setIsVisible] = useState(true);
   const [notifications, setNotifications] = useState([
-    { id: 1, name: "Sarah M.", text: "hat gerade €47 verdient" },
-    { id: 2, name: "Tom K.", text: "hat den AI-Guide gekauft" },
-    { id: 3, name: "Julia L.", text: "hat gerade €125 verdient" },
+    { id: 1, name: "Sarah M.", text: isEn ? "just earned €47" : "hat gerade €47 verdient" },
+    { id: 2, name: "Tom K.", text: isEn ? "just bought the AI guide" : "hat den AI-Guide gekauft" },
+    { id: 3, name: "Julia L.", text: isEn ? "just earned €125" : "hat gerade €125 verdient" },
   ]);
 
   // Rotate notifications
@@ -26,14 +29,14 @@ export function SocialProof() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 z-40 max-w-sm animate-in fade-in slide-in-from-right-2 duration-500">
+    <div className="fixed bottom-4 right-4 z-40 hidden max-w-sm animate-in fade-in slide-in-from-right-2 duration-500 md:block">
       {/* Main Badge */}
       <div className="rounded-xl shadow-lg p-4 mb-3" style={{ background: "var(--background-elevated)", border: "1px solid rgba(16, 185, 129, 0.3)" }}>
         <div className="flex items-start gap-3">
           <div className="text-2xl">✅</div>
           <div className="flex-1">
             <p className="font-bold text-sm" style={{ color: "var(--text-dark)" }}>
-              1.247 Member verdienen Geld
+              {isEn ? "1,247 members are earning money" : "1.247 Member verdienen Geld"}
             </p>
             <div className="flex gap-1 mt-1">
               {[1, 2, 3, 4, 5].map((i) => (
@@ -73,7 +76,7 @@ export function SocialProof() {
 
       {/* Trust Stats */}
       <div className="text-center mt-3 text-xs" style={{ color: "var(--text-muted)" }}>
-        <p>💰 Durchschn. €2.150/Monat • 🔐 100% Sicher</p>
+        <p>{isEn ? "💰 Avg. €2,150/month • 🔐 100% secure" : "💰 Durchschn. €2.150/Monat • 🔐 100% Sicher"}</p>
       </div>
     </div>
   );

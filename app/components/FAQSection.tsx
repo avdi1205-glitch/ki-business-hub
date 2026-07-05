@@ -2,47 +2,43 @@
 
 import Link from "next/link";
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 
 const faqs = [
   {
-    question: "❓ Wie viel kann ich wirklich verdienen?",
-    answer:
-      "Das haengt stark von Nische, Reichweite, Content-Qualitaet und Umsetzungsdisziplin ab. Die Plattform hilft dir dabei, Inhalte schneller zu produzieren, Klicks zu tracken und systematischer an Monetarisierung zu arbeiten.",
+    questionKey: "faq1Question",
+    answerKey: "faq1Answer",
     color: "#3b82f6",
   },
   {
-    question: "💡 Ist das wirklich kostenlos?",
-    answer:
-      "Ja. Du kannst kostenlos starten, erste Inhalte testen und den Workflow kennenlernen. Erst wenn du mehr Volumen, Automatisierung und Reports brauchst, wechselst du auf Pro fuer 39 EUR pro Monat.",
+    questionKey: "faq2Question",
+    answerKey: "faq2Answer",
     color: "#10b981",
   },
   {
-    question: "🤖 Wie gut ist die KI Content Factory?",
-    answer:
-      "Sie beschleunigt Themenfindung, Struktur und erste Entwuerfe deutlich. Gute Ergebnisse entstehen am schnellsten, wenn du die generierten Inhalte redaktionell pruefst und an deine Zielgruppe anpasst.",
+    questionKey: "faq3Question",
+    answerKey: "faq3Answer",
     color: "#8b5cf6",
   },
   {
-    question: "💰 Wie funktioniert die Affiliate-Bezahlung?",
-    answer:
-      "Du platzierst passende Empfehlungen in deinen Inhalten und kannst Klicks nachvollziehen. Die konkrete Verguetung haengt vom jeweiligen Partnerprogramm ab und nicht jeder Klick fuehrt automatisch zu Umsatz.",
+    questionKey: "faq4Question",
+    answerKey: "faq4Answer",
     color: "#f59e0b",
   },
   {
-    question: "📧 Ist Newsletter-Automation einfach?",
-    answer:
-      "Der Einstieg ist einfach, aber gute Newsletter leben trotzdem von klaren Inhalten und sauberer Segmentierung. Die Automatisierung spart dir vor allem Routinearbeit.",
+    questionKey: "faq5Question",
+    answerKey: "faq5Answer",
     color: "#ec4899",
   },
   {
-    question: "🔒 Ist meine Seite wirklich sicher?",
-    answer:
-      "Es gibt technische Schutzmechanismen fuer Infrastruktur und Datenzugriff. Wie bei jedem Online-System solltest du zusaetzlich auf starke Zugangsdaten und saubere Prozesse achten.",
+    questionKey: "faq6Question",
+    answerKey: "faq6Answer",
     color: "#06b6d4",
   },
 ];
 
 export function FAQSection() {
+  const t = useTranslations("home");
   const [openIdx, setOpenIdx] = useState(0);
 
   return (
@@ -51,10 +47,10 @@ export function FAQSection() {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
-            ❓ Häufig Gestellte Fragen
+            {t("faqTitle")}
           </h2>
-          <p className="text-xl" style={{ color: "#cbd5e1" }}>
-            Die wichtigsten Antworten vor deinem Start oder Upgrade
+          <p className="text-xl" style={{ color: "var(--text-light)" }}>
+            {t("faqSubtitle")}
           </p>
         </div>
 
@@ -78,7 +74,7 @@ export function FAQSection() {
                 }}
               >
                 <h3 className="text-lg font-bold text-left" style={{ color: "var(--text-dark)" }}>
-                  {faq.question}
+                  {t(faq.questionKey)}
                 </h3>
                 <div
                   className="text-2xl transition-transform duration-300"
@@ -94,8 +90,8 @@ export function FAQSection() {
               {/* Answer */}
               {openIdx === idx && (
                 <div className="p-6 border-t-2" style={{ borderColor: `${faq.color}40`, background: `${faq.color}08` }}>
-                  <p className="text-lg leading-relaxed" style={{ color: "#e2e8f0" }}>
-                    {faq.answer}
+                  <p className="text-lg leading-relaxed" style={{ color: "var(--text-light)" }}>
+                    {t(faq.answerKey)}
                   </p>
                   <div className="mt-4 inline-block">
                     <Link
@@ -103,7 +99,7 @@ export function FAQSection() {
                       className="inline-block px-4 py-2 text-white text-sm font-bold rounded-full"
                       style={{ background: faq.color }}
                     >
-                      Kostenlos ausprobieren
+                        {t("faqCta")}
                     </Link>
                   </div>
                 </div>
@@ -115,17 +111,17 @@ export function FAQSection() {
         {/* Bottom CTA */}
         <div className="mt-16 text-center p-12 rounded-2xl" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
           <h3 className="text-2xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
-            Immer noch Fragen?
+            {t("faqFooterTitle")}
           </h3>
-          <p className="mb-6" style={{ color: "#cbd5e1" }}>
-            Wenn noch etwas unklar ist, kannst du dir zuerst die kostenlose Version ansehen oder direkt Kontakt aufnehmen.
+          <p className="mb-6" style={{ color: "var(--text-light)" }}>
+            {t("faqFooterSubtitle")}
           </p>
           <Link
             href="/kontakt"
             className="inline-block px-8 py-4 text-white font-bold rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
             style={{ background: "var(--primary)" }}
           >
-            📞 Support kontaktieren
+            📞 {t("faqFooterCta")}
           </Link>
         </div>
       </div>

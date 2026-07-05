@@ -1,10 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useLocale } from "next-intl";
 
 const EXIT_INTENT_STORAGE_KEY = "kihub-exit-intent-dismissed";
 
 export function ExitIntentPopup() {
+  const locale = useLocale();
   const [shown, setShown] = useState(false);
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -41,17 +43,17 @@ export function ExitIntentPopup() {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage("✅ Danke! Dein Bonus ist unterwegs.");
+        setMessage(locale === "en" ? "✅ Thanks! Your bonus is on the way." : "✅ Danke! Dein Bonus ist unterwegs.");
         setMessageType("success");
         window.localStorage.setItem(EXIT_INTENT_STORAGE_KEY, "subscribed");
         setEmail("");
         window.setTimeout(() => setShown(false), 1400);
       } else {
-        setMessage(data.error || "Anmeldung fehlgeschlagen");
+        setMessage(data.error || (locale === "en" ? "Signup failed" : "Anmeldung fehlgeschlagen"));
         setMessageType("error");
       }
     } catch {
-      setMessage("Verbindungsfehler. Bitte später erneut versuchen.");
+      setMessage(locale === "en" ? "Connection error. Please try again later." : "Verbindungsfehler. Bitte später erneut versuchen.");
       setMessageType("error");
     } finally {
       setLoading(false);
@@ -81,16 +83,20 @@ export function ExitIntentPopup() {
         <div className="text-center">
           <div className="text-4xl mb-4">🎁</div>
           <h2 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>
-            Warte! Du verpasst was...
+            {locale === "en" ? "Wait! You are missing out..." : "Warte! Du verpasst was..."}
           </h2>
           <p className="mb-4" style={{ color: "var(--text-light)" }}>
-            Erhalte täglich KI-Business-Tipps direkt in dein Postfach. Die besten Tools, die höchsten Affiliate-Deals.
+            {locale === "en"
+              ? "Get daily AI business tips straight to your inbox. Best tools, top affiliate deals."
+              : "Erhalte täglich KI-Business-Tipps direkt in dein Postfach. Die besten Tools, die höchsten Affiliate-Deals."}
           </p>
 
           {/* Bonus */}
           <div className="rounded-lg p-3 mb-6" style={{ background: "rgba(59, 130, 246, 0.1)", border: "1px solid rgba(59, 130, 246, 0.3)" }}>
             <p className="text-sm font-semibold" style={{ color: "#3b82f6" }}>
-              ✨ Bonus: Exklusives "Top 10 AI Tools 2026" PDF (kostenlos)
+              {locale === "en"
+                ? '✨ Bonus: Exclusive "Top 10 AI Tools 2026" PDF (free)'
+                : '✨ Bonus: Exklusives "Top 10 AI Tools 2026" PDF (kostenlos)'}
             </p>
           </div>
 
@@ -98,7 +104,7 @@ export function ExitIntentPopup() {
           <div className="flex gap-2 mb-4">
             <input
               type="email"
-              placeholder="deine@email.com"
+              placeholder={locale === "en" ? "your@email.com" : "deine@email.com"}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="flex-1 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 transition-all"
@@ -114,7 +120,7 @@ export function ExitIntentPopup() {
               className="px-6 py-2 text-white rounded-lg font-medium transition-colors"
               style={{ background: "var(--primary)", opacity: loading || !email ? 0.5 : 1 }}
             >
-              {loading ? "..." : "Ja!"}
+              {loading ? "..." : locale === "en" ? "Yes!" : "Ja!"}
             </button>
           </div>
 
@@ -133,7 +139,7 @@ export function ExitIntentPopup() {
             className="text-sm w-full py-2 transition-colors"
             style={{ color: "var(--text-muted)" }}
           >
-            Nein danke, ich will kein Geld verdienen
+            {locale === "en" ? "No thanks, I do not want to earn money" : "Nein danke, ich will kein Geld verdienen"}
           </button>
         </div>
       </div>

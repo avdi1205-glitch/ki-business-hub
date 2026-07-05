@@ -2,64 +2,65 @@
 
 import React from "react";
 import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
 
 const comparisonData = [
   {
-    feature: "📝 Artikel-Generierung",
+    featureKey: "comparisonFeature1",
     starter: "5/Monat",
     pro: "50/Monat",
     agency: "Unbegrenzt",
   },
   {
-    feature: "🤖 KI Quality",
+    featureKey: "comparisonFeature2",
     starter: "Basis",
     pro: "Premium (85+ SEO)",
     agency: "Enterprise",
   },
   {
-    feature: "💰 Affiliate Links",
+    featureKey: "comparisonFeature3",
     starter: "10 Partner",
     pro: "47 Partner",
     agency: "47 + Custom",
   },
   {
-    feature: "📧 Newsletter Auto",
+    featureKey: "comparisonFeature4",
     starter: "❌",
     pro: "✅ Vollständig",
     agency: "✅ + Segmentierung",
   },
   {
-    feature: "🔍 SEO Analytics",
+    featureKey: "comparisonFeature5",
     starter: "Basis",
     pro: "Erweitert",
     agency: "Enterprise + API",
   },
   {
-    feature: "⚡ Auto-Publishing",
+    featureKey: "comparisonFeature6",
     starter: "Manuell",
     pro: "Schedule + Auto",
     agency: "✅ + Webhooks",
   },
   {
-    feature: "🧪 A/B Testing",
+    featureKey: "comparisonFeature7",
     starter: "❌",
     pro: "✅ Basic",
     agency: "✅ Advanced",
   },
   {
-    feature: "👥 Team Member",
+    featureKey: "comparisonFeature8",
     starter: "Nur Sie",
     pro: "Nur Sie",
     agency: "5 Member",
   },
   {
-    feature: "📞 Support",
+    featureKey: "comparisonFeature9",
     starter: "Email",
     pro: "Email + Chat",
     agency: "24/7 Phone",
   },
   {
-    feature: "💳 Kosten",
+    featureKey: "comparisonFeature10",
     starter: "€0",
     pro: "€39/Monat",
     agency: "€149/Monat",
@@ -67,16 +68,49 @@ const comparisonData = [
 ];
 
 export function ComparisonTable() {
+  const t = useTranslations("home");
+  const locale = useLocale();
+  const isEn = locale === "en";
+
+  const translateCell = (value: string) => {
+    if (!isEn) return value;
+
+    const map: Record<string, string> = {
+      "5/Monat": "5/month",
+      "50/Monat": "50/month",
+      "Unbegrenzt": "Unlimited",
+      "Basis": "Basic",
+      "10 Partner": "10 partners",
+      "47 Partner": "47 partners",
+      "✅ Vollständig": "✅ Full",
+      "✅ + Segmentierung": "✅ + Segmentation",
+      Erweitert: "Advanced",
+      Manuell: "Manual",
+      "Nur Sie": "Only you",
+      "€39/Monat": "€39/month",
+      "€149/Monat": "€149/month",
+    };
+
+    return map[value] || value;
+  };
+
+  const rows = comparisonData.map((row) => ({
+    ...row,
+    starter: translateCell(row.starter),
+    pro: translateCell(row.pro),
+    agency: translateCell(row.agency),
+  }));
+
   return (
     <div style={{ background: "var(--background)" }} className="py-24">
       <div className="max-w-6xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
-            📊 Vergleich der Plans
+            {t("comparisonTitle")}
           </h2>
-          <p className="text-xl" style={{ color: "#cbd5e1" }}>
-            Wähle den Plan, der zu deinem aktuellen Umsatz-Ziel passt
+          <p className="text-xl" style={{ color: "var(--text-light)" }}>
+            {t("comparisonSubtitle")}
           </p>
         </div>
 
@@ -86,27 +120,27 @@ export function ComparisonTable() {
             <thead>
               <tr style={{ background: "var(--background-elevated)", borderBottom: "2px solid rgba(255,255,255,0.1)" }}>
                 <th className="px-6 py-4 text-left font-bold" style={{ color: "var(--text-dark)" }}>
-                  Features
+                  {t("comparisonHeaderFeature")}
                 </th>
                 <th className="px-6 py-4 text-center">
                   <div className="text-2xl mb-2">🚀</div>
-                  <div className="font-bold" style={{ color: "var(--text-dark)" }}>Starter</div>
-                  <div className="text-sm" style={{ color: "#cbd5e1" }}>Kostenlos</div>
+                  <div className="font-bold" style={{ color: "var(--text-dark)" }}>{t("comparisonStarter")}</div>
+                  <div className="text-sm" style={{ color: "var(--text-light)" }}>{t("comparisonStarterPrice")}</div>
                 </th>
                 <th className="px-6 py-4 text-center" style={{ background: "rgba(139, 92, 246, 0.12)", borderLeft: "2px solid rgba(139, 92, 246, 0.3)", borderRight: "2px solid rgba(139, 92, 246, 0.3)" }}>
                   <div className="text-2xl mb-2">💎</div>
-                  <div className="font-bold" style={{ color: "#c4b5fd" }}>Pro</div>
-                  <div className="text-sm" style={{ color: "#ddd6fe" }}>€39/Monat</div>
+                  <div className="font-bold" style={{ color: "var(--text-dark)" }}>{t("comparisonPro")}</div>
+                  <div className="text-sm" style={{ color: "var(--text-light)" }}>{t("comparisonProPrice")}</div>
                 </th>
                 <th className="px-6 py-4 text-center">
                   <div className="text-2xl mb-2">👑</div>
-                  <div className="font-bold" style={{ color: "var(--text-dark)" }}>Agency</div>
-                  <div className="text-sm" style={{ color: "var(--text-light)" }}>€149/Monat</div>
+                  <div className="font-bold" style={{ color: "var(--text-dark)" }}>{t("comparisonAgency")}</div>
+                  <div className="text-sm" style={{ color: "var(--text-light)" }}>{t("comparisonAgencyPrice")}</div>
                 </th>
               </tr>
             </thead>
             <tbody style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}>
-              {comparisonData.map((row, idx) => (
+              {rows.map((row, idx) => (
                 <tr
                   key={idx}
                   style={{
@@ -115,15 +149,15 @@ export function ComparisonTable() {
                   }}
                 >
                   <td className="px-6 py-4 font-semibold" style={{ color: "var(--text-dark)" }}>
-                    {row.feature}
+                      {t(row.featureKey)}
                   </td>
-                  <td className="px-6 py-4 text-center" style={{ color: "#e2e8f0" }}>
+                  <td className="px-6 py-4 text-center" style={{ color: "var(--text-light)" }}>
                     {row.starter}
                   </td>
-                  <td className="px-6 py-4 text-center font-bold" style={{ background: "rgba(139, 92, 246, 0.12)", color: "#e9d5ff" }}>
+                  <td className="px-6 py-4 text-center font-bold" style={{ background: "rgba(139, 92, 246, 0.12)", color: "var(--text-dark)" }}>
                     {row.pro}
                   </td>
-                  <td className="px-6 py-4 text-center" style={{ color: "#e2e8f0" }}>
+                  <td className="px-6 py-4 text-center" style={{ color: "var(--text-light)" }}>
                     {row.agency}
                   </td>
                 </tr>
@@ -137,17 +171,17 @@ export function ComparisonTable() {
           {[
             {
               title: "🚀 Starter",
-              price: "Kostenlos",
+              price: t("comparisonStarterPrice"),
               color: "#3b82f6",
             },
             {
               title: "💎 Pro",
-              price: "€39/Monat",
+              price: t("comparisonProPrice"),
               color: "#8b5cf6",
             },
             {
               title: "👑 Agency",
-              price: "€149/Monat",
+              price: t("comparisonAgencyPrice"),
               color: "#f59e0b",
             },
           ].map((plan, idx) => (
@@ -165,10 +199,10 @@ export function ComparisonTable() {
               <p className="text-lg font-bold mb-4" style={{ color: plan.color }}>
                 {plan.price}
               </p>
-              <div className="space-y-2 text-sm" style={{ color: "#e2e8f0" }}>
-                {comparisonData.map((row, jdx) => (
+              <div className="space-y-2 text-sm" style={{ color: "var(--text-light)" }}>
+                {rows.map((row, jdx) => (
                   <div key={jdx} className="flex justify-between">
-                    <span>{row.feature}</span>
+                    <span>{t(row.featureKey)}</span>
                     <span className="font-semibold">
                       {idx === 0 && row.starter}
                       {idx === 1 && row.pro}
@@ -183,11 +217,11 @@ export function ComparisonTable() {
 
         {/* Bottom CTA */}
         <div className="mt-16 text-center">
-          <p className="text-lg mb-8" style={{ color: "#cbd5e1" }}>
-            Beide bezahlten Pläne sind direkt live nutzbar und monatlich kündbar 🛡️
+          <p className="text-lg mb-8" style={{ color: "var(--text-light)" }}>
+            {t("comparisonBottomCopy")}
           </p>
           <Link href="/api/checkout?plan=pro&source=comparison-table" className="inline-block px-10 py-4 text-white font-bold text-lg rounded-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105" style={{ background: "var(--success)" }}>
-            Pro jetzt freischalten
+            {t("comparisonBottomCta")}
           </Link>
         </div>
       </div>

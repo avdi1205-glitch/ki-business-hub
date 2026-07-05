@@ -2,15 +2,19 @@
 
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
+import { useLocale, useTranslations } from "next-intl";
 
 export default function CreateArticle() {
+  const t = useTranslations("createArticle");
+  const locale = useLocale();
+  const isEn = locale === "en";
   const [title, setTitle] = useState("");
   const [idea, setIdea] = useState("");
-  const [category, setCategory] = useState("KI Tools");
+  const [category, setCategory] = useState(isEn ? "AI tools" : "KI Tools");
   const [article, setArticle] = useState("");
 
   async function generateArticle() {
-    setArticle("⏳ KI schreibt Artikel...");
+    setArticle(t("generating"));
 
     const res = await fetch("/api/generate-article", {
       method: "POST",
@@ -21,6 +25,7 @@ export default function CreateArticle() {
         title,
         idea,
         category,
+          locale,
       }),
     });
 
@@ -30,7 +35,7 @@ export default function CreateArticle() {
       const data = JSON.parse(text);
       setArticle(data.article || data.error);
     } catch {
-      setArticle("API Fehler: " + text);
+      setArticle(`${t("apiError")}: ${text}`);
     }
   }
 
@@ -38,24 +43,24 @@ export default function CreateArticle() {
     <main style={{ background: "var(--background)", minHeight: "100vh" }} className="p-6">
       <div className="max-w-4xl mx-auto rounded-xl p-8 card">
         <h1 className="text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
-          🚀 KI Artikel erstellen
+          🚀 {t("title")}
         </h1>
 
         <p className="mb-4 leading-7" style={{ color: "#e2e8f0" }}>
-          Erstelle neue Inhalte für deinen Business Blog.
+          {t("subtitle")}
         </p>
 
         <div className="mb-8 rounded-xl border border-cyan-400/20 bg-cyan-500/10 p-4">
-          <p className="text-sm font-semibold uppercase tracking-wide text-cyan-200">KI erstellt</p>
+          <p className="text-sm font-semibold uppercase tracking-wide text-cyan-200">{t("badge")}</p>
           <p className="mt-1 text-sm" style={{ color: "#e2e8f0" }}>
-            Alle Inhalte, die du hier generierst, sollten ab August sichtbar als KI-generiert markiert werden.
+            {t("notice")}
           </p>
         </div>
 
         <div className="space-y-6">
           <div>
             <label className="font-bold block mb-2" style={{ color: "var(--text-dark)" }}>
-              Titel
+              {t("labelTitle")}
             </label>
 
             <input
@@ -67,13 +72,13 @@ export default function CreateArticle() {
                 color: "var(--text-dark)",
                 background: "var(--background-alt)",
               }}
-              placeholder="Titel eingeben"
+              placeholder={t("placeholderTitle")}
             />
           </div>
 
           <div>
             <label className="font-bold block mb-2" style={{ color: "var(--text-dark)" }}>
-              Artikel Idee
+              {t("labelIdea")}
             </label>
 
             <textarea
@@ -85,13 +90,13 @@ export default function CreateArticle() {
                 color: "var(--text-dark)",
                 background: "var(--background-alt)",
               }}
-              placeholder="Beschreibe deine Idee..."
+              placeholder={t("placeholderIdea")}
             />
           </div>
 
           <div>
             <label className="font-bold block mb-2" style={{ color: "var(--text-dark)" }}>
-              Kategorie
+              {t("labelCategory")}
             </label>
 
             <select
@@ -104,12 +109,12 @@ export default function CreateArticle() {
                 background: "var(--background-alt)",
               }}
             >
-              <option>KI Tools</option>
-              <option>SEO</option>
-              <option>Hosting</option>
-              <option>VPN</option>
-              <option>Affiliate</option>
-              <option>Automation</option>
+              <option>{t("categoryAi")}</option>
+              <option>{t("categorySeo")}</option>
+              <option>{t("categoryHosting")}</option>
+              <option>{t("categoryVpn")}</option>
+              <option>{t("categoryAffiliate")}</option>
+              <option>{t("categoryAutomation")}</option>
             </select>
           </div>
 
@@ -120,14 +125,14 @@ export default function CreateArticle() {
               background: "linear-gradient(135deg, var(--success) 0%, var(--success-light) 100%)",
             }}
           >
-            🤖 Artikel generieren
+            🤖 {t("cta")}
           </button>
         </div>
 
         {article && (
           <div className="mt-10 rounded-lg p-6 card" style={{ background: "var(--background-alt)" }}>
             <h2 className="text-2xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
-              📄 Generierter Artikel
+              📄 {t("outputTitle")}
             </h2>
             <div style={{ color: "#e2e8f0" }}>
               <ReactMarkdown>

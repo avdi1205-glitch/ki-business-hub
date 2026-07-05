@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "../../../lib/prisma";
 import AffiliateButton from "../../blog/[slug]/AffiliateButton";
+import { getLocale } from "next-intl/server";
 
 function createSlug(name: string) {
   return name
@@ -28,6 +29,8 @@ export default async function ToolDetailPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  const locale = await getLocale();
+  const isEn = locale === "en";
   const { slug } = await params;
 
   const tools = await prisma.affiliateLink.findMany();
@@ -50,7 +53,7 @@ export default async function ToolDetailPage({
           )}
 
           <h1 className="mb-4 text-5xl font-bold tracking-tight md:text-7xl">
-            {tool.name} Test & Bewertung
+            {isEn ? `${tool.name} review & rating` : `${tool.name} Test & Bewertung`}
           </h1>
 
           <p className="mb-3 text-2xl font-bold text-yellow-400">
@@ -63,14 +66,14 @@ export default async function ToolDetailPage({
             </p>
           )}
 
-          <p className="text-slate-300">Kategorie: {tool.category}</p>
+          <p className="text-slate-300">{isEn ? "Category" : "Kategorie"}: {tool.category}</p>
         </div>
       </section>
 
       <section className="mx-auto max-w-5xl px-6 pb-20">
         {tool.description && (
           <div className="mb-8 rounded-2xl border border-white/10 bg-white/10 p-8">
-            <h2 className="mb-3 text-3xl font-bold">Kurzfazit</h2>
+            <h2 className="mb-3 text-3xl font-bold">{isEn ? "Quick takeaway" : "Kurzfazit"}</h2>
             <p className="leading-7 text-slate-100">{tool.description}</p>
           </div>
         )}
@@ -79,7 +82,7 @@ export default async function ToolDetailPage({
           {tool.pros && (
             <div className="rounded-2xl border border-green-500/30 bg-green-500/10 p-6">
               <h2 className="mb-4 text-2xl font-bold text-green-400">
-                ✅ Vorteile
+                {isEn ? "✅ Pros" : "✅ Vorteile"}
               </h2>
 
               <ul className="ml-6 list-disc space-y-2 text-slate-100">
@@ -93,7 +96,7 @@ export default async function ToolDetailPage({
           {tool.cons && (
             <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-6">
               <h2 className="mb-4 text-2xl font-bold text-red-400">
-                ❌ Nachteile
+                {isEn ? "❌ Cons" : "❌ Nachteile"}
               </h2>
 
               <ul className="ml-6 list-disc space-y-2 text-slate-100">
@@ -107,44 +110,53 @@ export default async function ToolDetailPage({
 
         <div className="mb-8 rounded-2xl border border-green-500/40 bg-green-500/10 p-8">
           <h2 className="mb-4 text-3xl font-bold">
-            Lohnt sich {tool.name}?
+            {isEn ? `Is ${tool.name} worth it?` : `Lohnt sich ${tool.name}?`}
           </h2>
 
           <p className="mb-6 leading-7 text-slate-100">
-            {tool.name} ist besonders interessant, wenn du eine Lösung aus der
-            Kategorie <strong>{tool.category}</strong> suchst und schnell eine
-            passende Empfehlung finden möchtest.
+            {isEn
+              ? `${tool.name} is especially interesting if you are looking for a solution in the `
+              : `${tool.name} ist besonders interessant, wenn du eine Lösung aus der `}
+            {isEn ? "category " : "Kategorie "}
+            <strong>{tool.category}</strong>
+            {isEn
+              ? " and want to find a suitable recommendation quickly."
+              : " suchst und schnell eine passende Empfehlung finden möchtest."}
           </p>
 
           <AffiliateButton
             id={tool.id}
             url={tool.url}
-            text={tool.buttonText || "🚀 Angebot ansehen"}
+            text={tool.buttonText || (isEn ? "🚀 View offer" : "🚀 Angebot ansehen")}
             clickSource={`tool-detail-${slug}`}
           />
         </div>
 
         <div className="rounded-2xl border border-white/10 bg-white/10 p-8">
-          <h2 className="mb-6 text-3xl font-bold">Häufige Fragen</h2>
+          <h2 className="mb-6 text-3xl font-bold">{isEn ? "Frequently asked questions" : "Häufige Fragen"}</h2>
 
           <div className="space-y-5 text-slate-100">
             <div>
               <h3 className="font-bold text-white">
-                Für wen ist {tool.name} geeignet?
+                {isEn ? `Who is ${tool.name} for?` : `Für wen ist ${tool.name} geeignet?`}
               </h3>
               <p>
-                Für Nutzer, die eine zuverlässige Lösung im Bereich{" "}
-                {tool.category} suchen.
+                {isEn
+                  ? "For users looking for a reliable solution in "
+                  : "Für Nutzer, die eine zuverlässige Lösung im Bereich "}
+                {tool.category}
+                {isEn ? "." : " suchen."}
               </p>
             </div>
 
             <div>
               <h3 className="font-bold text-white">
-                Ist {tool.name} empfehlenswert?
+                {isEn ? `Is ${tool.name} recommended?` : `Ist ${tool.name} empfehlenswert?`}
               </h3>
               <p>
-                Mit einer Bewertung von {tool.rating}/10 gehört {tool.name} zu
-                unseren empfohlenen Tools.
+                {isEn
+                  ? `With a rating of ${tool.rating}/10, ${tool.name} is one of our recommended tools.`
+                  : `Mit einer Bewertung von ${tool.rating}/10 gehört ${tool.name} zu unseren empfohlenen Tools.`}
               </p>
             </div>
           </div>

@@ -20,7 +20,7 @@ export default async function AffiliateAdminPage() {
     const rating = Number(String(formData.get("rating") || "5").replace(",", "."));
     const price = String(formData.get("price") || "");
     const badge = String(formData.get("badge") || "");
-    const buttonText = String(formData.get("buttonText") || "🚀 Angebot ansehen");
+    const buttonText = String(formData.get("buttonText") || "🚀 View offer");
     const description = String(formData.get("description") || "");
     const pros = String(formData.get("pros") || "");
     const cons = String(formData.get("cons") || "");
@@ -46,28 +46,28 @@ export default async function AffiliateAdminPage() {
 
   return (
     <main style={{ background: "var(--background)", minHeight: "100vh" }} className="p-10">
-      <h1 className="text-4xl font-bold mb-8" style={{ color: "var(--text-dark)" }}>💰 Affiliate Manager</h1>
+      <h1 className="text-4xl font-bold mb-8" style={{ color: "var(--text-dark)" }}>💰 Affiliate manager</h1>
 
       <form
         action={createAffiliateLink}
         className="mb-8 space-y-4 rounded-xl p-8"
         style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}
       >
-        <input name="name" placeholder="Produktname" className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
-        <input name="url" placeholder="Affiliate Link" className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
-        <input name="category" placeholder="Kategorie z.B. Hosting" className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
+        <input name="name" placeholder="Product name" className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
+        <input name="url" placeholder="Affiliate link" className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
+        <input name="category" placeholder="Category e.g. hosting" className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
         <input name="logo" placeholder="Logo URL optional" className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
-        <input name="rating" defaultValue="9.4" placeholder="Bewertung z.B. 9.4" className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
-        <input name="price" placeholder="Preis z.B. ab 2,99 €/Monat" className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
-        <input name="badge" placeholder="Badge z.B. 🥇 Testsieger 2026" className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
-        <input name="buttonText" defaultValue="🚀 Angebot ansehen" placeholder="Button Text" className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
+        <input name="rating" defaultValue="9.4" placeholder="Rating e.g. 9.4" className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
+        <input name="price" placeholder="Price e.g. from €2.99/month" className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
+        <input name="badge" placeholder="Badge e.g. 🥇 2026 winner" className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
+        <input name="buttonText" defaultValue="🚀 View offer" placeholder="Button text" className="w-full p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
 
-        <textarea name="description" placeholder="Kurzbeschreibung" className="w-full h-24 p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
-        <textarea name="pros" placeholder="Vorteile, eine Zeile pro Vorteil" className="w-full h-24 p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
-        <textarea name="cons" placeholder="Nachteile, eine Zeile pro Nachteil" className="w-full h-24 p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
+        <textarea name="description" placeholder="Short description" className="w-full h-24 p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
+        <textarea name="pros" placeholder="Pros, one line per benefit" className="w-full h-24 p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
+        <textarea name="cons" placeholder="Cons, one line per drawback" className="w-full h-24 p-3 rounded-xl bg-slate-800 text-white border border-slate-600" />
 
         <button type="submit" className="rounded-xl border border-green-400/30 bg-green-600 px-6 py-3 font-bold text-white shadow-sm hover:bg-green-700">
-          Affiliate Link speichern
+          Save affiliate link
         </button>
       </form>
 
@@ -105,7 +105,7 @@ export default async function AffiliateAdminPage() {
             </p>
 
             <p className="text-yellow-400 font-bold">
-              Klicks: {link.clicks}
+              Clicks: {link.clicks}
             </p>
 
             {link.description && (
@@ -114,11 +114,11 @@ export default async function AffiliateAdminPage() {
 
             <div className="mt-6 flex flex-wrap gap-3">
               <Link href={`/admin/affiliate/edit/${link.id}`} className="rounded-lg border border-blue-400/30 bg-blue-600 px-4 py-2 font-bold text-white shadow-sm hover:bg-blue-700">
-                Bearbeiten
+                Edit
               </Link>
 
               <a href={link.url} target="_blank" rel="noopener noreferrer" className="rounded-lg border border-green-400/30 bg-green-600 px-4 py-2 font-bold text-white shadow-sm hover:bg-green-700">
-                Link öffnen
+                Open link
               </a>
 
               <DeleteAffiliateButton id={link.id} />

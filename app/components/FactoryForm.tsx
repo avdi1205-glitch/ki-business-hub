@@ -1,3 +1,7 @@
+"use client";
+
+import { useLocale, useTranslations } from "next-intl";
+
 type Props = {
   category: string;
   setCategory: (value: string) => void;
@@ -57,6 +61,10 @@ export default function FactoryForm({
 
   startFactory,
 }: Props) {
+  const t = useTranslations("contentFactory");
+  const locale = useLocale();
+  const isEn = locale === "en";
+
   return (
     <div className="rounded-2xl border border-white/10 bg-white/10 p-8">
 
@@ -67,11 +75,11 @@ export default function FactoryForm({
           onChange={(e) => setCategory(e.target.value)}
           className="rounded-xl bg-slate-900 p-4"
         >
-          <option>KI Tools</option>
-          <option>Hosting</option>
-          <option>VPN</option>
-          <option>Automation</option>
-          <option>Affiliate</option>
+          <option>{t("categoryAi")}</option>
+          <option>{t("categoryHosting")}</option>
+          <option>{t("categoryVpn")}</option>
+          <option>{t("categoryAutomation")}</option>
+          <option>{t("categoryAffiliate")}</option>
         </select>
 
         <select
@@ -101,9 +109,9 @@ export default function FactoryForm({
           onChange={(e) => setStyle(e.target.value)}
           className="rounded-xl bg-slate-900 p-4"
         >
-          <option>Professionell</option>
-          <option>Locker</option>
-          <option>Experte</option>
+          <option>{isEn ? "Professional" : "Professionell"}</option>
+          <option>{isEn ? "Casual" : "Locker"}</option>
+          <option>{isEn ? "Expert" : "Experte"}</option>
         </select>
 
         <select
@@ -111,9 +119,9 @@ export default function FactoryForm({
           onChange={(e) => setAudience(e.target.value)}
           className="rounded-xl bg-slate-900 p-4"
         >
-          <option>Anfänger</option>
-          <option>Unternehmer</option>
-          <option>Agenturen</option>
+          <option>{t("audienceBeginners")}</option>
+          <option>{t("audienceEntrepreneurs")}</option>
+          <option>{t("audienceAgencies")}</option>
         </select>
 
         <select
@@ -121,7 +129,7 @@ export default function FactoryForm({
           onChange={(e) => setAffiliateTool(e.target.value)}
           className="rounded-xl bg-slate-900 p-4"
         >
-          <option>Automatisch</option>
+          <option>{t("affiliateAuto")}</option>
           <option>Hostinger</option>
           <option>ChatGPT Plus</option>
           <option>NordVPN</option>
@@ -135,9 +143,9 @@ export default function FactoryForm({
           onChange={(e) => setSeoStrength(e.target.value)}
           className="rounded-xl bg-slate-900 p-4"
         >
-          <option>Standard</option>
-          <option>Stark</option>
-          <option>Maximal</option>
+          <option>{t("seoStandard")}</option>
+          <option>{t("seoStrong")}</option>
+          <option>{t("seoMax")}</option>
         </select>
 
         <select
@@ -145,10 +153,10 @@ export default function FactoryForm({
           onChange={(e) => setArticleType(e.target.value)}
           className="rounded-xl bg-slate-900 p-4"
         >
-          <option>Ratgeber</option>
-          <option>Vergleich</option>
-          <option>Testbericht</option>
-          <option>Liste</option>
+          <option>{t("articleGuide")}</option>
+          <option>{t("articleComparison")}</option>
+          <option>{t("articleReview")}</option>
+          <option>{t("articleList")}</option>
         </select>
 
       </div>
@@ -159,8 +167,8 @@ export default function FactoryForm({
         className="mt-8 rounded-xl bg-green-600 px-8 py-4 font-bold hover:bg-green-700 disabled:opacity-50"
       >
         {loading
-          ? "Generiere..."
-          : "🚀 Content Factory starten"}
+          ? t("generating")
+          : `🚀 ${t("startFactory")}`}
       </button>
 
     </div>

@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import CheckoutCtaButton from "./CheckoutCtaButton";
+import { useLocale, useTranslations } from "next-intl";
 
 const pricingPlans = [
   {
@@ -10,16 +11,16 @@ const pricingPlans = [
     emoji: "🚀",
     price: "Kostenlos",
     period: "Für immer",
-    description: "Zum Starten und ersten Testen",
+    descriptionKey: "pricingStarterDescription",
     features: [
-      "✅ 5 Artikel/Monat mit KI",
-      "✅ Basis-Affiliate Links",
-      "✅ Email-Support",
-      "✅ Basic Analytics",
-      "❌ Newsletter Automation",
-      "❌ Advanced SEO Tools",
+      "pricingStarterFeature1",
+      "pricingStarterFeature2",
+      "pricingStarterFeature3",
+      "pricingStarterFeature4",
+      "pricingStarterFeature5",
+      "pricingStarterFeature6",
     ],
-    cta: "Kostenlos starten",
+    ctaKey: "pricingStarterCta",
     color: "#3b82f6",
     badge: "",
     href: "/content-factory",
@@ -29,16 +30,16 @@ const pricingPlans = [
     emoji: "💎",
     price: "€39",
     period: "pro Monat",
-    description: "Für Solos, Creator und kleine Business-Setups",
+    descriptionKey: "pricingProDescription",
     features: [
-      "✅ 50 Artikel/Monat mit KI",
-      "✅ Premium-Affiliate Links (47 Partner)",
-      "✅ Priority Email & Chat Support",
-      "✅ Advanced Analytics & Reports",
-      "✅ Newsletter Automation",
-      "✅ Keyword Research Tool",
+      "pricingProFeature1",
+      "pricingProFeature2",
+      "pricingProFeature3",
+      "pricingProFeature4",
+      "pricingProFeature5",
+      "pricingProFeature6",
     ],
-    cta: "Pro jetzt freischalten",
+    ctaKey: "pricingProCta",
     color: "#8b5cf6",
     badge: "BESTER START",
     highlight: true,
@@ -49,16 +50,16 @@ const pricingPlans = [
     emoji: "👑",
     price: "€149",
     period: "pro Monat",
-    description: "Für Agenturen, Teams und mehrere Projekte",
+    descriptionKey: "pricingAgencyDescription",
     features: [
-      "✅ Unbegrenzte Artikel mit KI",
-      "✅ Alle Affiliate Links + Custom",
-      "✅ 24/7 Priority Phone Support",
-      "✅ Custom Reports & API Access",
-      "✅ Team Management (5 Member)",
-      "✅ White Label Option",
+      "pricingAgencyFeature1",
+      "pricingAgencyFeature2",
+      "pricingAgencyFeature3",
+      "pricingAgencyFeature4",
+      "pricingAgencyFeature5",
+      "pricingAgencyFeature6",
     ],
-    cta: "Agency jetzt freischalten",
+    ctaKey: "pricingAgencyCta",
     color: "#f59e0b",
     badge: "FÜR TEAMS",
     href: "/api/checkout?plan=agency&source=pricing-card-agency",
@@ -66,22 +67,50 @@ const pricingPlans = [
 ];
 
 export function PricingSection() {
+  const t = useTranslations("home");
+  const locale = useLocale();
+  const isEn = locale === "en";
+
+  const plans = pricingPlans.map((plan) => {
+    if (plan.name === "Pro") {
+      return {
+        ...plan,
+        period: isEn ? "per month" : "pro Monat",
+        badge: isEn ? "BEST START" : "BESTER START",
+      };
+    }
+
+    if (plan.name === "Agency") {
+      return {
+        ...plan,
+        period: isEn ? "per month" : "pro Monat",
+        badge: isEn ? "FOR TEAMS" : "FÜR TEAMS",
+      };
+    }
+
+    return {
+      ...plan,
+      price: isEn ? "Free" : "Kostenlos",
+      period: isEn ? "Forever" : "Für immer",
+    };
+  });
+
   return (
     <div style={{ background: "var(--background)" }} className="py-24">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
-            💰 Einfache, transparente Preise
+            {t("pricingTitle")}
           </h2>
-          <p className="text-xl max-w-2xl mx-auto" style={{ color: "#cbd5e1" }}>
-            Starte kostenlos und upgrade erst dann, wenn dir die Automatisierung wirklich Zeit und Umsatz bringt.
+          <p className="text-xl max-w-2xl mx-auto" style={{ color: "var(--text-light)" }}>
+            {t("pricingSubtitle")}
           </p>
         </div>
 
         {/* Pricing Grid */}
         <div className="grid md:grid-cols-3 gap-8 mb-12">
-          {pricingPlans.map((plan, idx) => (
+          {plans.map((plan, idx) => (
             <div
               key={idx}
               className="relative rounded-2xl overflow-hidden transition-all duration-300 transform hover:scale-105"
@@ -104,7 +133,7 @@ export function PricingSection() {
                 <div className="mb-6">
                   <div className="text-5xl mb-3">{plan.emoji}</div>
                   <h3 className="text-2xl font-bold" style={{ color: "var(--text-dark)" }}>{plan.name}</h3>
-                  <p className="text-sm" style={{ color: "#cbd5e1" }}>{plan.description}</p>
+                  <p className="text-sm" style={{ color: "var(--text-light)" }}>{t(plan.descriptionKey)}</p>
                 </div>
 
                 {/* Price */}
@@ -112,10 +141,10 @@ export function PricingSection() {
                   <div className="text-4xl font-bold" style={{ color: plan.color }}>
                     {plan.price}
                   </div>
-                  <p className="text-sm" style={{ color: "#94a3b8" }}>{plan.period}</p>
+                  <p className="text-sm" style={{ color: "var(--text-muted)" }}>{plan.period}</p>
                   {plan.name !== "Starter" && (
-                    <p className="mt-2 text-sm font-medium" style={{ color: "#e2e8f0" }}>
-                      {plan.name === "Pro" ? "Ideal, wenn du regelmäßig Inhalte und Affiliate-Umsatz aufbauen willst." : "Sinnvoll, wenn du mehrere Marken, Kunden oder Teammitglieder steuerst."}
+                    <p className="mt-2 text-sm font-medium" style={{ color: "var(--text-light)" }}>
+                      {plan.name === "Pro" ? t("pricingProHint") : t("pricingAgencyHint")}
                     </p>
                   )}
                 </div>
@@ -124,9 +153,9 @@ export function PricingSection() {
                 <div className="flex-1 mb-6 space-y-3">
                   {plan.features.map((feature, fidx) => (
                     <div key={fidx} className="flex items-start gap-2">
-                      <span className="text-lg mt-1">{feature.includes("✅") ? "✅" : "❌"}</span>
-                        <span style={{ color: feature.includes("✅") ? "#e2e8f0" : "#cbd5e1" }}>
-                        {feature.replace("✅ ", "").replace("❌ ", "")}
+                      <span className="text-lg mt-1">{t(feature).startsWith("❌") ? "❌" : "✅"}</span>
+                        <span style={{ color: t(feature).startsWith("❌") ? "var(--text-muted)" : "var(--text-light)" }}>
+                        {t(feature).replace("✅ ", "").replace("❌ ", "")}
                       </span>
                     </div>
                   ))}
@@ -138,12 +167,12 @@ export function PricingSection() {
                     href={plan.href}
                     ctaKey={`pricing-${plan.name.toLowerCase()}`}
                     variantA={{
-                      label: plan.cta,
+                      label: `🚀 ${t(plan.ctaKey)}`,
                       sourceSuffix: "variant-a",
                       className: "block w-full rounded-lg px-4 py-3 text-center font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-lg",
                     }}
                     variantB={{
-                      label: plan.name === "Pro" ? "⚡ Mehr Umsatz mit Pro" : "🏢 Mehr Projekte mit Agency",
+                      label: plan.name === "Pro" ? `⚡ ${t("pricingProVariantB")}` : `🏢 ${t("pricingAgencyVariantB")}`,
                       sourceSuffix: "variant-b",
                       className: "block w-full rounded-lg px-4 py-3 text-center font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-lg",
                     }}
@@ -154,7 +183,7 @@ export function PricingSection() {
                     className="block w-full rounded-lg px-4 py-3 text-center font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
                     style={{ background: plan.color }}
                   >
-                    {plan.cta}
+                    {t(plan.ctaKey)}
                   </Link>
                 )}
               </div>
@@ -165,13 +194,13 @@ export function PricingSection() {
         {/* Money-Back Guarantee */}
         <div className="max-w-2xl mx-auto p-8 rounded-xl text-center" style={{ background: "rgba(16, 185, 129, 0.1)", border: "1px solid var(--success)" }}>
           <h3 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>
-            🛡️ 30 Tage ohne Risiko testen
+            {t("pricingGuaranteeTitle")}
           </h3>
-          <p style={{ color: "#e2e8f0" }}>
-            Wenn es nicht zu deinem Workflow passt, bekommst du dein Geld zurueck.
+          <p style={{ color: "var(--text-light)" }}>
+            {t("pricingGuaranteeBody")}
           </p>
           <p className="mt-4 text-sm" style={{ color: "var(--text-muted)" }}>
-            Für bezahlte Pläne kannst du `PRO_CHECKOUT_URL` und `AGENCY_CHECKOUT_URL` in Vercel hinterlegen.
+            {t("pricingEnvNote")}
           </p>
         </div>
       </div>

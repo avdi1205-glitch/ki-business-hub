@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { prisma } from "../../lib/prisma";
+import { getLocale } from "next-intl/server";
+import TranslateArticleButton from "./TranslateArticleButton";
+import TranslateAllMissingButton from "./TranslateAllMissingButton";
 
 function statusColor(status: string) {
   if (status === "Veröffentlicht" || status === "published") return "text-green-400";
@@ -10,14 +13,18 @@ function statusColor(status: string) {
 }
 
 export default async function EditorPage() {
+  const locale = await getLocale();
+  const isEn = locale === "en";
   const articles = await prisma.article.findMany({
+    where: { locale } as any,
     orderBy: { createdAt: "desc" },
   });
 
   return (
     <main className="min-h-screen px-6 py-16" style={{ background: "var(--background)", color: "var(--text-dark)" }}>
       <section className="mx-auto max-w-6xl">
-        <h1 className="mb-10 text-5xl font-bold">📚 KI Redaktion</h1>
+        <h1 className="mb-10 text-5xl font-bold">{isEn ? "📚 AI editorial" : "📚 KI Redaktion"}</h1>
+        <TranslateAllMissingButton />
 
         <div className="grid gap-6">
           {articles.map((article) => (
@@ -26,7 +33,15 @@ export default async function EditorPage() {
               className="rounded-2xl border border-white/10 bg-white/10 p-6"
             >
               <p className={`mb-2 font-bold ${statusColor(article.status)}`}>
-                {article.status}
+                {article.status === "Veröffentlicht"
+                  ? isEn
+                    ? "Published"
+                    : "Veröffentlicht"
+                  : article.status === "Geplant"
+                    ? isEn
+                      ? "Scheduled"
+                      : "Geplant"
+                    : article.status}
               </p>
 
               <h2 className="text-2xl font-bold">{article.title}</h2>
@@ -46,8 +61,10 @@ export default async function EditorPage() {
                   href={`/blog/${article.slug}`}
                   className="rounded-xl bg-cyan-500 px-4 py-2 font-bold hover:bg-cyan-600"
                 >
-                  Artikel öffnen
+                  {isEn ? "Open article" : "Artikel öffnen"}
                 </Link>
+
+                <TranslateArticleButton articleId={article.id} />
               </div>
             </div>
           ))}

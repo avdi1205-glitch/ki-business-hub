@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type FactoryStatsProps = {
   refreshKey?: number;
@@ -16,6 +17,7 @@ type Stats = {
 export default function FactoryStats({
   refreshKey = 0,
 }: FactoryStatsProps) {
+  const t = useTranslations("contentFactory");
   const [stats, setStats] = useState<Stats>({
     todayArticles: 0,
     totalArticles: 0,
@@ -55,7 +57,7 @@ export default function FactoryStats({
   if (loading) {
     return (
       <div className="mt-6 rounded-2xl border border-white/10 bg-black/30 p-6">
-        <p className="text-gray-400">Lade Statistiken...</p>
+        <p className="text-gray-400">{t("loadingStats")}</p>
       </div>
     );
   }
@@ -65,7 +67,7 @@ export default function FactoryStats({
 
       <div className="rounded-xl border border-white/10 bg-black/30 p-5">
         <p className="text-sm text-gray-400">
-          📊 Heute erstellt
+          📊 {t("todayCreated")}
         </p>
 
         <p className="mt-2 text-4xl font-bold">
@@ -75,7 +77,7 @@ export default function FactoryStats({
 
       <div className="rounded-xl border border-white/10 bg-black/30 p-5">
         <p className="text-sm text-gray-400">
-          📄 Gesamt Artikel
+          📄 {t("totalArticles")}
         </p>
 
         <p className="mt-2 text-4xl font-bold">
@@ -85,7 +87,7 @@ export default function FactoryStats({
 
       <div className="rounded-xl border border-white/10 bg-black/30 p-5">
         <p className="text-sm text-gray-400">
-          🎯 SEO Score
+          🎯 {t("seoScore")}
         </p>
 
         <p className="mt-2 text-4xl font-bold text-green-400">
@@ -95,7 +97,7 @@ export default function FactoryStats({
 
       <div className="rounded-xl border border-white/10 bg-black/30 p-5">
         <p className="text-sm text-gray-400">
-          ⚡ Durchschnitt
+          ⚡ {t("average")}
         </p>
 
         <p className="mt-2 text-4xl font-bold text-cyan-300">
