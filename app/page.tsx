@@ -177,21 +177,21 @@ export default async function Home() {
               className="rounded-2xl border border-white/10 bg-white/10 p-5 transition hover:bg-white/15"
             >
               <p className="text-sm font-bold text-cyan-300">Ich will die besten Tools vergleichen</p>
-              <p className="mt-2 text-sm leading-6 text-slate-200">Nutze klare Ratings, Preise und Empfehlungen, um schneller zu entscheiden.</p>
+              <p className="mt-2 text-sm leading-6 text-slate-200">Ratings, Preise und Empfehlungen auf einen Blick.</p>
             </Link>
             <Link
               href="/affiliate"
               className="rounded-2xl border border-white/10 bg-white/10 p-5 transition hover:bg-white/15"
             >
               <p className="text-sm font-bold text-cyan-300">Ich will passende Empfehlungen finden</p>
-              <p className="mt-2 text-sm leading-6 text-slate-200">Direkt zu den besten Affiliate-Empfehlungen und passenden Detailseiten.</p>
+              <p className="mt-2 text-sm leading-6 text-slate-200">Direkt zu passenden Empfehlungen und Detailseiten.</p>
             </Link>
             <Link
               href="/blog"
               className="rounded-2xl border border-white/10 bg-white/10 p-5 transition hover:bg-white/15"
             >
               <p className="text-sm font-bold text-cyan-300">Ich will mich zuerst informieren</p>
-              <p className="mt-2 text-sm leading-6 text-slate-200">Lesen, vergleichen und dann mit einem besseren Bild weitergehen.</p>
+              <p className="mt-2 text-sm leading-6 text-slate-200">Erst lesen, dann schneller entscheiden.</p>
             </Link>
           </div>
         </div>
@@ -199,7 +199,7 @@ export default async function Home() {
 
       <section className="px-6 pb-6">
         <div className="mx-auto max-w-6xl rounded-2xl border border-cyan-400/20 bg-cyan-500/5 px-5 py-4 text-sm leading-7 text-slate-200">
-          <span className="font-semibold text-cyan-300">Oder direkt entscheiden:</span> Wenn du schon weißt, was du brauchst, geh oben mit einem Klick in die passende Strecke. Wenn du noch unsicher bist, helfen dir die Top-Tools direkt danach beim Vergleichen.
+          <span className="font-semibold text-cyan-300">Oder direkt entscheiden:</span> Wenn du schon weißt, was du brauchst, nimm oben die passende Strecke. Wenn du unsicher bist, helfen dir die Top-Tools beim Vergleichen.
         </div>
       </section>
 
@@ -218,15 +218,15 @@ export default async function Home() {
           <div className="mb-8 grid gap-4 md:grid-cols-3">
             <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
               <p className="text-sm font-bold text-emerald-300">Mehr Klarheit</p>
-              <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>Schneller sehen, was sich fuer dein Ziel am ehesten lohnt.</p>
+              <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>Schnell sehen, was sich fuer dich lohnt.</p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
               <p className="text-sm font-bold text-emerald-300">Weniger Recherche</p>
-              <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>Weniger Tabs, weniger Streuverlust, schneller zum naechsten Schritt.</p>
+              <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>Weniger Tabs, schneller zum naechsten Schritt.</p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
               <p className="text-sm font-bold text-emerald-300">Schneller Umsatzpfad</p>
-              <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>Direkt zu den Seiten mit hoechster Kauf- und Klickwahrscheinlichkeit.</p>
+              <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>Direkt zu den stärksten Klickpfaden.</p>
             </div>
           </div>
 
