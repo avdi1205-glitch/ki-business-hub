@@ -13,7 +13,7 @@ type Props = {
 };
 
 export default function FactoryQueue({ queue }: Props) {
-  const t = useTranslations("contentFactory");
+  const t = useTranslations("home.contentFactory");
 
   return (
     <div className="mt-6 rounded-2xl border border-white/10 bg-white/10 p-6">

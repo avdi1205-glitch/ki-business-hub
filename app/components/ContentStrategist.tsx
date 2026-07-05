@@ -14,7 +14,7 @@ type Idea = {
 };
 
 export default function ContentStrategist({ onApply }: { onApply: () => void }) {
-  const t = useTranslations("contentFactory");
+  const t = useTranslations("home.contentFactory");
   const locale = useLocale();
   const isEn = locale === "en";
   const [ideas, setIdeas] = useState<Idea[]>([]);
