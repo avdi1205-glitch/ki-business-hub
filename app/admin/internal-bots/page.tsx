@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 type BotType = "sales" | "seo" | "content-ops" | "support";
 type TeamRole = "owner" | "growth" | "content" | "support";
@@ -130,7 +130,7 @@ export default function InternalBotsPage() {
     return value.map((item) => String(item || "")).filter(Boolean);
   };
 
-  const loadHistory = async () => {
+  const loadHistory = useCallback(async () => {
     try {
       const params = new URLSearchParams();
       params.set("limit", "50");
@@ -148,12 +148,28 @@ export default function InternalBotsPage() {
     } finally {
       setHistoryLoading(false);
     }
-  };
+  }, [favoriteOnly, recurringOnly]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     void loadHistory();
-  }, [favoriteOnly, recurringOnly]);
+  }, [loadHistory]);
+
+  const historyKpis = useMemo(() => {
+    const now = new Date();
+    const isSameDay = (a: Date, b: Date) =>
+      a.getFullYear() === b.getFullYear() &&
+      a.getMonth() === b.getMonth() &&
+      a.getDate() === b.getDate();
+
+    const totalRuns = history.length;
+    const favoriteRuns = history.filter((item) => item.favorite).length;
+    const recurringRuns = history.filter((item) => Boolean(item.recurringTaskKey)).length;
+    const runsToday = history.filter((item) => isSameDay(new Date(item.createdAt), now)).length;
+    const favoriteRate = totalRuns > 0 ? Math.round((favoriteRuns / totalRuns) * 100) : 0;
+
+    return { totalRuns, favoriteRuns, recurringRuns, runsToday, favoriteRate };
+  }, [history]);
 
   const applyPlaybook = (preset: { name: string; goal: string; context: string }) => {
     setPlaybook(preset.name);
@@ -370,6 +386,29 @@ export default function InternalBotsPage() {
             <pre className="whitespace-pre-wrap text-sm" style={{ color: "var(--text-light)", fontFamily: "inherit" }}>{answer}</pre>
           </div>
         )}
+
+        <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+          <div className="rounded-xl border p-4" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
+            <p className="text-xs uppercase tracking-wide" style={{ color: "var(--text-light)" }}>Runs</p>
+            <p className="mt-1 text-2xl font-bold">{historyKpis.totalRuns}</p>
+          </div>
+          <div className="rounded-xl border p-4" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
+            <p className="text-xs uppercase tracking-wide" style={{ color: "var(--text-light)" }}>Heute</p>
+            <p className="mt-1 text-2xl font-bold">{historyKpis.runsToday}</p>
+          </div>
+          <div className="rounded-xl border p-4" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
+            <p className="text-xs uppercase tracking-wide" style={{ color: "var(--text-light)" }}>Favoriten</p>
+            <p className="mt-1 text-2xl font-bold">{historyKpis.favoriteRuns}</p>
+          </div>
+          <div className="rounded-xl border p-4" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
+            <p className="text-xs uppercase tracking-wide" style={{ color: "var(--text-light)" }}>Favoritenquote</p>
+            <p className="mt-1 text-2xl font-bold">{historyKpis.favoriteRate}%</p>
+          </div>
+          <div className="rounded-xl border p-4" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
+            <p className="text-xs uppercase tracking-wide" style={{ color: "var(--text-light)" }}>Recurring</p>
+            <p className="mt-1 text-2xl font-bold">{historyKpis.recurringRuns}</p>
+          </div>
+        </div>
 
         {recurringTasks.length > 0 && (
           <div className="mt-6 rounded-xl border p-5" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
