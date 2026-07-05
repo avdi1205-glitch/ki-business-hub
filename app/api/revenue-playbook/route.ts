@@ -70,25 +70,41 @@ export async function GET(req: NextRequest) {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    const [clicks, affiliates, activeTests, completedTests, subscribedCount] = await Promise.all([
-      prisma.affiliateClick.findMany({
-        where: { createdAt: { gte: thirtyDaysAgo } },
-        select: { source: true, articleSlug: true, revenue: true, affiliateLinkId: true },
-      }),
-      prisma.affiliateLink.findMany({
-        select: { id: true, name: true, clicks: true, rating: true, category: true },
-        orderBy: { clicks: "desc" },
-      }),
-      prisma.aBTest.findMany({
-        where: { status: "active" },
-        include: { affiliateLink: { select: { name: true } } },
-      }),
-      prisma.aBTest.findMany({
-        where: { status: "complete" },
-        include: { affiliateLink: { select: { name: true } } },
-      }),
-      prisma.newsletterSubscriber.count({ where: { status: "subscribed" } }),
-    ]);
+    let clicks: Array<{ source: string | null; articleSlug: string | null; revenue: number | null; affiliateLinkId: number }> = [];
+    let affiliates: Array<{ id: number; name: string; clicks: number; rating: number; category: string }> = [];
+    let activeTests: Array<{ impressionsA: number; clicksA: number; impressionsB: number; clicksB: number; confidence: number; affiliateLink: { name: string } }> = [];
+    let completedTests: Array<{ affiliateLink: { name: string } }> = [];
+    let subscribedCount = 0;
+
+    try {
+      const [fetchedClicks, fetchedAffiliates, fetchedActiveTests, fetchedCompletedTests, fetchedSubscribedCount] = await Promise.all([
+        prisma.affiliateClick.findMany({
+          where: { createdAt: { gte: thirtyDaysAgo } },
+          select: { source: true, articleSlug: true, revenue: true, affiliateLinkId: true },
+        }),
+        prisma.affiliateLink.findMany({
+          select: { id: true, name: true, clicks: true, rating: true, category: true },
+          orderBy: { clicks: "desc" },
+        }),
+        prisma.aBTest.findMany({
+          where: { status: "active" },
+          include: { affiliateLink: { select: { name: true } } },
+        }),
+        prisma.aBTest.findMany({
+          where: { status: "complete" },
+          include: { affiliateLink: { select: { name: true } } },
+        }),
+        prisma.newsletterSubscriber.count({ where: { status: "subscribed" } }),
+      ]);
+
+      clicks = fetchedClicks;
+      affiliates = fetchedAffiliates;
+      activeTests = fetchedActiveTests;
+      completedTests = fetchedCompletedTests;
+      subscribedCount = fetchedSubscribedCount;
+    } catch {
+      canPersistPlaybook = false;
+    }
 
     const totalRevenue = clicks.reduce((sum, c) => sum + (c.revenue || 0), 0);
     const totalClicks = clicks.length;
