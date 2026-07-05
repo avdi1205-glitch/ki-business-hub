@@ -22,6 +22,9 @@ const run = (command, args, { allowFailure = false } = {}) => {
   }
 };
 
+// Ensure Prisma Client types match the current schema before TypeScript build.
+run("npx", ["prisma", "generate"]);
+
 if (shouldRunMigrations) {
   run("npx", ["prisma", "migrate", "resolve", "--rolled-back", "20260704000000_init_postgres"], { allowFailure: true });
   run("npx", ["prisma", "migrate", "deploy"]);
