@@ -36,13 +36,13 @@ export default function Navbar() {
           boxShadow: "0 12px 30px rgba(2, 6, 23, 0.24)",
         }}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-          <Link href="/" className="flex items-center gap-3 rounded-2xl px-2 py-1 transition-colors hover:bg-white/5" style={{ color: "var(--text-dark)" }}>
-            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-sky-500 to-emerald-400 text-lg shadow-lg shadow-sky-500/20">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-3 py-3 sm:px-6">
+          <Link href="/" className="flex min-w-0 items-center gap-2 rounded-2xl px-1 py-1 transition-colors hover:bg-white/5 sm:gap-3 sm:px-2" style={{ color: "var(--text-dark)" }}>
+            <span className="grid h-9 w-9 place-items-center rounded-2xl bg-gradient-to-br from-sky-500 to-emerald-400 text-base shadow-lg shadow-sky-500/20 sm:h-10 sm:w-10 sm:text-lg">
               🚀
             </span>
-            <span className="flex flex-col leading-tight">
-              <span className="text-sm font-semibold uppercase tracking-[0.22em] text-slate-300">KI Business Hub</span>
+            <span className="flex max-w-[7.5rem] flex-col leading-tight sm:max-w-none">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-300 sm:text-sm sm:tracking-[0.22em]">KI Business Hub</span>
               <span className="text-xs text-slate-400 hidden sm:block">{t("brandTag")}</span>
             </span>
           </Link>
@@ -93,19 +93,19 @@ export default function Navbar() {
             <LanguageSwitcher />
           </div>
 
-          <div className="flex items-center gap-2 lg:hidden">
+          <div className="flex shrink-0 items-center gap-1.5 lg:hidden">
             <Link
               href="/content-factory"
-              className="rounded-full border border-emerald-400/30 bg-emerald-500 px-3 py-2 text-xs font-bold text-slate-950 shadow-sm shadow-emerald-500/20"
+              className="rounded-full border border-emerald-400/30 bg-emerald-500 px-2.5 py-2 text-[11px] font-bold text-slate-950 shadow-sm shadow-emerald-500/20"
             >
               {t("mobileStart")}
             </Link>
 
-            <LanguageSwitcher />
+            <LanguageSwitcher compact />
 
             <button
               onClick={() => setOpen(true)}
-              className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-lg font-bold text-slate-100 shadow-sm"
+              className="rounded-full border border-white/10 bg-white/5 px-2.5 py-2 text-lg font-bold text-slate-100 shadow-sm"
               aria-label={t("openMenu")}
             >
               ☰
