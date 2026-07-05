@@ -123,13 +123,23 @@ export default function RevenueNavigatorPage() {
 
           {data?.locked && (
             <div className="rounded-lg border border-yellow-500/40 bg-yellow-500/10 p-4 text-yellow-100">
+              <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-yellow-300">Starter-Limit erreicht</p>
               <p className="mb-3 font-semibold">{data.message}</p>
+              <p className="mb-3 text-sm text-yellow-100/90">
+                Mit Pro oder Agency bekommst du jede Woche priorisierte Maßnahmen mit Euro-Potenzial,
+                damit du schneller siehst, welcher Hebel als Nächstes Umsatz bringt.
+              </p>
+              <div className="mb-4 grid gap-2 text-sm text-yellow-100/95 md:grid-cols-3">
+                <div className="rounded-md border border-yellow-500/30 bg-yellow-500/10 px-3 py-2">Top-4 Hebel mit Priorität</div>
+                <div className="rounded-md border border-yellow-500/30 bg-yellow-500/10 px-3 py-2">Monatliche Lift-Prognose in EUR</div>
+                <div className="rounded-md border border-yellow-500/30 bg-yellow-500/10 px-3 py-2">Klare nächste Schritte fürs Team</div>
+              </div>
               <div className="flex flex-wrap gap-3">
-                <Link href="/api/checkout?plan=pro&source=revenue-navigator-lock" className="rounded-lg bg-cyan-600 px-4 py-2 font-semibold text-white">
-                  Pro freischalten
+                <Link href="/api/checkout?plan=pro&source=revenue-navigator-lock-pro" className="rounded-lg bg-cyan-600 px-4 py-2 font-semibold text-white hover:bg-cyan-500">
+                  Pro fuer 39 EUR aktivieren
                 </Link>
-                <Link href="/api/checkout?plan=agency&source=revenue-navigator-lock" className="rounded-lg bg-amber-600 px-4 py-2 font-semibold text-white">
-                  Agency freischalten
+                <Link href="/api/checkout?plan=agency&source=revenue-navigator-lock-agency" className="rounded-lg bg-amber-600 px-4 py-2 font-semibold text-white hover:bg-amber-500">
+                  Agency fuer Teams starten
                 </Link>
               </div>
             </div>
