@@ -22,22 +22,39 @@ export default async function BlogPage() {
   const blogTopAdSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_TOP;
   const blogGridAdSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_GRID;
 
-  let articles: Awaited<ReturnType<typeof prisma.article.findMany>> = [];
+  type BlogArticleRow = {
+    id: number;
+    slug: string | null;
+    title: string;
+    category: string | null;
+    idea: string;
+  };
+
+  let articles: BlogArticleRow[] = [];
 
   try {
-    articles = await prisma.article.findMany({
+    const ormArticles = await prisma.article.findMany({
       where: { locale } as any,
       orderBy: {
         createdAt: "desc",
       },
-    });
-  } catch {
-    // Fallback for environments where the DB schema is not yet migrated.
-    articles = await prisma.article.findMany({
-      orderBy: {
-        createdAt: "desc",
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        category: true,
+        idea: true,
       },
     });
+
+    articles = ormArticles;
+  } catch {
+    // Fallback for environments where the DB schema is not yet migrated
+    // and Prisma model queries fail (for example missing locale column).
+    const rawRows = await prisma.$queryRawUnsafe<BlogArticleRow[]>(
+      'SELECT "id", "slug", "title", "category", "idea" FROM "Article" ORDER BY "createdAt" DESC'
+    );
+    articles = rawRows;
   }
 
   return (
