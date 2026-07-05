@@ -6,10 +6,21 @@ type BotType = "sales" | "seo" | "content-ops" | "support";
 type TeamRole = "owner" | "growth" | "content" | "support";
 
 const botPrompts: Record<BotType, string> = {
-  sales: "Du bist ein interner Sales-Bot. Gib kurze, umsetzbare Upsell-Strategien fuer Pro/Agency, inkl. CTA-Ideen und Priorisierung nach Umsatzhebel.",
-  seo: "Du bist ein interner SEO-Bot. Gib konkrete SEO-Verbesserungen fuer Rankings, interne Verlinkung und Content-Cluster. Fokus auf schnelle Wirkung.",
-  "content-ops": "Du bist ein interner Content-Ops-Bot. Plane effiziente Content-Workflows, Automationsschritte und Wochen-Sprints mit klaren Verantwortlichkeiten.",
-  support: "Du bist ein interner Support-Bot. Formuliere klare, freundliche Antworten fuer Nutzerfragen und gib gleichzeitig konkrete naechste Schritte fuer das Team.",
+  sales:
+    "Du bist ein interner Sales-Bot. Optimiere auf Umsatz: mehr Upgrades, mehr Abschluesse, bessere CTA-Conversion und klarere Angebote. Nenne immer die schnellste profitable Aktion, einen CTA-Text und die groesste Einwandbehandlung.",
+  seo:
+    "Du bist ein interner SEO-Bot. Optimiere auf qualifizierten Traffic: suchintensive Keywords, interne Verlinkung, Vergleichsseiten, Money-Keywords und schnelle Ranking-Hebel mit Monetarisierungsperspektive.",
+  "content-ops":
+    "Du bist ein interner Content-Ops-Bot. Optimiere auf Output pro Stunde und Umsatzwirkung: Content-Pipeline, Automationen, Priorisierung von Seiten mit Conversion-Potenzial und klare Sprint-Schritte.",
+  support:
+    "Du bist ein interner Support-Bot. Optimiere auf Retention und Expansion: freundliche Antworten, Upgrade-Hinweise, Einwandbehandlung, naechste Schritte und kleine Hebel zur Reduktion von Churn.",
+};
+
+const botMoneyLens: Record<BotType, string> = {
+  sales: "Money-Lens: Pro/Agency-Upsell, CTA-Positionierung, Preisanker, Einwaende, Abschlussquote.",
+  seo: "Money-Lens: mehr qualifizierte Besucher auf Money-Seiten, interne Links auf konvertierende Seiten, Vergleichs- und Entscheidungs-Content.",
+  "content-ops": "Money-Lens: schneller mehr publishen, erst Seiten mit Umsatzpotenzial, weniger Reibung, mehr Durchsatz.",
+  support: "Money-Lens: weniger Churn, mehr Upgrades, bessere Antworten, hoehere Aktivierung und Bindung.",
 };
 
 const rolePermissions: Record<TeamRole, BotType[]> = {
@@ -75,6 +86,8 @@ export async function POST(req: Request) {
       input: `
 ${botPrompts[bot]}
 
+${botMoneyLens[bot]}
+
 Rolle im Team:
 ${role}
 
@@ -88,9 +101,11 @@ Kontext:
 ${context || "Kein zusaetzlicher Kontext"}
 
 Antworte auf Deutsch und strukturiere die Antwort so:
-1) Kurzdiagnose
-2) Top-3 Aktionen mit Prioritaet
-3) Konkreter 7-Tage-Plan
+1) Money-Diagnose: Was bringt am ehesten Umsatz oder qualifizierten Traffic?
+2) Top-3 Aktionen mit Prioritaet: jeweils Wirkung, Aufwand, CTA/Offer-Hebel
+3) Konkreter 7-Tage-Plan: mit Reihenfolge, Owner und naechstem Schritt
+4) Einwand/Engpass: groesster Blocker plus die beste Gegenstrategie
+5) Copy-Asset: ein kurzer, direkt nutzbarer CTA-, Hook- oder Antwort-Text
 Verwende nur ASCII-Zeichen (ae, oe, ue, ss statt Umlaute).
 `,
     });
