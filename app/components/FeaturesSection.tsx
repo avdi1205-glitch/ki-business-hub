@@ -69,6 +69,27 @@ export function FeaturesSection() {
           </p>
         </div>
 
+        <div className="mb-10 grid gap-4 md:grid-cols-3">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <p className="text-sm font-bold text-cyan-300">Schneller Output</p>
+            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+              Inhalte, Empfehlungen und Workflows schneller in einen verwertbaren Zustand bringen.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <p className="text-sm font-bold text-cyan-300">Mehr Monetarisierung</p>
+            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+              Features sind direkt mit Affiliate-, Upgrade- und Funnel-Zielen verbunden.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <p className="text-sm font-bold text-cyan-300">Weniger Reibung</p>
+            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+              Du springst schneller zur naechsten sinnvollen Aktion statt lange zu suchen.
+            </p>
+          </div>
+        </div>
+
         {/* Features Grid */}
         <div className="grid md:grid-cols-2 gap-8">
           {features.map((feature, idx) => (
@@ -113,6 +134,16 @@ export function FeaturesSection() {
                   {t(feature.descriptionKey)}
                 </p>
 
+                <div className="mb-6 rounded-xl border border-white/10 bg-white/5 p-4 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+                  {idx === 0
+                    ? "Gut fuer den schnellen Start mit Content- und Workflow-Aufbau."
+                    : idx === 1
+                      ? "Gut fuer Empfehlungen, Vergleiche und Affiliate-Optimierung."
+                      : idx === 2
+                        ? "Gut fuer E-Mail- und Conversion-Strecken, die Umsatz nachziehen."
+                        : "Gut fuer Analyse, Priorisierung und bessere Entscheidungen."}
+                </div>
+
                 {/* Benefits */}
                 <ul className="space-y-2 mb-6">
                   {feature.benefitsKeys.map((benefitKey, bidx) => (
@@ -141,13 +172,21 @@ export function FeaturesSection() {
           <p className="mb-4 text-lg" style={{ color: "var(--text-light)" }}>
             🚀 {t("featuresBottomCopy")}
           </p>
-          <Link
-            href="/content-factory"
-            className="inline-block rounded-lg px-8 py-4 text-lg font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-            style={{ background: "var(--primary)" }}
-          >
-            {t("featuresBottomCta")}
-          </Link>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link
+              href="/content-factory"
+              className="inline-block rounded-lg px-8 py-4 text-lg font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+              style={{ background: "var(--primary)" }}
+            >
+              {t("featuresBottomCta")}
+            </Link>
+            <Link
+              href="/affiliate"
+              className="inline-block rounded-lg border border-white/10 bg-white/5 px-8 py-4 text-lg font-bold text-slate-100 transition-all duration-300 hover:scale-105 hover:bg-white/10"
+            >
+              Empfehlungen ansehen
+            </Link>
+          </div>
         </div>
       </div>
     </div>

@@ -107,6 +107,27 @@ export function TestimonialsSection() {
           </p>
         </div>
 
+        <div className="mb-10 grid gap-4 md:grid-cols-3">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <p className="text-sm font-bold text-cyan-300">Praxisnah</p>
+            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+              Die Zitate beziehen sich auf konkrete Workflows statt nur auf allgemeine Begeisterung.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <p className="text-sm font-bold text-cyan-300">Klare Signale</p>
+            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+              Du siehst schneller, ob der Fokus auf Content, Affiliate oder Skalierung passt.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <p className="text-sm font-bold text-cyan-300">Nächster Schritt</p>
+            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+              Nach dem Vertrauenssignal folgt direkt ein sinnvoller Einstieg in Content-Factory oder Affiliate.
+            </p>
+          </div>
+        </div>
+
         {/* Testimonials Grid */}
         <div className="grid md:grid-cols-2 gap-8 mb-12">
           {localizedTestimonials.map((testimonial, idx) => (
@@ -194,12 +215,20 @@ export function TestimonialsSection() {
           <p className="text-xl mb-8" style={{ color: "var(--text-light)" }}>
             🚀 {t("testimonialsBottomCopy")}
           </p>
-          <Link
-            href="/content-factory"
-            className="inline-block px-10 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105"
-          >
-            {t("testimonialsBottomCta")}
-          </Link>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link
+              href="/content-factory"
+              className="inline-block px-10 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105"
+            >
+              {t("testimonialsBottomCta")}
+            </Link>
+            <Link
+              href="/tools"
+              className="inline-block rounded-lg border border-white/10 bg-white/5 px-10 py-4 text-lg font-bold text-slate-100 transition-all duration-300 hover:scale-105 hover:bg-white/10"
+            >
+              Tools vergleichen
+            </Link>
+          </div>
         </div>
       </div>
     </div>
