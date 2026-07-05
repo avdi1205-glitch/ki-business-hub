@@ -18,9 +18,16 @@ function createSlug(name: string) {
 
 export default async function AffiliatePage() {
   const t = await getTranslations("affiliate");
-  const links = await prisma.affiliateLink.findMany({
-    orderBy: { rating: "desc" },
-  });
+  let links: Awaited<ReturnType<typeof prisma.affiliateLink.findMany>> = [];
+
+  try {
+    links = await prisma.affiliateLink.findMany({
+      orderBy: { rating: "desc" },
+    });
+  } catch {
+    // Render fallback content if DB is unavailable.
+    links = [];
+  }
 
   return (
     <main style={{ background: "var(--background)" }}>
@@ -43,6 +50,12 @@ export default async function AffiliatePage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-6 pb-20">
+        {links.length === 0 && (
+          <div className="mb-6 rounded-2xl border border-yellow-500/30 bg-yellow-500/10 p-5 text-yellow-100">
+            Affiliate-Daten sind gerade nicht verfuegbar. Bitte spaeter erneut laden.
+          </div>
+        )}
+
         <div className="grid gap-6 md:grid-cols-3">
           {links.map((link) => (
             <div

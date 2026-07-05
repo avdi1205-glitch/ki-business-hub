@@ -17,9 +17,16 @@ function createSlug(name: string) {
 
 export default async function ToolsPage() {
   const t = await getTranslations("tools");
-  const tools = await prisma.affiliateLink.findMany({
-    orderBy: { rating: "desc" },
-  });
+  let tools: Awaited<ReturnType<typeof prisma.affiliateLink.findMany>> = [];
+
+  try {
+    tools = await prisma.affiliateLink.findMany({
+      orderBy: { rating: "desc" },
+    });
+  } catch {
+    // Keep customer-facing page readable even when DB env/config is missing.
+    tools = [];
+  }
 
   return (
     <main style={{ background: "var(--background)" }}>
@@ -42,6 +49,12 @@ export default async function ToolsPage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-6 pb-20">
+        {tools.length === 0 && (
+          <div className="mb-6 rounded-2xl border border-yellow-500/30 bg-yellow-500/10 p-5 text-yellow-100">
+            Tool-Daten sind gerade nicht verfuegbar. Bitte spaeter erneut laden.
+          </div>
+        )}
+
         <div className="grid gap-6 md:grid-cols-3">
           {tools.map((tool) => (
             <Link

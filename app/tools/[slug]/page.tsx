@@ -33,7 +33,26 @@ export default async function ToolDetailPage({
   const isEn = locale === "en";
   const { slug } = await params;
 
-  const tools = await prisma.affiliateLink.findMany();
+  let tools: Awaited<ReturnType<typeof prisma.affiliateLink.findMany>> = [];
+
+  try {
+    tools = await prisma.affiliateLink.findMany();
+  } catch {
+    tools = [];
+  }
+
+  if (tools.length === 0) {
+    return (
+      <main className="px-6 py-20" style={{ background: "var(--background)", minHeight: "100vh" }}>
+        <div className="mx-auto max-w-3xl rounded-2xl border border-yellow-500/30 bg-yellow-500/10 p-8 text-yellow-100">
+          {isEn
+            ? "Tool details are temporarily unavailable. Please try again later."
+            : "Tool-Details sind voruebergehend nicht verfuegbar. Bitte spaeter erneut versuchen."}
+        </div>
+      </main>
+    );
+  }
+
   const tool = tools.find((item) => createSlug(item.name) === slug);
 
   if (!tool) {

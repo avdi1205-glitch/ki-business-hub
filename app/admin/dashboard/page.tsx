@@ -15,43 +15,61 @@ function prettifySource(source: string) {
 }
 
 export default async function DashboardPage() {
-  const articleCount = await prisma.article.count();
-  const affiliateCount = await prisma.affiliateLink.count();
-  const affiliateLinks = await prisma.affiliateLink.findMany({
-    orderBy: { clicks: "desc" },
-  });
-  const latestArticle = await prisma.article.findFirst({
-    orderBy: { createdAt: "desc" },
-  });
-  const totalClicks = affiliateLinks.reduce((sum, link) => sum + link.clicks, 0);
-  const topAffiliate = affiliateLinks[0];
+  let articleCount = 0;
+  let affiliateCount = 0;
+  let affiliateLinks: Awaited<ReturnType<typeof prisma.affiliateLink.findMany>> = [];
+  let latestArticle: Awaited<ReturnType<typeof prisma.article.findFirst>> = null;
+  let totalClicks = 0;
+  let topAffiliate: Awaited<ReturnType<typeof prisma.affiliateLink.findMany>>[number] | undefined;
+  let todayClicks: Awaited<ReturnType<typeof prisma.affiliateClick.findMany>> = [];
+  let todayRevenue = 0;
+  let subscriberCount = 0;
+  let leadSources: Array<{ source: string | null }> = [];
+  let activeTests = 0;
+  let completedTests = 0;
+  let dbUnavailable = false;
 
-  // Calculate today's revenue
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
+  try {
+    articleCount = await prisma.article.count();
+    affiliateCount = await prisma.affiliateLink.count();
+    affiliateLinks = await prisma.affiliateLink.findMany({
+      orderBy: { clicks: "desc" },
+    });
+    latestArticle = await prisma.article.findFirst({
+      orderBy: { createdAt: "desc" },
+    });
+    totalClicks = affiliateLinks.reduce((sum, link) => sum + link.clicks, 0);
+    topAffiliate = affiliateLinks[0];
 
-  const todayClicks = await prisma.affiliateClick.findMany({
-    where: { createdAt: { gte: today, lt: tomorrow } },
-  });
-  const todayRevenue = todayClicks.reduce(
-    (sum, click) => sum + (click.revenue || 0),
-    0
-  );
+    // Calculate today's revenue
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
 
-  const subscriberCount = await prisma.newsletterSubscriber.count({
-    where: { status: "subscribed" },
-  });
+    todayClicks = await prisma.affiliateClick.findMany({
+      where: { createdAt: { gte: today, lt: tomorrow } },
+    });
+    todayRevenue = todayClicks.reduce(
+      (sum, click) => sum + (click.revenue || 0),
+      0
+    );
 
-  const [leadSources, activeTests, completedTests] = await Promise.all([
-    prisma.newsletterSubscriber.findMany({
+    subscriberCount = await prisma.newsletterSubscriber.count({
       where: { status: "subscribed" },
-      select: { source: true },
-    }),
-    prisma.aBTest.count({ where: { status: "active" } }),
-    prisma.aBTest.count({ where: { status: "complete" } }),
-  ]);
+    });
+
+    [leadSources, activeTests, completedTests] = await Promise.all([
+      prisma.newsletterSubscriber.findMany({
+        where: { status: "subscribed" },
+        select: { source: true },
+      }),
+      prisma.aBTest.count({ where: { status: "active" } }),
+      prisma.aBTest.count({ where: { status: "complete" } }),
+    ]);
+  } catch {
+    dbUnavailable = true;
+  }
 
   const topLeadSource = Object.entries(
     leadSources.reduce<Record<string, number>>((accumulator, subscriber) => {
@@ -64,6 +82,12 @@ export default async function DashboardPage() {
   return (
     <div style={{ background: "var(--background)", minHeight: "100vh" }} className="py-10 px-6">
       <h1 className="mb-10 text-5xl font-bold" style={{ color: "var(--text-dark)" }}>📊 Admin dashboard</h1>
+
+      {dbUnavailable && (
+        <div className="mb-6 rounded-xl border border-yellow-500/30 bg-yellow-500/10 p-4 text-yellow-100">
+          Datenbank ist aktuell nicht erreichbar. Dashboard zeigt temporaer Fallback-Werte.
+        </div>
+      )}
 
       {/* KPI Cards */}
       <div className="grid md:grid-cols-4 gap-6 mb-10">
