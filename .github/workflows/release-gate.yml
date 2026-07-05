@@ -26,16 +26,17 @@ jobs:
         shell: bash
         run: |
           for attempt in 1 2 3; do
-            if npm ci --no-audit --no-progress; then
+            npm cache clean --force || true
+            if npm install --no-audit --no-fund --no-progress --prefer-online; then
               exit 0
             fi
-            echo "npm ci failed on attempt ${attempt}."
+            echo "npm install failed on attempt ${attempt}."
             if [ "${attempt}" -lt 3 ]; then
               echo "Retrying in 15 seconds..."
               sleep 15
             fi
           done
-          echo "npm ci failed after 3 attempts."
+          echo "npm install failed after 3 attempts."
           exit 1
 
       - name: Lint
