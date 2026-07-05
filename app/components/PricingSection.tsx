@@ -199,7 +199,7 @@ export function PricingSection() {
           <p style={{ color: "var(--text-light)" }}>
             {t("pricingGuaranteeBody")}
           </p>
-          <p className="mt-4 text-sm" style={{ color: "var(--text-muted)" }}>
+          <p className="mt-4 text-sm" style={{ color: "#d1fae5" }}>
             {t("pricingEnvNote")}
           </p>
         </div>

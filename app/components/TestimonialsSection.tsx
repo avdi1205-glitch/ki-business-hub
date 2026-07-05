@@ -152,15 +152,15 @@ export function TestimonialsSection() {
 
               {/* Earnings Badge */}
               <div className="flex gap-4">
-                <div className="px-4 py-2 rounded-lg" style={{ background: "rgba(16, 185, 129, 0.2)", border: "1px solid var(--success)" }}>
-                  <p className="text-xs font-semibold" style={{ color: "var(--success)" }}>{isEn ? "Earned" : "Verdient"}</p>
-                  <p className="text-2xl font-bold" style={{ color: "var(--success)" }}>
+                <div className="px-4 py-2 rounded-lg" style={{ background: "rgba(5, 150, 105, 0.45)", border: "1px solid rgba(16, 185, 129, 0.7)" }}>
+                  <p className="text-xs font-semibold" style={{ color: "#d1fae5" }}>{isEn ? "Earned" : "Verdient"}</p>
+                  <p className="text-2xl font-bold" style={{ color: "#f0fdf4" }}>
                     {testimonial.earnings}
                   </p>
                 </div>
-                <div className="px-4 py-2 rounded-lg" style={{ background: "rgba(59, 130, 246, 0.2)", border: "1px solid var(--primary)" }}>
-                  <p className="text-xs font-semibold" style={{ color: "var(--primary)" }}>{isEn ? "Timeframe" : "Zeitrahmen"}</p>
-                  <p className="text-lg font-bold" style={{ color: "var(--primary)" }}>
+                <div className="px-4 py-2 rounded-lg" style={{ background: "rgba(37, 99, 235, 0.45)", border: "1px solid rgba(96, 165, 250, 0.75)" }}>
+                  <p className="text-xs font-semibold" style={{ color: "#dbeafe" }}>{isEn ? "Timeframe" : "Zeitrahmen"}</p>
+                  <p className="text-lg font-bold" style={{ color: "#eff6ff" }}>
                     {testimonial.time}
                   </p>
                 </div>

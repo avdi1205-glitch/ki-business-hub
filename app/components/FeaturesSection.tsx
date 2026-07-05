@@ -34,6 +34,9 @@ const features = [
     badgeKey: "feature3Badge",
     href: "/content-factory",
     ctaKey: "feature3Cta",
+    titleColor: "#c4b5fd",
+    badgeTextColor: "#0f172a",
+    ctaTextColor: "#0f172a",
   },
   {
     icon: "🔍",
@@ -44,6 +47,9 @@ const features = [
     badgeKey: "feature4Badge",
     href: "/stats",
     ctaKey: "feature4Cta",
+    titleColor: "#facc15",
+    badgeTextColor: "#0f172a",
+    ctaTextColor: "#0f172a",
   },
 ];
 
@@ -79,7 +85,10 @@ export function FeaturesSection() {
 
               {/* Badge */}
               <div className="absolute top-4 right-4">
-                <span className="px-3 py-1 rounded-full text-xs font-semibold text-white" style={{ background: feature.color }}>
+                <span
+                  className="px-3 py-1 rounded-full text-xs font-semibold"
+                  style={{ background: feature.color, color: (feature as { badgeTextColor?: string }).badgeTextColor || "#ffffff" }}
+                >
                   {t(feature.badgeKey)}
                 </span>
               </div>
@@ -92,7 +101,10 @@ export function FeaturesSection() {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-2xl font-bold mb-2" style={{ color: feature.color }}>
+                <h3
+                  className="text-2xl font-bold mb-2"
+                  style={{ color: (feature as { titleColor?: string }).titleColor || feature.color }}
+                >
                   {t(feature.titleKey)}
                 </h3>
 
@@ -114,8 +126,8 @@ export function FeaturesSection() {
                 {/* CTA */}
                 <Link
                   href={feature.href}
-                  className="block w-full rounded-lg px-4 py-3 text-center font-semibold text-white transition-all duration-300 hover:shadow-lg group-hover:scale-105"
-                  style={{ background: feature.color }}
+                  className="block w-full rounded-lg px-4 py-3 text-center font-semibold transition-all duration-300 hover:shadow-lg group-hover:scale-105"
+                  style={{ background: feature.color, color: (feature as { ctaTextColor?: string }).ctaTextColor || "#ffffff" }}
                 >
                   {t(feature.ctaKey)} →
                 </Link>
