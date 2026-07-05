@@ -197,6 +197,12 @@ export default async function Home() {
         </div>
       </section>
 
+      <section className="px-6 pb-6">
+        <div className="mx-auto max-w-6xl rounded-2xl border border-cyan-400/20 bg-cyan-500/5 px-5 py-4 text-sm leading-7 text-slate-200">
+          <span className="font-semibold text-cyan-300">Oder direkt entscheiden:</span> Wenn du schon weißt, was du brauchst, geh oben mit einem Klick in die passende Strecke. Wenn du noch unsicher bist, helfen dir die Top-Tools direkt danach beim Vergleichen.
+        </div>
+      </section>
+
       {/* Top Tools Section */}
       <section className="py-24" style={{ background: "linear-gradient(135deg, var(--background) 0%, var(--background-alt) 100%)" }}>
         <div className="max-w-6xl mx-auto px-4">
