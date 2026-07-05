@@ -15,9 +15,12 @@ function statusColor(status: string) {
 export default async function EditorPage() {
   const locale = await getLocale();
   const isEn = locale === "en";
-  const articles = await prisma.article.findMany({
-    where: { locale } as any,
+  const rawArticles = await prisma.article.findMany({
     orderBy: { createdAt: "desc" },
+  });
+  const articles = rawArticles.filter((article) => {
+    const row = article as { locale?: string | null };
+    return !row.locale || row.locale === locale;
   });
 
   return (

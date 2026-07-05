@@ -127,11 +127,17 @@ export default async function Home() {
       take: 3,
     });
 
-    articles = await prisma.article.findMany({
-      where: { locale } as any,
+    const recentArticles = await prisma.article.findMany({
       orderBy: { createdAt: "desc" },
-      take: 3,
+      take: 15,
     });
+
+    articles = recentArticles
+      .filter((article) => {
+        const row = article as { locale?: string | null };
+        return !row.locale || row.locale === locale;
+      })
+      .slice(0, 3);
   } catch {
     // Keep rendering the customer-facing page even if the local DB is unavailable.
   }

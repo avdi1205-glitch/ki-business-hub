@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { prisma } from "../../lib/prisma";
 import GoogleAd from "../components/GoogleAd";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("blog");
@@ -17,7 +17,6 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function BlogPage() {
-  const locale = await getLocale();
   const t = await getTranslations("blog");
   const blogTopAdSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_TOP;
   const blogGridAdSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_GRID;
@@ -34,7 +33,6 @@ export default async function BlogPage() {
 
   try {
     const ormArticles = await prisma.article.findMany({
-      where: { locale } as any,
       orderBy: {
         createdAt: "desc",
       },
@@ -45,6 +43,7 @@ export default async function BlogPage() {
         category: true,
         idea: true,
       },
+      take: 100,
     });
 
     articles = ormArticles;
@@ -61,6 +60,8 @@ export default async function BlogPage() {
       articles = [];
     }
   }
+
+  const localizedArticles = articles;
 
   return (
     <main style={{ background: "var(--background)" }}>
@@ -89,7 +90,7 @@ export default async function BlogPage() {
         )}
 
         <div className="grid gap-6 md:grid-cols-3">
-          {articles.map((article) => (
+          {localizedArticles.map((article) => (
             <Link
               key={article.id}
               href={`/blog/${article.slug}`}

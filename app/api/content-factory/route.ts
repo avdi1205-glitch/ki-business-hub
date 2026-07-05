@@ -209,7 +209,7 @@ Artikel-Regeln:
         title: savedArticle.title,
         slug: savedArticle.slug ?? slug,
         category: savedArticle.category ?? category,
-        locale: savedArticle.locale,
+        locale,
       });
     }
 
@@ -218,10 +218,10 @@ Artikel-Regeln:
       created,
       articles: createdArticles,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json({
       success: false,
-      error: error.message,
+      error: error instanceof Error ? error.message : "Unbekannter Fehler",
     });
   }
 }
