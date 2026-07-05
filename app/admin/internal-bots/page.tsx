@@ -300,6 +300,55 @@ export default function InternalBotsPage() {
       .slice(0, 3);
   }, [allHistory]);
 
+  const revenueInsights = useMemo(() => {
+    const bestTask = topMoneyTasks[0];
+    const recurringTask = topMoneyTasks.find((item) => Boolean(item.recurringTaskKey));
+    const highestTrendDay = sevenDayTrend.reduce(
+      (best, current) => (current.runs > best.runs ? current : best),
+      sevenDayTrend[0] || { label: "--", runs: 0, favorites: 0, favoriteRate: 0, widthPct: 0 }
+    );
+
+    const insights: Array<{
+      title: string;
+      description: string;
+      actionLabel: string;
+      task?: (typeof topMoneyTasks)[number];
+      tone: "emerald" | "cyan" | "amber";
+    }> = [];
+
+    if (bestTask) {
+      insights.push({
+        title: "Skaliere den staerksten Money-Task",
+        description: `${bestTask.playbook || "Freier Task"} hat den hoechsten Score und sollte als naechstes in eine feste Umsatz-Routine ueberfuehrt werden.`,
+        actionLabel: "Task sofort starten",
+        task: bestTask,
+        tone: "emerald",
+      });
+    }
+
+    if (recurringTask) {
+      insights.push({
+        title: "Recurring-Task in festen Sprint verwandeln",
+        description: `${recurringTask.goal} laeuft bereits wiederkehrend. Das ist ein guter Kandidat fuer ein woechentliches Revenue-Playbook.`,
+        actionLabel: "Sprint vorbereiten",
+        task: recurringTask,
+        tone: "cyan",
+      });
+    }
+
+    if (highestTrendDay.runs > 0) {
+      insights.push({
+        title: "Trendtag als Momentum-Fenster nutzen",
+        description: `Am staerksten war bisher ${highestTrendDay.label} mit ${highestTrendDay.runs} Runs. Nutze dieses Momentum fuer Upsell-, SEO- oder Publishing-Tasks.`,
+        actionLabel: "Auf Momentum setzen",
+        task: bestTask,
+        tone: "amber",
+      });
+    }
+
+    return insights.slice(0, 3);
+  }, [sevenDayTrend, topMoneyTasks]);
+
   const applyPlaybook = (preset: { name: string; goal: string; context: string }) => {
     setPlaybook(preset.name);
     setGoal(preset.goal);
@@ -623,6 +672,66 @@ export default function InternalBotsPage() {
           ) : (
             <p className="text-sm" style={{ color: "var(--text-light)" }}>
               Noch keine ausreichend starken Tasks vorhanden. Erstelle ein paar Runs, damit hier die Top-Tasks hochgezogen werden.
+            </p>
+          )}
+        </div>
+
+        <div className="mt-6 rounded-xl border p-5" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h2 className="text-lg font-bold">Revenue Insights</h2>
+              <p className="text-xs" style={{ color: "var(--text-light)" }}>Die naechsten sinnvollen Money-Schritte aus euren Bot-Daten</p>
+            </div>
+            <span className="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-xs font-semibold text-cyan-100">
+              Von Daten zu Umsatz
+            </span>
+          </div>
+
+          {revenueInsights.length > 0 ? (
+            <div className="grid gap-3 lg:grid-cols-3">
+              {revenueInsights.map((insight) => (
+                <div key={insight.title} className="rounded-lg border p-4" style={{ borderColor: "rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.03)" }}>
+                  <p className="text-sm font-semibold">{insight.title}</p>
+                  <p className="mt-2 text-sm" style={{ color: "var(--text-light)" }}>{insight.description}</p>
+                  <button
+                    type="button"
+                    className="mt-4 rounded-lg px-3 py-1.5 text-sm font-semibold text-white"
+                    style={{
+                      background:
+                        insight.tone === "emerald"
+                          ? "rgb(16, 185, 129)"
+                          : insight.tone === "cyan"
+                            ? "rgb(8, 145, 178)"
+                            : "rgb(217, 119, 6)",
+                    }}
+                    onClick={() => {
+                      if (!insight.task) return;
+                      setBot(insight.task.bot);
+                      setRole(insight.task.role);
+                      setPlaybook(insight.task.playbook || "");
+                      setGoal(insight.task.goal);
+                      setContext(insight.task.context || "");
+                      setTagsInput(insight.task.tags.join(", "));
+                      setRecurringTaskKey(insight.task.recurringTaskKey || "");
+                      void generate({
+                        bot: insight.task.bot,
+                        role: insight.task.role,
+                        playbook: insight.task.playbook || "",
+                        goal: insight.task.goal,
+                        context: insight.task.context || "",
+                        tagsInput: insight.task.tags.join(", "),
+                        recurringTaskKey: insight.task.recurringTaskKey || "",
+                      });
+                    }}
+                  >
+                    {insight.actionLabel}
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm" style={{ color: "var(--text-light)" }}>
+              Noch keine belastbaren Signale. Sobald der Verlauf mehr Daten hat, erscheinen hier die naechsten Umsatz-Hebel.
             </p>
           )}
         </div>
