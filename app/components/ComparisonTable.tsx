@@ -114,6 +114,27 @@ export function ComparisonTable() {
           </p>
         </div>
 
+        <div className="mb-10 grid gap-4 md:grid-cols-3">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <p className="text-sm font-bold text-cyan-300">Starter</p>
+            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+              Gut zum Kennenlernen und fuer erste Workflows mit wenig Risiko.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <p className="text-sm font-bold text-cyan-300">Pro</p>
+            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+              Bester Mix aus Preis, Automatisierung und Skalierung fuer die meisten Nutzer.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <p className="text-sm font-bold text-cyan-300">Agency</p>
+            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+              Sinnvoll, wenn du mit Team, mehreren Kunden oder mehreren Workflows arbeitest.
+            </p>
+          </div>
+        </div>
+
         {/* Desktop Table */}
         <div className="hidden md:block overflow-x-auto">
           <table className="w-full">
@@ -220,9 +241,17 @@ export function ComparisonTable() {
           <p className="text-lg mb-8" style={{ color: "var(--text-light)" }}>
             {t("comparisonBottomCopy")}
           </p>
-          <Link href="/api/checkout?plan=pro&source=comparison-table" className="inline-block px-10 py-4 text-white font-bold text-lg rounded-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105" style={{ background: "var(--success)" }}>
-            {t("comparisonBottomCta")}
-          </Link>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link href="/content-factory" className="inline-block rounded-lg border border-white/10 bg-white/5 px-8 py-4 font-bold text-slate-100 transition-all duration-300 hover:scale-105 hover:bg-white/10">
+              {locale === "en" ? "Start free" : "Kostenlos starten"}
+            </Link>
+            <Link href="/tools" className="inline-block rounded-lg border border-cyan-400/30 bg-cyan-500/10 px-8 py-4 font-bold text-cyan-100 transition-all duration-300 hover:scale-105 hover:bg-cyan-500/20">
+              {locale === "en" ? "Compare tools" : "Tools vergleichen"}
+            </Link>
+            <Link href="/api/checkout?plan=pro&source=comparison-table" className="inline-block rounded-lg bg-emerald-600 px-10 py-4 text-lg font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+              {t("comparisonBottomCta")}
+            </Link>
+          </div>
         </div>
       </div>
     </div>

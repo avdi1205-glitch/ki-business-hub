@@ -108,6 +108,27 @@ export function PricingSection() {
           </p>
         </div>
 
+        <div className="mb-10 grid gap-4 md:grid-cols-3">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <p className="text-sm font-bold text-cyan-300">Schnell starten</p>
+            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+              Kostenlos testen und den ersten Workflow ohne Risiko aufsetzen.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <p className="text-sm font-bold text-cyan-300">Am meisten Nutzen</p>
+            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+              Pro ist der klare Sweet Spot fuer mehr Volumen, Automatisierung und Klicks.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <p className="text-sm font-bold text-cyan-300">Fuer Teams</p>
+            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+              Agency lohnt sich, wenn mehrere Personen oder Workflows parallel laufen.
+            </p>
+          </div>
+        </div>
+
         {/* Pricing Grid */}
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           {plans.map((plan, idx) => (
@@ -142,6 +163,13 @@ export function PricingSection() {
                     {plan.price}
                   </div>
                   <p className="text-sm" style={{ color: "var(--text-muted)" }}>{plan.period}</p>
+                  <p className="mt-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-light)" }}>
+                    {plan.name === "Starter"
+                      ? (isEn ? "Best for testing" : "Gut zum Testen")
+                      : plan.name === "Pro"
+                        ? (isEn ? "Best value" : "Bester Nutzen")
+                        : (isEn ? "Best for teams" : "Fuer Teams")}
+                  </p>
                   {plan.name !== "Starter" && (
                     <p className="mt-2 text-sm font-medium" style={{ color: "var(--text-light)" }}>
                       {plan.name === "Pro" ? t("pricingProHint") : t("pricingAgencyHint")}
