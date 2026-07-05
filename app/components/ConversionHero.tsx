@@ -20,12 +20,6 @@ export default function ConversionHero() {
 
       {/* Content */}
       <div className="relative z-10 max-w-6xl mx-auto px-4 py-20 text-center">
-        {/* Urgency Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/20 border border-red-500/50 rounded-full mb-8 animate-pulse">
-          <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-          <span className="text-sm font-semibold text-red-300">⏰ {t("heroBadge")}</span>
-        </div>
-
         {/* Main Headline */}
         <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-cyan-400 to-green-400 bg-clip-text text-transparent leading-tight">
           {t("heroTitle1")}
@@ -114,12 +108,6 @@ export default function ConversionHero() {
 
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <div className="w-6 h-10 border-2 border-white/30 rounded-full flex items-center justify-center">
-          <div className="w-1 h-2 bg-white/30 rounded-full animate-pulse" />
-        </div>
-      </div>
     </div>
   );
 }
