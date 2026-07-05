@@ -69,6 +69,14 @@ export default function AdminPage() {
       color: "#10b981",
       accent: "text-emerald-400",
     },
+    {
+      icon: "🧠",
+      name: "Interne Bots",
+      desc: "Sales, SEO, Content Ops and Support copilots",
+      href: "/admin/internal-bots",
+      color: "#f97316",
+      accent: "text-orange-400",
+    },
   ];
 
   return (
@@ -78,7 +86,7 @@ export default function AdminPage() {
         <div className="max-w-7xl mx-auto px-8 py-8">
           <div>
             <h1 className="text-4xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>🚀 Admin Dashboard</h1>
-            <p style={{ color: "var(--text-light)" }}>Monetization platform with 7 intelligent skills</p>
+            <p style={{ color: "var(--text-light)" }}>Monetization platform with 8 intelligent skills</p>
           </div>
         </div>
       </div>

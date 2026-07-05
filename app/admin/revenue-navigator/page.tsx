@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type Plan = "starter" | "pro" | "agency";
 
@@ -44,15 +45,12 @@ function normalizePlan(value: string | null): Plan {
 
 export default function RevenueNavigatorPage() {
   const searchParams = useSearchParams();
-  const [plan, setPlan] = useState<Plan>(() => normalizePlan(searchParams.get("plan")));
+  const plan = normalizePlan(searchParams.get("plan"));
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<PlaybookResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const queryPlan = normalizePlan(searchParams.get("plan"));
-    setPlan(queryPlan);
-  }, [searchParams]);
+  const router = useRouter();
 
   const sorted = data?.recommendations
     ? [...data.recommendations].sort((a, b) => b.estimatedMonthlyLift - a.estimatedMonthlyLift)
@@ -97,7 +95,9 @@ export default function RevenueNavigatorPage() {
               <button
                 key={option}
                 onClick={() => {
-                  setPlan(option);
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.set("plan", option);
+                  router.replace(`/admin/revenue-navigator?${params.toString()}`);
                   loadPlaybook(option);
                 }}
                 className="rounded-lg px-4 py-2 font-semibold transition"
