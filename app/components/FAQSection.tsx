@@ -54,6 +54,27 @@ export function FAQSection() {
           </p>
         </div>
 
+        <div className="mb-10 grid gap-4 md:grid-cols-3">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <p className="text-sm font-bold text-cyan-300">Noch unsicher?</p>
+            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+              Die FAQs beantworten die haeufigsten Fragen, bevor du Zeit in den Kaufpfad investierst.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <p className="text-sm font-bold text-cyan-300">Erst vergleichen</p>
+            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+              Wenn du zwei Optionen gegeneinander pruefen willst, gehe direkt zu Tools oder Vergleich.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <p className="text-sm font-bold text-cyan-300">Dann starten</p>
+            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+              Kostenlos anfangen, dann je nach Bedarf auf Pro oder Agency wechseln.
+            </p>
+          </div>
+        </div>
+
         {/* FAQ Accordion */}
         <div className="space-y-4">
           {faqs.map((faq, idx) => (
@@ -116,13 +137,27 @@ export function FAQSection() {
           <p className="mb-6" style={{ color: "var(--text-light)" }}>
             {t("faqFooterSubtitle")}
           </p>
-          <Link
-            href="/kontakt"
-            className="inline-block px-8 py-4 text-white font-bold rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-            style={{ background: "var(--primary)" }}
-          >
-            📞 {t("faqFooterCta")}
-          </Link>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link
+              href="/content-factory"
+              className="inline-block rounded-lg border border-white/10 bg-white/5 px-8 py-4 font-bold text-slate-100 transition-all duration-300 hover:scale-105 hover:bg-white/10"
+            >
+              🚀 Kostenlos starten
+            </Link>
+            <Link
+              href="/tools"
+              className="inline-block rounded-lg border border-cyan-400/30 bg-cyan-500/10 px-8 py-4 font-bold text-cyan-100 transition-all duration-300 hover:scale-105 hover:bg-cyan-500/20"
+            >
+              🏆 Tools vergleichen
+            </Link>
+            <Link
+              href="/kontakt"
+              className="inline-block rounded-lg px-8 py-4 text-white font-bold transition-all duration-300 transform hover:scale-105"
+              style={{ background: "var(--primary)" }}
+            >
+              📞 {t("faqFooterCta")}
+            </Link>
+          </div>
         </div>
       </div>
     </div>
