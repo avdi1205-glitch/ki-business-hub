@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { prisma } from "../../../lib/prisma";
 import AffiliateButton from "../../blog/[slug]/AffiliateButton";
 import { getLocale } from "next-intl/server";
@@ -59,6 +60,11 @@ export default async function ToolDetailPage({
     notFound();
   }
 
+  const alternativeTools = tools
+    .filter((item) => item.id !== tool.id)
+    .sort((a, b) => b.rating - a.rating)
+    .slice(0, 3);
+
   return (
     <main style={{ background: "var(--background)" }}>
       <section className="relative overflow-hidden px-6 py-20">
@@ -86,10 +92,50 @@ export default async function ToolDetailPage({
           )}
 
           <p className="text-slate-300">{isEn ? "Category" : "Kategorie"}: {tool.category}</p>
+
+          <div className="mt-8 grid gap-3 md:grid-cols-3">
+            <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-100">
+              <strong className="block text-cyan-300">Klare Einordnung</strong>
+              Schnell sehen, ob das Tool zu deinem Ziel passt.
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-100">
+              <strong className="block text-cyan-300">Weniger Risiko</strong>
+              Bewertungen, Pros und Cons helfen bei der Entscheidung.
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-100">
+              <strong className="block text-cyan-300">Schneller Einstieg</strong>
+              Direkt zu Angebot oder Vergleich wechseln.
+            </div>
+          </div>
         </div>
       </section>
 
       <section className="mx-auto max-w-5xl px-6 pb-20">
+        <div className="mb-8 rounded-2xl border border-cyan-500/30 bg-cyan-500/10 p-6">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h2 className="mb-2 text-2xl font-bold">Schnelle Entscheidung</h2>
+              <p className="max-w-3xl leading-7 text-slate-100">
+                Wenn du das Tool weiterpruefen willst, kannst du direkt zum Angebot gehen oder zuerst die Alternativen vergleichen.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <AffiliateButton
+                id={tool.id}
+                url={tool.url}
+                text={tool.buttonText || (isEn ? "🚀 View offer" : "🚀 Angebot ansehen")}
+                clickSource={`tool-detail-${slug}-hero`}
+              />
+              <Link
+                href="/tools#tools-grid"
+                className="rounded-xl border border-white/15 bg-white/5 px-4 py-3 font-bold text-slate-100 hover:bg-white/10"
+              >
+                Weitere Tools vergleichen
+              </Link>
+            </div>
+          </div>
+        </div>
+
         {tool.description && (
           <div className="mb-8 rounded-2xl border border-white/10 bg-white/10 p-8">
             <h2 className="mb-3 text-3xl font-bold">{isEn ? "Quick takeaway" : "Kurzfazit"}</h2>
@@ -150,6 +196,37 @@ export default async function ToolDetailPage({
             clickSource={`tool-detail-${slug}`}
           />
         </div>
+
+        {alternativeTools.length > 0 && (
+          <div className="mb-8 rounded-2xl border border-white/10 bg-white/10 p-8">
+            <h2 className="mb-3 text-3xl font-bold">{isEn ? "Good alternatives" : "Gute Alternativen"}</h2>
+            <p className="mb-6 leading-7 text-slate-100">
+              {isEn
+                ? "If this one is not the best fit, compare these alternatives before deciding."
+                : "Wenn das hier nicht perfekt passt, vergleiche zuerst diese Alternativen."}
+            </p>
+
+            <div className="grid gap-4 md:grid-cols-3">
+              {alternativeTools.map((alternative) => (
+                <div key={alternative.id} className="rounded-xl border border-white/10 bg-white/5 p-5">
+                  <div className="mb-3 flex items-start justify-between gap-3">
+                    <h3 className="text-xl font-bold text-white">{alternative.name}</h3>
+                    <span className="text-lg font-bold text-yellow-400">⭐ {alternative.rating.toFixed(1)}</span>
+                  </div>
+                  <p className="mb-3 text-sm text-slate-300">{alternative.category}</p>
+                  {alternative.price && <p className="mb-4 font-bold text-green-400">💰 {alternative.price}</p>}
+                  <p className="mb-5 text-sm leading-6 text-slate-100">{alternative.description || alternative.category}</p>
+                  <Link
+                    href={`/tools/${createSlug(alternative.name)}`}
+                    className="inline-flex rounded-xl bg-cyan-500 px-4 py-2 font-bold text-white hover:bg-cyan-400"
+                  >
+                    {isEn ? "Open details" : "Details ansehen"}
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="rounded-2xl border border-white/10 bg-white/10 p-8">
           <h2 className="mb-6 text-3xl font-bold">{isEn ? "Frequently asked questions" : "Häufige Fragen"}</h2>
