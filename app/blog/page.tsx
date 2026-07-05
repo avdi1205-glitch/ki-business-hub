@@ -51,10 +51,15 @@ export default async function BlogPage() {
   } catch {
     // Fallback for environments where the DB schema is not yet migrated
     // and Prisma model queries fail (for example missing locale column).
-    const rawRows = await prisma.$queryRawUnsafe<BlogArticleRow[]>(
-      'SELECT "id", "slug", "title", "category", "idea" FROM "Article" ORDER BY "createdAt" DESC'
-    );
-    articles = rawRows;
+    try {
+      const rawRows = await prisma.$queryRawUnsafe<BlogArticleRow[]>(
+        'SELECT "id", "slug", "title", "category", "idea" FROM "Article" ORDER BY "createdAt" DESC'
+      );
+      articles = rawRows;
+    } catch {
+      // Final safety net: keep /blog available even when DB access fails.
+      articles = [];
+    }
   }
 
   return (
