@@ -49,8 +49,8 @@ export default function ConversionHero() {
           {t("heroSubtitle")}
           <span className="text-green-400 font-semibold"> {t("heroHighlight")}</span>
           {locale === "en"
-            ? " and only switch to Pro or Agency when the output is worth it for you."
-            : " und wechsle erst auf Pro oder Agency, wenn sich der Output fuer dich lohnt."}
+            ? " and switch up only when it pays off."
+            : " und wechsle erst hoch, wenn es sich fuer dich lohnt."}
         </p>
 
         {/* CTA Section */}
@@ -76,12 +76,12 @@ export default function ConversionHero() {
             href="/api/checkout?plan=pro"
             ctaKey="hero-pro"
             variantA={{
-              label: `💎 ${t("heroSecondaryCta")}`,
+              label: `Pro`,
               sourceSuffix: "price-view",
               className: "px-8 py-4 bg-blue-500/20 border-2 border-blue-400 text-blue-300 font-bold text-lg rounded-lg hover:bg-blue-500/30 transition-all duration-300",
             }}
             variantB={{
-              label: `🔥 ${t("heroSecondaryAltCta")}`,
+              label: `Agency`,
               sourceSuffix: "direct-pro",
               className: "px-8 py-4 bg-cyan-500/20 border-2 border-cyan-400 text-cyan-200 font-bold text-lg rounded-lg hover:bg-cyan-500/30 transition-all duration-300",
             }}
@@ -91,8 +91,8 @@ export default function ConversionHero() {
         <div className="mb-10 text-sm text-gray-300">
           <p className="mb-4">
             {locale === "en"
-              ? "Start free, compare tools, or jump directly to recommendations."
-              : "Starte kostenlos, vergleiche Tools oder gehe direkt zu Empfehlungen."}
+              ? "Start free, compare tools, or go straight to recommendations."
+              : "Kostenlos starten, Tools vergleichen oder direkt zu Empfehlungen gehen."}
           </p>
 
           <div className="grid gap-3 md:grid-cols-3">
