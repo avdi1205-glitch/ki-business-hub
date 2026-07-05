@@ -146,9 +146,9 @@ export default function ContentFactoryPage() {
   }
 
   return (
-    <main style={{ background: "var(--background)" }}>
-      <section className="mx-auto max-w-6xl px-6 py-16">
-        <h1 className="mb-10 text-5xl font-bold">🤖 {t("title")}</h1>
+    <main style={{ background: "#0f172a", minHeight: "100vh", color: "#f1f5f9" }}>
+      <section className="mx-auto max-w-6xl px-6 py-16" style={{ background: "#0f172a" }}>
+        <h1 className="mb-10 text-5xl font-bold" style={{ color: "#f1f5f9" }}>🤖 {t("title")}</h1>
 
         <ContentStrategist onApply={applyStrategy} />
 
@@ -178,13 +178,13 @@ export default function ContentFactoryPage() {
             <FactoryQueue queue={queue} />
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/10 p-8">
-            <h2 className="mb-5 text-2xl font-bold">{t("statusTitle")}</h2>
+          <div className="rounded-2xl border border-white/10 p-8" style={{ background: "#1e293b", color: "#f1f5f9" }}>
+            <h2 className="mb-5 text-2xl font-bold" style={{ color: "#f1f5f9" }}>{t("statusTitle")}</h2>
 
-            <div className="mb-4 rounded-xl bg-black/30 p-4">{status}</div>
+            <div className="mb-4 rounded-xl bg-black/30 p-4" style={{ color: "#f1f5f9" }}>{status}</div>
 
             <div className="mb-4">
-              <div className="mb-2 flex justify-between text-sm text-gray-300">
+              <div className="mb-2 flex justify-between text-sm" style={{ color: "#cbd5e1" }}>
                 <span>{step}</span>
                 <span>{progress}%</span>
               </div>
@@ -199,7 +199,7 @@ export default function ContentFactoryPage() {
 
             {articles.length > 0 && (
               <>
-                <h3 className="mb-4 mt-6 font-bold">{t("createdArticlesTitle")}</h3>
+                <h3 className="mb-4 mt-6 font-bold" style={{ color: "#f1f5f9" }}>{t("createdArticlesTitle")}</h3>
 
                 <div className="space-y-3">
                   {articles.map((article) => (
@@ -208,7 +208,7 @@ export default function ContentFactoryPage() {
                       href={`/blog/${article.slug}`}
                       className="block rounded-xl bg-slate-900 p-4 hover:bg-slate-800"
                     >
-                      <p className="font-bold">{article.title}</p>
+                      <p className="font-bold" style={{ color: "#f1f5f9" }}>{article.title}</p>
                       <p className="text-sm text-gray-400">
                         {article.category}
                       </p>

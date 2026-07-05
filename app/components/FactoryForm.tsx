@@ -66,14 +66,14 @@ export default function FactoryForm({
   const isEn = locale === "en";
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/10 p-8">
+    <div className="rounded-2xl border border-white/10 p-8" style={{ background: "#1e293b", color: "#f1f5f9" }}>
 
       <div className="grid gap-5 md:grid-cols-2">
 
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="rounded-xl bg-slate-900 p-4"
+          className="rounded-xl bg-slate-900 p-4 text-slate-100"
         >
           <option>{t("categoryAi")}</option>
           <option>{t("categoryHosting")}</option>
@@ -85,7 +85,7 @@ export default function FactoryForm({
         <select
           value={count}
           onChange={(e) => setCount(e.target.value)}
-          className="rounded-xl bg-slate-900 p-4"
+          className="rounded-xl bg-slate-900 p-4 text-slate-100"
         >
           <option>1</option>
           <option>3</option>
@@ -96,7 +96,7 @@ export default function FactoryForm({
         <select
           value={words}
           onChange={(e) => setWords(e.target.value)}
-          className="rounded-xl bg-slate-900 p-4"
+          className="rounded-xl bg-slate-900 p-4 text-slate-100"
         >
           <option>1000</option>
           <option>1500</option>
@@ -107,7 +107,7 @@ export default function FactoryForm({
         <select
           value={style}
           onChange={(e) => setStyle(e.target.value)}
-          className="rounded-xl bg-slate-900 p-4"
+          className="rounded-xl bg-slate-900 p-4 text-slate-100"
         >
           <option>{isEn ? "Professional" : "Professionell"}</option>
           <option>{isEn ? "Casual" : "Locker"}</option>
@@ -117,7 +117,7 @@ export default function FactoryForm({
         <select
           value={audience}
           onChange={(e) => setAudience(e.target.value)}
-          className="rounded-xl bg-slate-900 p-4"
+          className="rounded-xl bg-slate-900 p-4 text-slate-100"
         >
           <option>{t("audienceBeginners")}</option>
           <option>{t("audienceEntrepreneurs")}</option>
@@ -127,7 +127,7 @@ export default function FactoryForm({
         <select
           value={affiliateTool}
           onChange={(e) => setAffiliateTool(e.target.value)}
-          className="rounded-xl bg-slate-900 p-4"
+          className="rounded-xl bg-slate-900 p-4 text-slate-100"
         >
           <option>{t("affiliateAuto")}</option>
           <option>Hostinger</option>
@@ -141,7 +141,7 @@ export default function FactoryForm({
         <select
           value={seoStrength}
           onChange={(e) => setSeoStrength(e.target.value)}
-          className="rounded-xl bg-slate-900 p-4"
+          className="rounded-xl bg-slate-900 p-4 text-slate-100"
         >
           <option>{t("seoStandard")}</option>
           <option>{t("seoStrong")}</option>
@@ -151,7 +151,7 @@ export default function FactoryForm({
         <select
           value={articleType}
           onChange={(e) => setArticleType(e.target.value)}
-          className="rounded-xl bg-slate-900 p-4"
+          className="rounded-xl bg-slate-900 p-4 text-slate-100"
         >
           <option>{t("articleGuide")}</option>
           <option>{t("articleComparison")}</option>
