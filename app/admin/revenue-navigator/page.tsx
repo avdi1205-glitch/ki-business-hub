@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 type Plan = "starter" | "pro" | "agency";
 
@@ -33,11 +34,25 @@ type PlaybookResponse = {
   };
 };
 
+function normalizePlan(value: string | null): Plan {
+  if (value === "starter" || value === "pro" || value === "agency") {
+    return value;
+  }
+
+  return "pro";
+}
+
 export default function RevenueNavigatorPage() {
-  const [plan, setPlan] = useState<Plan>("pro");
+  const searchParams = useSearchParams();
+  const [plan, setPlan] = useState<Plan>(() => normalizePlan(searchParams.get("plan")));
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<PlaybookResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const queryPlan = normalizePlan(searchParams.get("plan"));
+    setPlan(queryPlan);
+  }, [searchParams]);
 
   const sorted = data?.recommendations
     ? [...data.recommendations].sort((a, b) => b.estimatedMonthlyLift - a.estimatedMonthlyLift)
