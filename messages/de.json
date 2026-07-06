@@ -171,7 +171,15 @@
       "articleReview": "Testbericht",
       "articleList": "Liste",
       "generating": "Generiere...",
-      "startFactory": "Content Factory starten"
+      "startFactory": "Content Factory starten",
+      "offerEyebrow": "Naechster Umsatzschritt",
+      "offerTitle": "Wenn der Workflow passt, schalte direkt mehr Output und mehr Monetarisierung frei.",
+      "offerSubtitle": "Die Content Factory bringt den Einstieg. Pro und Agency bringen mehr Volumen, Automatisierung und den klareren Umsatzpfad fuer echte Produktion.",
+      "offerFreeCta": "Kostenlos weiter testen",
+      "offerProA": "Pro fuer 39 EUR freischalten",
+      "offerProB": "Pro fuer mehr Output aktivieren",
+      "offerAgencyA": "Agency fuer 149 EUR starten",
+      "offerAgencyB": "Agency fuer Teams aktivieren"
     },
     "statPrice": "Startpreis für Pro",
     "trustFree": "Kostenlos testen und erst bei echtem Nutzen upgraden",
@@ -326,14 +334,30 @@
     "eyebrow": "Nexmoneta Tools",
     "title": "Tools für dein Online-Business",
     "subtitle": "Entdecke KI-Tools, Hosting-Lösungen, VPNs und Automatisierungs-Tools für dein digitales Business.",
-    "readMore": "Mehr erfahren →"
+    "readMore": "Mehr erfahren →",
+    "offerEyebrow": "Direkter Umsatzpfad",
+    "offerTitle": "Vergleiche Tools und geh dann direkt in deinen Workflow.",
+    "offerSubtitle": "Wenn du schon weißt, dass du regelmäßig veröffentlichen und Affiliate-Klicks aufbauen willst, nimm direkt den klaren Einstieg statt noch mehr Tabs.",
+    "offerFreeCta": "Kostenlos starten",
+    "offerProA": "Pro für 39 EUR starten",
+    "offerProB": "Pro direkt freischalten",
+    "offerAgencyA": "Agency für 149 EUR starten",
+    "offerAgencyB": "Agency für Teams aktivieren"
   },
   "affiliate": {
     "eyebrow": "Affiliate Empfehlungen",
     "title": "Empfohlene Tools für dein Online-Business",
     "subtitle": "Hier findest du ausgewählte Tools für KI, Hosting, VPN, Automatisierung und Affiliate-Marketing.",
     "readMore": "Mehr erfahren",
-    "cta": "Angebot ansehen"
+    "cta": "Angebot ansehen",
+    "offerEyebrow": "Mehr als nur Klicks",
+    "offerTitle": "Hol dir nicht nur Empfehlungen, sondern den ganzen Monetarisierungs-Workflow.",
+    "offerSubtitle": "Affiliate-Klicks bringen mehr, wenn Content, Tracking und Follow-up sauber zusammenspielen. Genau dafuer sind Pro und Agency gedacht.",
+    "offerFreeCta": "Kostenlosen Workflow starten",
+    "offerProA": "Pro für 39 EUR freischalten",
+    "offerProB": "Pro für mehr Klicks aktivieren",
+    "offerAgencyA": "Agency für 149 EUR starten",
+    "offerAgencyB": "Agency für Teams aktivieren"
   },
   "footer": {
     "newsletter": "Hol dir wöchentliche Conversion- und Tool-Updates"

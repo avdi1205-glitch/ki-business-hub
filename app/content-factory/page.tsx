@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import ContentStrategist from "../components/ContentStrategist";
+import CheckoutCtaButton from "../components/CheckoutCtaButton";
 import FactoryForm from "../components/FactoryForm";
 import FactoryStats from "../components/FactoryStats";
 import FactoryLog from "../components/FactoryLog";
@@ -151,6 +152,52 @@ export default function ContentFactoryPage() {
         <h1 className="mb-10 text-5xl font-bold" style={{ color: "#f1f5f9" }}>🤖 {t("title")}</h1>
 
         <ContentStrategist onApply={applyStrategy} />
+
+        <div className="mb-8 rounded-[2rem] border border-emerald-400/20 bg-gradient-to-br from-emerald-500/12 to-cyan-500/8 p-6 shadow-2xl shadow-slate-950/20 backdrop-blur-xl">
+          <p className="text-xs font-bold uppercase tracking-[0.24em] text-emerald-300/80">{t("offerEyebrow")}</p>
+          <div className="mt-3 grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div>
+              <h2 className="text-2xl font-black text-white sm:text-3xl">{t("offerTitle")}</h2>
+              <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300 sm:text-base">{t("offerSubtitle")}</p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-3 lg:w-[40rem]">
+              <Link
+                href="/content-factory"
+                className="rounded-2xl border border-emerald-300/20 bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-3 text-center font-black text-white shadow-[0_18px_40px_rgba(16,185,129,0.22)] transition-all duration-300 hover:-translate-y-1"
+              >
+                🚀 {t("offerFreeCta")}
+              </Link>
+              <CheckoutCtaButton
+                href="/api/checkout?plan=pro"
+                ctaKey="factory-pro"
+                variantA={{
+                  label: `💎 ${t("offerProA")}`,
+                  sourceSuffix: "variant-a",
+                  className: "rounded-2xl border border-sky-300/20 bg-sky-500/10 px-4 py-3 text-center font-black text-sky-100 transition-all duration-300 hover:-translate-y-1 hover:bg-sky-500/20",
+                }}
+                variantB={{
+                  label: `⚡ ${t("offerProB")}`,
+                  sourceSuffix: "variant-b",
+                  className: "rounded-2xl border border-sky-300/20 bg-sky-500/10 px-4 py-3 text-center font-black text-sky-100 transition-all duration-300 hover:-translate-y-1 hover:bg-sky-500/20",
+                }}
+              />
+              <CheckoutCtaButton
+                href="/api/checkout?plan=agency"
+                ctaKey="factory-agency"
+                variantA={{
+                  label: `👑 ${t("offerAgencyA")}`,
+                  sourceSuffix: "variant-a",
+                  className: "rounded-2xl border border-amber-300/20 bg-amber-500/10 px-4 py-3 text-center font-black text-amber-100 transition-all duration-300 hover:-translate-y-1 hover:bg-amber-500/20",
+                }}
+                variantB={{
+                  label: `🏢 ${t("offerAgencyB")}`,
+                  sourceSuffix: "variant-b",
+                  className: "rounded-2xl border border-amber-300/20 bg-amber-500/10 px-4 py-3 text-center font-black text-amber-100 transition-all duration-300 hover:-translate-y-1 hover:bg-amber-500/20",
+                }}
+              />
+            </div>
+          </div>
+        </div>
 
         <div className="grid gap-8 lg:grid-cols-3">
           <div className="space-y-8 lg:col-span-2">
