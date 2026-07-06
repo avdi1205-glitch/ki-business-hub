@@ -96,74 +96,84 @@ export function PricingSection() {
   });
 
   return (
-    <div style={{ background: "linear-gradient(180deg, #111827 0%, #0f172a 100%)" }} className="py-24">
-      <div className="max-w-7xl mx-auto px-4">
+    <section className="relative overflow-hidden py-24">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_10%,rgba(14,165,233,0.09),transparent_25%),radial-gradient(circle_at_88%_18%,rgba(168,85,247,0.08),transparent_22%),linear-gradient(180deg,rgba(15,23,42,0),rgba(15,23,42,0.45))]" />
+
+      <div className="relative mx-auto max-w-7xl px-4">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
-            {t("pricingTitle")}
-          </h2>
-          <p className="text-xl max-w-2xl mx-auto" style={{ color: "var(--text-light)" }}>
+        <div className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
+          <div>
+            <p className="mb-4 text-xs font-bold uppercase tracking-[0.28em] text-cyan-300/80">Pricing</p>
+            <h2 className="display-heading max-w-xl text-4xl font-black text-white sm:text-5xl md:text-6xl">
+              {t("pricingTitle")}
+            </h2>
+          </div>
+          <p className="max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl lg:justify-self-end">
             {t("pricingSubtitle")}
           </p>
         </div>
 
-        <div className="mb-10 grid gap-4 md:grid-cols-3">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-            <p className="text-sm font-bold text-cyan-300">Schnell starten</p>
-            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+        <div className="mt-12 grid gap-4 md:grid-cols-3">
+          <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 md:translate-y-6">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-300/80">Schnell starten</p>
+            <p className="mt-2 text-sm leading-6 text-slate-300">
               Kostenlos testen und den ersten Workflow ohne Risiko aufsetzen.
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-            <p className="text-sm font-bold text-cyan-300">Am meisten Nutzen</p>
-            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+          <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-violet-300/80">Am meisten Nutzen</p>
+            <p className="mt-2 text-sm leading-6 text-slate-300">
               Pro ist der klare Sweet Spot fuer mehr Volumen, Automatisierung und Klicks.
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-            <p className="text-sm font-bold text-cyan-300">Fuer Teams</p>
-            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+          <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 md:-translate-y-4">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-amber-300/80">Fuer Teams</p>
+            <p className="mt-2 text-sm leading-6 text-slate-300">
               Agency lohnt sich, wenn mehrere Personen oder Workflows parallel laufen.
             </p>
           </div>
         </div>
 
         {/* Pricing Grid */}
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
+        <div className="mt-14 grid gap-8 md:grid-cols-3">
           {plans.map((plan, idx) => (
             <div
               key={idx}
-              className="relative rounded-2xl overflow-hidden transition-all duration-300 transform hover:scale-105"
+              className={`group relative overflow-hidden rounded-[2rem] transition-all duration-300 hover:-translate-y-2 ${plan.highlight ? "md:translate-y-[-1rem]" : idx === 0 ? "md:translate-y-6" : "md:translate-y-2"}`}
               style={{
-                background: "#1e293b",
-                border: plan.highlight ? `2px solid ${plan.color}` : `1px solid rgba(255,255,255,0.1)`,
-                transform: plan.highlight ? "scale(1.05)" : "scale(1)",
+                background:
+                  "linear-gradient(180deg, rgba(15,23,42,0.92) 0%, rgba(15,23,42,0.72) 100%)",
+                border: plan.highlight ? `1px solid ${plan.color}66` : "1px solid rgba(255,255,255,0.1)",
+                boxShadow: plan.highlight
+                  ? `0 30px 80px rgba(139, 92, 246, 0.25), inset 0 1px 0 rgba(255,255,255,0.06)`
+                  : "0 22px 60px rgba(2, 6, 23, 0.26)",
               }}
             >
+              <div className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: `radial-gradient(circle at top, ${plan.color}18, transparent 48%)` }} />
+
               {/* Badge */}
               {plan.badge && (
-                <div className="absolute top-4 right-4 px-4 py-1 text-white text-xs font-bold rounded-full" style={{ background: plan.color }}>
+                <div className="absolute right-4 top-4 rounded-full px-4 py-1 text-xs font-black tracking-[0.18em] text-slate-950" style={{ background: plan.color }}>
                   {plan.badge}
                 </div>
               )}
 
               {/* Content */}
-              <div className="relative z-10 p-8 h-full flex flex-col">
+              <div className="relative z-10 flex h-full flex-col p-8">
                 {/* Header */}
                 <div className="mb-6">
-                  <div className="text-5xl mb-3">{plan.emoji}</div>
-                  <h3 className="text-2xl font-bold" style={{ color: "var(--text-dark)" }}>{plan.name}</h3>
-                  <p className="text-sm" style={{ color: "var(--text-light)" }}>{t(plan.descriptionKey)}</p>
+                  <div className="mb-3 text-5xl transition-transform duration-300 group-hover:scale-105">{plan.emoji}</div>
+                  <h3 className="text-2xl font-black text-white">{plan.name}</h3>
+                  <p className="text-sm text-slate-300">{t(plan.descriptionKey)}</p>
                 </div>
 
                 {/* Price */}
                 <div className="mb-6">
-                  <div className="text-4xl font-bold" style={{ color: plan.color }}>
+                  <div className="text-4xl font-black" style={{ color: plan.color }}>
                     {plan.price}
                   </div>
-                  <p className="text-sm" style={{ color: "var(--text-muted)" }}>{plan.period}</p>
-                  <p className="mt-2 text-xs font-semibold uppercase tracking-wide" style={{ color: "var(--text-light)" }}>
+                  <p className="text-sm text-slate-400">{plan.period}</p>
+                  <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">
                     {plan.name === "Starter"
                       ? (isEn ? "Best for testing" : "Gut zum Testen")
                       : plan.name === "Pro"
@@ -171,7 +181,7 @@ export function PricingSection() {
                         : (isEn ? "Best for teams" : "Fuer Teams")}
                   </p>
                   {plan.name !== "Starter" && (
-                    <p className="mt-2 text-sm font-medium" style={{ color: "var(--text-light)" }}>
+                    <p className="mt-2 text-sm font-medium text-slate-300">
                       {plan.name === "Pro" ? t("pricingProHint") : t("pricingAgencyHint")}
                     </p>
                   )}
@@ -182,7 +192,7 @@ export function PricingSection() {
                   {plan.features.map((feature, fidx) => (
                     <div key={fidx} className="flex items-start gap-2">
                       <span className="text-lg mt-1">{t(feature).startsWith("❌") ? "❌" : "✅"}</span>
-                        <span style={{ color: t(feature).startsWith("❌") ? "var(--text-muted)" : "var(--text-light)" }}>
+                      <span style={{ color: t(feature).startsWith("❌") ? "var(--text-muted)" : "var(--text-light)" }}>
                         {t(feature).replace("✅ ", "").replace("❌ ", "")}
                       </span>
                     </div>
@@ -197,18 +207,18 @@ export function PricingSection() {
                     variantA={{
                       label: `🚀 ${t(plan.ctaKey)}`,
                       sourceSuffix: "variant-a",
-                      className: "block w-full rounded-lg px-4 py-3 text-center font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-lg",
+                      className: "block w-full rounded-2xl px-4 py-3 text-center font-black text-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg",
                     }}
                     variantB={{
                       label: plan.name === "Pro" ? `⚡ ${t("pricingProVariantB")}` : `🏢 ${t("pricingAgencyVariantB")}`,
                       sourceSuffix: "variant-b",
-                      className: "block w-full rounded-lg px-4 py-3 text-center font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-lg",
+                      className: "block w-full rounded-2xl px-4 py-3 text-center font-black text-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg",
                     }}
                   />
                 ) : (
                   <Link
                     href={plan.href}
-                    className="block w-full rounded-lg px-4 py-3 text-center font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                    className="block w-full rounded-2xl px-4 py-3 text-center font-black text-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                     style={{ background: plan.color }}
                   >
                     {t(plan.ctaKey)}
@@ -220,18 +230,18 @@ export function PricingSection() {
         </div>
 
         {/* Money-Back Guarantee */}
-        <div className="max-w-2xl mx-auto p-8 rounded-xl text-center" style={{ background: "rgba(5, 150, 105, 0.16)", border: "1px solid var(--success)" }}>
-          <h3 className="text-2xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>
+        <div className="mx-auto mt-16 max-w-3xl rounded-[2rem] border border-emerald-400/20 bg-emerald-500/10 p-8 text-center backdrop-blur-xl">
+          <h3 className="mb-2 text-2xl font-black text-white">
             {t("pricingGuaranteeTitle")}
           </h3>
-          <p style={{ color: "var(--text-light)" }}>
+          <p className="text-slate-300">
             {t("pricingGuaranteeBody")}
           </p>
-          <p className="mt-4 text-sm" style={{ color: "#d1fae5" }}>
+          <p className="mt-4 text-sm text-emerald-200">
             {t("pricingEnvNote")}
           </p>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

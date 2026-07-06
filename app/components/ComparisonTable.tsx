@@ -102,83 +102,88 @@ export function ComparisonTable() {
   }));
 
   return (
-    <div style={{ background: "linear-gradient(180deg, #0f172a 0%, #111827 100%)" }} className="py-24">
-      <div className="max-w-6xl mx-auto px-4">
+    <section className="relative overflow-hidden py-24">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_12%,rgba(14,165,233,0.08),transparent_24%),radial-gradient(circle_at_86%_18%,rgba(245,158,11,0.08),transparent_22%),linear-gradient(180deg,rgba(15,23,42,0),rgba(15,23,42,0.45))]" />
+
+      <div className="relative mx-auto max-w-6xl px-4">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
-            {t("comparisonTitle")}
-          </h2>
-          <p className="text-xl" style={{ color: "var(--text-light)" }}>
+        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+          <div>
+            <p className="mb-4 text-xs font-bold uppercase tracking-[0.28em] text-amber-300/80">Vergleich</p>
+            <h2 className="display-heading max-w-xl text-4xl font-black text-white sm:text-5xl md:text-6xl">
+              {t("comparisonTitle")}
+            </h2>
+          </div>
+          <p className="max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl lg:justify-self-end">
             {t("comparisonSubtitle")}
           </p>
         </div>
 
-        <div className="mb-10 grid gap-4 md:grid-cols-3">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-            <p className="text-sm font-bold text-cyan-300">Starter</p>
-            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+        <div className="mt-12 grid gap-4 md:grid-cols-3">
+          <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 md:translate-y-4">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-sky-300/80">Starter</p>
+            <p className="mt-2 text-sm leading-6 text-slate-300">
               Gut zum Kennenlernen und fuer erste Workflows mit wenig Risiko.
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-            <p className="text-sm font-bold text-cyan-300">Pro</p>
-            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+          <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-violet-300/80">Pro</p>
+            <p className="mt-2 text-sm leading-6 text-slate-300">
               Bester Mix aus Preis, Automatisierung und Skalierung fuer die meisten Nutzer.
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-            <p className="text-sm font-bold text-cyan-300">Agency</p>
-            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+          <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 md:-translate-y-4">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-amber-300/80">Agency</p>
+            <p className="mt-2 text-sm leading-6 text-slate-300">
               Sinnvoll, wenn du mit Team, mehreren Kunden oder mehreren Workflows arbeitest.
             </p>
           </div>
         </div>
 
         {/* Desktop Table */}
-        <div className="hidden md:block overflow-x-auto">
-          <table className="w-full">
+        <div className="mt-14 hidden overflow-x-auto rounded-[2rem] border border-white/10 bg-slate-950/55 backdrop-blur-2xl md:block">
+          <table className="w-full border-collapse">
             <thead>
-              <tr style={{ background: "#1f2937", borderBottom: "2px solid rgba(255,255,255,0.1)" }}>
-                <th className="px-6 py-4 text-left font-bold" style={{ color: "var(--text-dark)" }}>
+              <tr style={{ background: "rgba(15,23,42,0.92)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                <th className="px-6 py-5 text-left text-xs font-bold uppercase tracking-[0.22em] text-slate-300">
                   {t("comparisonHeaderFeature")}
                 </th>
-                <th className="px-6 py-4 text-center">
+                <th className="px-6 py-5 text-center">
                   <div className="text-2xl mb-2">🚀</div>
-                  <div className="font-bold" style={{ color: "var(--text-dark)" }}>{t("comparisonStarter")}</div>
-                  <div className="text-sm" style={{ color: "var(--text-light)" }}>{t("comparisonStarterPrice")}</div>
+                  <div className="font-black text-white">{t("comparisonStarter")}</div>
+                  <div className="text-sm text-slate-400">{t("comparisonStarterPrice")}</div>
                 </th>
-                <th className="px-6 py-4 text-center" style={{ background: "rgba(109, 40, 217, 0.26)", borderLeft: "2px solid rgba(139, 92, 246, 0.35)", borderRight: "2px solid rgba(139, 92, 246, 0.35)" }}>
+                <th className="px-6 py-5 text-center" style={{ background: "rgba(109, 40, 217, 0.18)", borderLeft: "1px solid rgba(139, 92, 246, 0.25)", borderRight: "1px solid rgba(139, 92, 246, 0.25)" }}>
                   <div className="text-2xl mb-2">💎</div>
-                  <div className="font-bold" style={{ color: "var(--text-dark)" }}>{t("comparisonPro")}</div>
-                  <div className="text-sm" style={{ color: "var(--text-light)" }}>{t("comparisonProPrice")}</div>
+                  <div className="font-black text-white">{t("comparisonPro")}</div>
+                  <div className="text-sm text-slate-400">{t("comparisonProPrice")}</div>
                 </th>
-                <th className="px-6 py-4 text-center">
+                <th className="px-6 py-5 text-center">
                   <div className="text-2xl mb-2">👑</div>
-                  <div className="font-bold" style={{ color: "var(--text-dark)" }}>{t("comparisonAgency")}</div>
-                  <div className="text-sm" style={{ color: "var(--text-light)" }}>{t("comparisonAgencyPrice")}</div>
+                  <div className="font-black text-white">{t("comparisonAgency")}</div>
+                  <div className="text-sm text-slate-400">{t("comparisonAgencyPrice")}</div>
                 </th>
               </tr>
             </thead>
-            <tbody style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}>
+            <tbody>
               {rows.map((row, idx) => (
                 <tr
                   key={idx}
                   style={{
-                    background: idx % 2 === 0 ? "#0f172a" : "#111827",
+                    background: idx % 2 === 0 ? "rgba(15,23,42,0.84)" : "rgba(30,41,59,0.56)",
                     borderBottom: "1px solid rgba(255,255,255,0.05)",
                   }}
                 >
-                  <td className="px-6 py-4 font-semibold" style={{ color: "var(--text-dark)" }}>
-                      {t(row.featureKey)}
+                  <td className="px-6 py-4 font-semibold text-slate-100">
+                    {t(row.featureKey)}
                   </td>
-                  <td className="px-6 py-4 text-center" style={{ color: "var(--text-light)" }}>
+                  <td className="px-6 py-4 text-center text-slate-300">
                     {row.starter}
                   </td>
-                  <td className="px-6 py-4 text-center font-bold" style={{ background: "rgba(109, 40, 217, 0.22)", color: "var(--text-dark)" }}>
+                  <td className="px-6 py-4 text-center font-bold text-white" style={{ background: "rgba(109, 40, 217, 0.18)" }}>
                     {row.pro}
                   </td>
-                  <td className="px-6 py-4 text-center" style={{ color: "var(--text-light)" }}>
+                  <td className="px-6 py-4 text-center text-slate-300">
                     {row.agency}
                   </td>
                 </tr>
@@ -188,7 +193,7 @@ export function ComparisonTable() {
         </div>
 
         {/* Mobile Cards */}
-        <div className="md:hidden space-y-6">
+        <div className="mt-14 space-y-6 md:hidden">
           {[
             {
               title: "🚀 Starter",
@@ -208,19 +213,19 @@ export function ComparisonTable() {
           ].map((plan, idx) => (
             <div
               key={idx}
-              className="p-6 rounded-xl"
+              className="rounded-[1.75rem] border border-white/10 p-6 backdrop-blur-xl"
               style={{
-                background: "var(--background-elevated)",
+                background: "rgba(15,23,42,0.72)",
                 border: `1px solid ${plan.color}40`,
               }}
             >
-              <h3 className="text-xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>
+              <h3 className="mb-2 text-xl font-black text-white">
                 {plan.title}
               </h3>
-              <p className="text-lg font-bold mb-4" style={{ color: plan.color }}>
+              <p className="mb-4 text-lg font-black" style={{ color: plan.color }}>
                 {plan.price}
               </p>
-              <div className="space-y-2 text-sm" style={{ color: "var(--text-light)" }}>
+              <div className="space-y-2 text-sm text-slate-300">
                 {rows.map((row, jdx) => (
                   <div key={jdx} className="flex justify-between">
                     <span>{t(row.featureKey)}</span>
@@ -237,23 +242,23 @@ export function ComparisonTable() {
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-16 text-center">
-          <p className="text-lg mb-8" style={{ color: "var(--text-light)" }}>
+        <div className="mt-16 rounded-[2rem] border border-white/10 bg-white/5 p-8 text-center backdrop-blur-xl">
+          <p className="mb-8 text-lg text-slate-300">
             {t("comparisonBottomCopy")}
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/content-factory" className="inline-block rounded-lg border border-white/10 bg-white/5 px-8 py-4 font-bold text-slate-100 transition-all duration-300 hover:scale-105 hover:bg-white/10">
+            <Link href="/content-factory" className="inline-block rounded-2xl border border-white/10 bg-white/5 px-8 py-4 font-black text-slate-100 transition-all duration-300 hover:-translate-y-1 hover:bg-white/10">
               {locale === "en" ? "Start free" : "Kostenlos starten"}
             </Link>
-            <Link href="/tools" className="inline-block rounded-lg border border-cyan-400/30 bg-cyan-500/10 px-8 py-4 font-bold text-cyan-100 transition-all duration-300 hover:scale-105 hover:bg-cyan-500/20">
+            <Link href="/tools" className="inline-block rounded-2xl border border-cyan-400/30 bg-cyan-500/10 px-8 py-4 font-black text-cyan-100 transition-all duration-300 hover:-translate-y-1 hover:bg-cyan-500/20">
               {locale === "en" ? "Compare tools" : "Tools vergleichen"}
             </Link>
-            <Link href="/api/checkout?plan=pro&source=comparison-table" className="inline-block rounded-lg bg-emerald-600 px-10 py-4 text-lg font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+            <Link href="/api/checkout?plan=pro&source=comparison-table" className="inline-block rounded-2xl bg-emerald-600 px-10 py-4 text-lg font-black text-white transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
               {t("comparisonBottomCta")}
             </Link>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
