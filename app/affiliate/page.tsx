@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "../../lib/prisma";
 import AffiliateButton from "../blog/[slug]/AffiliateButton";
 import { getTranslations } from "next-intl/server";
+import { getLocale } from "next-intl/server";
 import CheckoutCtaButton from "../components/CheckoutCtaButton";
 
 function createSlug(name: string) {
@@ -19,7 +20,16 @@ function createSlug(name: string) {
 
 export default async function AffiliatePage() {
   const t = await getTranslations("affiliate");
+  const locale = await getLocale();
   let links: Awaited<ReturnType<typeof prisma.affiliateLink.findMany>> = [];
+
+  const translateBadge = (badge: string | null) => {
+    if (!badge) return null;
+    if (locale === "en") return badge;
+    if (badge === "Most Popular") return "Am beliebtesten";
+    if (badge === "Best for Images") return "Am besten fuer Bilder";
+    return badge;
+  };
 
   try {
     links = await prisma.affiliateLink.findMany({
@@ -161,7 +171,7 @@ export default async function AffiliatePage() {
             >
               {link.badge && (
                 <p className="mb-4 inline-block rounded-full bg-yellow-500 px-3 py-1 text-sm font-bold text-black">
-                  {link.badge}
+                  {translateBadge(link.badge)}
                 </p>
               )}
 
