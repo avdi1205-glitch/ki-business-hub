@@ -191,3 +191,63 @@ Notes:
 
 - Keep `pub-...` format in IDs (no `ca-` in env values).
 - After saving all variables, redeploy once.
+
+## Go-Live Check (2 min)
+
+Run these checks on production right after deploy.
+
+### 1) ads.txt is reachable
+
+URL:
+
+- `https://nexmoneta.com/ads.txt`
+
+Expected:
+
+- Contains: `google.com, pub-<your-id>, DIRECT, f08c47fec0942fa0`
+
+### 2) Checkout redirects work
+
+URLs:
+
+- `https://nexmoneta.com/api/checkout?plan=pro&source=go-live-check`
+- `https://nexmoneta.com/api/checkout?plan=agency&source=go-live-check`
+
+Expected:
+
+- Redirects to your live payment provider URL (Stripe/Lemon).
+- Does NOT redirect to `/kontakt?reason=checkout_url_missing`.
+
+### 3) AI labeling notice state
+
+URL:
+
+- `https://nexmoneta.com/create-article`
+
+Expected:
+
+- If `AI_LABELING_ACTIVE=true`: mandatory labeling text is shown.
+- If `AI_LABELING_ACTIVE=false`: "starting in August" text is shown.
+
+### 4) Ad blocks render on content pages
+
+URLs:
+
+- `https://nexmoneta.com/blog`
+- Any blog article URL, e.g. `https://nexmoneta.com/blog/<slug>`
+
+Expected:
+
+- Ad placeholders/blocks are visible.
+- Source contains `adsbygoogle` and AdSense script with `client=ca-pub-...`.
+
+### 5) Affiliate tracking path is alive
+
+Action:
+
+- Click one affiliate button from tools/blog pages.
+
+Expected:
+
+- Internal click appears in admin/stats.
+- Partner program dashboard also shows tracked click after sync delay.
