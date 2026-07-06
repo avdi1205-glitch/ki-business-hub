@@ -73,6 +73,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
+                  prefetch={false}
                   className="rounded-full px-4 py-2 text-sm font-semibold transition-all hover:bg-white/20 active:scale-95"
                   style={{
                     color: pathname === link.href ? "#fff" : "#cbd5e1",
@@ -159,6 +160,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
+                  prefetch={false}
                   onClick={() => setOpen(false)}
                   className="block rounded-lg px-4 py-3 text-base font-semibold transition-all hover:bg-white/10"
                   style={{
