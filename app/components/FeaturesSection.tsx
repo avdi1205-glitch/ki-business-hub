@@ -57,50 +57,60 @@ export function FeaturesSection() {
   const t = useTranslations("home");
 
   return (
-    <div style={{ background: "var(--background)" }} className="py-24">
-      <div className="max-w-6xl mx-auto px-4">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
-            {t("featuresTitle")}
-          </h2>
-          <p className="text-xl max-w-2xl mx-auto" style={{ color: "var(--text-light)" }}>
-            {t("featuresSubtitle")}
-          </p>
-        </div>
+    <section className="relative overflow-hidden py-24">
+      <div className="absolute inset-0 opacity-70 [background:radial-gradient(circle_at_15%_10%,rgba(14,165,233,0.10),transparent_28%),radial-gradient(circle_at_85%_20%,rgba(168,85,247,0.08),transparent_24%),linear-gradient(180deg,rgba(15,23,42,0.0),rgba(15,23,42,0.35))]" />
 
-        <div className="mb-10 grid gap-4 md:grid-cols-3">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-            <p className="text-sm font-bold text-cyan-300">Schneller Output</p>
-            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
-              Inhalte, Empfehlungen und Workflows schneller in einen verwertbaren Zustand bringen.
+      <div className="relative mx-auto max-w-6xl px-4">
+        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+          <div>
+            <p className="mb-4 text-xs font-bold uppercase tracking-[0.28em] text-cyan-300/80">Feature Layer</p>
+            <h2 className="display-heading max-w-xl text-4xl font-black text-white sm:text-5xl md:text-6xl">
+              {t("featuresTitle")}
+            </h2>
+            <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
+              {t("featuresSubtitle")}
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-            <p className="text-sm font-bold text-cyan-300">Mehr Monetarisierung</p>
-            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
-              Features sind direkt mit Affiliate-, Upgrade- und Funnel-Zielen verbunden.
-            </p>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-            <p className="text-sm font-bold text-cyan-300">Weniger Reibung</p>
-            <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>
-              Du springst schneller zur naechsten sinnvollen Aktion statt lange zu suchen.
-            </p>
+
+          <div className="grid gap-4 sm:grid-cols-3 lg:translate-y-6">
+            <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-300/80">Schneller Output</p>
+              <p className="mt-2 text-sm leading-6 text-slate-300">
+                Inhalte, Empfehlungen und Workflows schneller in einen verwertbaren Zustand bringen.
+              </p>
+            </div>
+            <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-5 backdrop-blur-xl sm:translate-y-4">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300/80">Mehr Monetarisierung</p>
+              <p className="mt-2 text-sm leading-6 text-slate-300">
+                Features sind direkt mit Affiliate-, Upgrade- und Funnel-Zielen verbunden.
+              </p>
+            </div>
+            <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-5 backdrop-blur-xl sm:-translate-y-4">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-violet-300/80">Weniger Reibung</p>
+              <p className="mt-2 text-sm leading-6 text-slate-300">
+                Du springst schneller zur naechsten sinnvollen Aktion statt lange zu suchen.
+              </p>
+            </div>
           </div>
         </div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="mt-14 grid gap-8 md:grid-cols-2">
           {features.map((feature, idx) => (
             <div
               key={idx}
-              className="relative group rounded-2xl overflow-hidden transition-all duration-300 transform hover:-translate-y-2"
+              className={`relative group overflow-hidden rounded-[2rem] transition-all duration-300 hover:-translate-y-2 ${
+                idx % 2 === 0 ? "md:translate-y-8" : "md:-translate-y-6"
+              }`}
               style={{
-                background: "var(--background-elevated)",
-                border: `2px solid ${feature.color}40`,
+                background:
+                  "linear-gradient(180deg, rgba(15,23,42,0.85) 0%, rgba(15,23,42,0.55) 100%)",
+                border: `1px solid ${feature.color}4d`,
+                boxShadow: `0 25px 60px rgba(2, 6, 23, 0.35), inset 0 1px 0 rgba(255,255,255,0.05)`,
               }}
             >
+              <div className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: `radial-gradient(circle at top left, ${feature.color}20, transparent 42%)` }} />
+
               {/* Gradient Header */}
               <div className="h-1" style={{ background: feature.color }} />
 
@@ -117,15 +127,12 @@ export function FeaturesSection() {
               {/* Content */}
               <div className="p-8">
                 {/* Icon */}
-                <div className="text-5xl mb-4 w-16 h-16 flex items-center justify-center rounded-xl" style={{ background: `${feature.color}20` }}>
+                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl text-5xl transition-transform duration-300 group-hover:scale-105" style={{ background: `${feature.color}20` }}>
                   {feature.icon}
                 </div>
 
                 {/* Title */}
-                <h3
-                  className="text-2xl font-bold mb-2"
-                  style={{ color: (feature as { titleColor?: string }).titleColor || feature.color }}
-                >
+                <h3 className="mb-2 text-2xl font-black" style={{ color: (feature as { titleColor?: string }).titleColor || feature.color }}>
                   {t(feature.titleKey)}
                 </h3>
 
@@ -134,7 +141,7 @@ export function FeaturesSection() {
                   {t(feature.descriptionKey)}
                 </p>
 
-                <div className="mb-6 rounded-xl border border-white/10 bg-white/5 p-4 text-sm leading-6" style={{ color: "var(--text-light)" }}>
+                <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm leading-6 text-slate-300">
                   {idx === 0
                     ? "Gut fuer den schnellen Start mit Content- und Workflow-Aufbau."
                     : idx === 1
@@ -157,7 +164,7 @@ export function FeaturesSection() {
                 {/* CTA */}
                 <Link
                   href={feature.href}
-                  className="block w-full rounded-lg px-4 py-3 text-center font-semibold transition-all duration-300 hover:shadow-lg group-hover:scale-105"
+                  className="block w-full rounded-2xl px-4 py-3 text-center font-semibold transition-all duration-300 hover:shadow-lg group-hover:scale-[1.02]"
                   style={{ background: feature.color, color: (feature as { ctaTextColor?: string }).ctaTextColor || "#ffffff" }}
                 >
                   {t(feature.ctaKey)} →
@@ -168,27 +175,30 @@ export function FeaturesSection() {
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-16 text-center">
-          <p className="mb-4 text-lg" style={{ color: "var(--text-light)" }}>
+        <div className="mt-16 flex flex-col items-start gap-6 rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur-xl lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.28em] text-slate-400">Next Step</p>
+            <p className="mt-3 text-lg text-slate-200">
             🚀 {t("featuresBottomCopy")}
-          </p>
-          <div className="flex flex-wrap justify-center gap-3">
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
             <Link
               href="/content-factory"
-              className="inline-block rounded-lg px-8 py-4 text-lg font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+              className="inline-block rounded-2xl px-8 py-4 text-lg font-bold text-white transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
               style={{ background: "var(--primary)" }}
             >
               {t("featuresBottomCta")}
             </Link>
             <Link
               href="/affiliate"
-              className="inline-block rounded-lg border border-white/10 bg-white/5 px-8 py-4 text-lg font-bold text-slate-100 transition-all duration-300 hover:scale-105 hover:bg-white/10"
+              className="inline-block rounded-2xl border border-white/10 bg-white/5 px-8 py-4 text-lg font-bold text-slate-100 transition-all duration-300 hover:-translate-y-1 hover:bg-white/10"
             >
               Empfehlungen ansehen
             </Link>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
