@@ -4,7 +4,7 @@ import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { useLocale, useTranslations } from "next-intl";
 
-export default function CreateArticleClient() {
+export default function CreateArticleClient({ isAfterAiLabelingStart }: { isAfterAiLabelingStart: boolean }) {
   const t = useTranslations("createArticle");
   const locale = useLocale();
   const isEn = locale === "en";
@@ -53,7 +53,7 @@ export default function CreateArticleClient() {
         <div className="mb-8 rounded-xl border border-cyan-400/20 bg-cyan-500/10 p-4">
           <p className="text-sm font-semibold uppercase tracking-wide text-cyan-200">{t("badge")}</p>
           <p className="mt-1 text-sm" style={{ color: "#e2e8f0" }}>
-            {t("notice")}
+            {isAfterAiLabelingStart ? t("noticeAfterAugust") : t("noticeBeforeAugust")}
           </p>
         </div>
 
