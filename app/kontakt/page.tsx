@@ -12,6 +12,7 @@ export default async function KontaktPage({
     email: "Email",
     website: "Website",
     note: "Note",
+    supportFlow: "How support works",
   };
   const { plan, source, intent } = await searchParams;
   const planLabel = plan?.toLowerCase() === "agency"
@@ -81,6 +82,15 @@ export default async function KontaktPage({
             <p className="mt-2 text-sm" style={{ color: "var(--text-muted)" }}>
               If you have Stripe Payment Links or Lemon Squeezy links, add them in Vercel as PRO_CHECKOUT_URL and AGENCY_CHECKOUT_URL. Then the upgrade buttons work directly.
             </p>
+          </div>
+        </div>
+
+        <div className="mt-8 rounded-xl p-6" style={{ background: "rgba(16, 185, 129, 0.08)", border: "1px solid rgba(16, 185, 129, 0.24)" }}>
+          <h2 className="mb-3 text-2xl font-bold" style={{ color: "var(--text-dark)" }}>{t.supportFlow}</h2>
+          <div className="space-y-2 text-sm" style={{ color: "var(--text-light)" }}>
+            <p>1. Bot first response for standard questions, onboarding, and quick troubleshooting.</p>
+            <p>2. Human handover for billing, account-specific issues, technical bugs, and edge cases.</p>
+            <p>3. Priority handling for active Pro and Agency users on urgent blockers.</p>
           </div>
         </div>
 
