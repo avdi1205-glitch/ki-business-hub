@@ -41,9 +41,9 @@ export default function Navbar() {
             <span className="grid h-9 w-9 place-items-center rounded-2xl bg-gradient-to-br from-sky-500 to-emerald-400 text-base shadow-lg shadow-sky-500/20 sm:h-10 sm:w-10 sm:text-lg">
               🚀
             </span>
-            <span className="flex max-w-[7.5rem] flex-col leading-tight sm:max-w-none">
+            <span className="flex flex-col leading-tight">
               <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-300 sm:text-sm sm:tracking-[0.22em]">Nexmoneta</span>
-              <span className="text-xs text-slate-400 hidden sm:block">{t("brandTag")}</span>
+              <span className="text-[10px] text-slate-400 hidden sm:block whitespace-nowrap">{t("brandTag")}</span>
             </span>
           </Link>
 
