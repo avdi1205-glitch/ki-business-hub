@@ -1,6 +1,6 @@
-# 💰 KI Business Hub - Monetarisierungs-Setup
+# 💰 Nexmoneta - Monetarisierungs-Setup
 
-Dieses Guide zeigt dir, wie du deine KI Business Hub Seite für maximale Einnahmen konfigurierst.
+Dieses Guide zeigt dir, wie du deine Nexmoneta Seite für maximale Einnahmen konfigurierst.
 
 ## 🚀 Was wurde hinzugefügt
 

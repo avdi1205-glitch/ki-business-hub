@@ -1,4 +1,4 @@
-# KI Business Hub - Operations Playbook
+# Nexmoneta - Operations Playbook
 
 ## Ziel
 Diese Checkliste stellt sicher, dass die Seite stabil bleibt, Fehler schnell erkannt werden und Revenue-relevante Funktionen laufend verfuegbar sind.
@@ -65,5 +65,5 @@ Wöchentlich prüfen:
 3. Nur bei messbaren Rückgängen neue UI-Änderungen planen.
 
 ## Verantwortlichkeit
-- Owner: Team KI Business Hub
+- Owner: Team Nexmoneta
 - Priorität bei Alarm: Verfügbarkeit > Datenintegrität > Conversion-Optimierung

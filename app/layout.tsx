@@ -32,8 +32,8 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(siteUrl),
     title: isEn
-      ? "KI Business Hub | Earn with AI & affiliate marketing"
-      : "KI Business Hub | Verdiene mit KI & Affiliate Marketing",
+      ? "Nexmoneta | Earn with AI & affiliate marketing"
+      : "Nexmoneta | Verdiene mit KI & Affiliate Marketing",
     description: isEn
       ? "Get access to 50+ AI tools, automated content factory, and affiliate revenue workflows. 1,247+ members are already earning €2,150+/month."
       : "Erhalte Zugang zu 50+ KI-Tools, automatisierter Content-Factory und Affiliate-Einnahmen. 1.247+ member verdienen bereits €2.150+/Monat.",
@@ -52,8 +52,8 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     openGraph: {
       title: isEn
-        ? "KI Business Hub | Earn with AI & affiliate marketing"
-        : "KI Business Hub | Verdiene mit KI & Affiliate Marketing",
+        ? "Nexmoneta | Earn with AI & affiliate marketing"
+        : "Nexmoneta | Verdiene mit KI & Affiliate Marketing",
       description: isEn
         ? "Access 50+ AI tools, content automation, and affiliate workflows."
         : "Zugang zu 50+ KI-Tools, automatisierter Content-Factory und Affiliate-Einnahmen.",
@@ -62,14 +62,14 @@ export async function generateMetadata(): Promise<Metadata> {
         url: `${siteUrl}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: "KI Business Hub",
+        alt: "Nexmoneta",
       }],
       type: "website",
       locale: isEn ? "en_US" : "de_DE",
     },
     twitter: {
       card: "summary_large_image",
-      title: "KI Business Hub",
+      title: "Nexmoneta",
       description: isEn ? "Earn with AI & affiliate marketing" : "Verdiene mit KI & Affiliate Marketing",
     },
     robots: {
@@ -115,12 +115,12 @@ export default async function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              name: "KI Business Hub",
+              name: "Nexmoneta",
               url: siteUrl,
               logo: `${siteUrl}/logo.png`,
               description: "KI tools, content factory and affiliate workflow for sustainable content monetization.",
               inLanguage: locale === "en" ? "en-US" : "de-DE",
-              sameAs: ["https://twitter.com/kibusinesshub"],
+              sameAs: ["https://twitter.com/nexmoneta"],
             }),
           }}
         />
@@ -130,7 +130,7 @@ export default async function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "LocalBusiness",
-              name: "KI Business Hub",
+              name: "Nexmoneta",
               url: siteUrl,
               image: `${siteUrl}/og-image.png`,
               description: "Platform for AI tools, content automation and affiliate workflows.",

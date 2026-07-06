@@ -42,7 +42,7 @@ export default function Navbar() {
               🚀
             </span>
             <span className="flex max-w-[7.5rem] flex-col leading-tight sm:max-w-none">
-              <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-300 sm:text-sm sm:tracking-[0.22em]">KI Business Hub</span>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-300 sm:text-sm sm:tracking-[0.22em]">Nexmoneta</span>
               <span className="text-xs text-slate-400 hidden sm:block">{t("brandTag")}</span>
             </span>
           </Link>

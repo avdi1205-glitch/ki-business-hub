@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   if (locale === "en") {
     return {
-      title: "KI Business Hub | AI tools, content factory, and affiliate workflow",
+      title: "Nexmoneta | AI tools, content factory, and affiliate workflow",
       description:
         "Use AI content, affiliate tools, and automation in one clear workflow. Start free and upgrade to Pro or Agency when you need it.",
       alternates: {
@@ -29,7 +29,7 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 
   return {
-    title: "KI Business Hub | KI-Tools, Content-Factory und Affiliate-Workflow",
+    title: "Nexmoneta | KI-Tools, Content-Factory und Affiliate-Workflow",
     description:
       "Nutze KI-Content, Affiliate-Tools und Automatisierung in einem klaren Workflow. Starte kostenlos und upgrade bei Bedarf auf Pro oder Agency.",
     alternates: {
@@ -157,7 +157,7 @@ export default async function Home() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebSite",
-            name: "KI Business Hub",
+            name: "Nexmoneta",
             url: siteUrl,
             inLanguage: locale === "en" ? "en-US" : "de-DE",
           }),

@@ -54,7 +54,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const copy = copyByLocale[locale] ?? copyByLocale.en;
 
   return {
-    title: `${copy.title} | KI Business Hub`,
+    title: `${copy.title} | Nexmoneta`,
     description: copy.subtitle,
   };
 }

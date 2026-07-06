@@ -19,7 +19,7 @@
     "contact": "Kontakt",
     "openMenu": "Menü öffnen",
     "closeMenu": "Menü schließen",
-    "brandTag": "Verdienen, testen, optimieren"
+    "brandTag": "Die Zukunft des digitalen Einkommens"
   },
   "language": {
     "label": "Sprache",
@@ -34,7 +34,7 @@
     "heroHighlight": "Starte kostenlos",
     "heroPrimaryCta": "Kostenlos starten",
     "blogArticle": {
-      "siteName": "KI Business Hub",
+      "siteName": "Nexmoneta",
       "breadcrumbHome": "Startseite",
       "breadcrumbBlog": "Blog",
       "aiGenerated": "KI erstellt",
@@ -66,7 +66,7 @@
     "statUsers": "Aktive Nutzer",
     "statArticles": "Artikel pro Monat mit Pro",
     "bestTools": {
-      "eyebrow": "KI Business Hub Empfehlungen",
+      "eyebrow": "Nexmoneta Empfehlungen",
       "title": "Die besten Tools für dein Online-Business",
       "subtitle": "Vergleiche Software für KI, Hosting, VPN, Automation und Affiliate-Marketing. Schnell, klar und auf den Punkt.",
       "tableTitle": "Vergleichstabelle",
@@ -122,7 +122,7 @@
       "createdArticlesTitle": "Erstellte Artikel",
       "strategistEyebrow": "KI Content Strategist",
       "strategistTitle": "Heute empfohlen:",
-      "strategistSubtitle": "Diese Idee hat aktuell die höchste Priorität für KI Business Hub.",
+      "strategistSubtitle": "Diese Idee hat aktuell die höchste Priorität für Nexmoneta.",
       "category": "Kategorie",
       "priority": "Priorität",
       "searchVolume": "Suchvolumen",
@@ -304,14 +304,14 @@
     "newsletterTitle": "Hol dir wöchentliche Conversion- und Tool-Updates"
   },
   "blog": {
-    "eyebrow": "KI Business Hub Blog",
+    "eyebrow": "Nexmoneta Blog",
     "title": "Artikel, Tests und Vergleiche",
     "subtitle": "Lerne mehr über KI-Tools, Hosting, VPN, Automatisierung und digitale Geschäftsmodelle.",
     "badge": "KI erstellt",
     "readMore": "Artikel lesen →"
   },
   "tools": {
-    "eyebrow": "KI Business Hub Tools",
+    "eyebrow": "Nexmoneta Tools",
     "title": "Tools für dein Online-Business",
     "subtitle": "Entdecke KI-Tools, Hosting-Lösungen, VPNs und Automatisierungs-Tools für dein digitales Business.",
     "readMore": "Mehr erfahren →"
@@ -343,7 +343,7 @@
     "createdArticlesTitle": "Erstellte Artikel",
     "strategistEyebrow": "KI Content Strategist",
     "strategistTitle": "Heute empfohlen:",
-    "strategistSubtitle": "Diese Idee hat aktuell die höchste Priorität für KI Business Hub.",
+    "strategistSubtitle": "Diese Idee hat aktuell die höchste Priorität für Nexmoneta.",
     "category": "Kategorie",
     "priority": "Priorität",
     "searchVolume": "Suchvolumen",

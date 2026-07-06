@@ -2,20 +2,20 @@
 
 export const generateMetadata = (title: string, description: string, image?: string) => {
   return {
-    title: `${title} | KI Business Hub`,
+    title: `${title} | Nexmoneta`,
     description,
     openGraph: {
       title,
       description,
-      image: image || "https://ki-business-hub.vercel.app/og-image.png",
+      image: image || "https://nexmoneta.com/og-image.png",
       type: "website",
-      url: "https://ki-business-hub.vercel.app",
+      url: "https://nexmoneta.com",
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      image: image || "https://ki-business-hub.vercel.app/og-image.png",
+      image: image || "https://nexmoneta.com/og-image.png",
     },
     robots: {
       index: true,
@@ -28,7 +28,7 @@ export const generateMetadata = (title: string, description: string, image?: str
         "max-snippet": -1,
       },
     },
-    canonical: "https://ki-business-hub.vercel.app",
+    canonical: "https://nexmoneta.com",
   };
 };
 
@@ -57,7 +57,7 @@ export const generateSchema = (type: SchemaType, data: ArticleSchemaData) => {
       image: data.image,
       author: {
         "@type": "Person",
-        name: "KI Business Hub",
+        name: "Nexmoneta",
       },
       datePublished: data.date,
       articleBody: data.content,
@@ -67,14 +67,14 @@ export const generateSchema = (type: SchemaType, data: ArticleSchemaData) => {
   if (type === "Organization") {
     return {
       ...baseSchema,
-      name: "KI Business Hub",
-      url: "https://ki-business-hub.vercel.app",
-      logo: "https://ki-business-hub.vercel.app/logo.png",
-      sameAs: ["https://twitter.com/kibusinesshub"],
+      name: "Nexmoneta",
+      url: "https://nexmoneta.com",
+      logo: "https://nexmoneta.com/logo.png",
+      sameAs: ["https://twitter.com/nexmoneta"],
       contactPoint: {
         "@type": "ContactPoint",
         contactType: "Support",
-        email: "support@ki-business-hub.de",
+        email: "support@nexmoneta.com",
       },
     };
   }

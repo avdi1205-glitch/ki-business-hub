@@ -21,7 +21,7 @@ export async function POST() {
     const response = await client.responses.create({
       model: "gpt-4o-mini",
       input: `
-Erstelle 50 deutsche Content-Ideen für KI Business Hub.
+Erstelle 50 deutsche Content-Ideen für Nexmoneta.
 
 Antworte NUR als gültiges JSON Array:
 [

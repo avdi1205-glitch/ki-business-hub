@@ -71,7 +71,7 @@ export default async function KontaktPage({
 
           <p>
             <strong>{t.website}:</strong><br />
-            KI Business Hub
+            Nexmoneta
           </p>
 
           <div className="pt-6">

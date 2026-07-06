@@ -1,4 +1,4 @@
-const baseUrl = process.env.PROD_BASE_URL || "https://ki-business-hub.vercel.app";
+const baseUrl = process.env.PROD_BASE_URL || "https://nexmoneta.com";
 
 const pagePaths = [
   "/",
@@ -28,7 +28,7 @@ const apiChecks = [
 ];
 
 const pageContentHints = [
-  "KI Business Hub",
+  "Nexmoneta",
   "Content-Factory",
   "Affiliate",
   "Blog",

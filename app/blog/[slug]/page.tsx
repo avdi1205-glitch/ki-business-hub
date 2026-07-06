@@ -37,7 +37,7 @@ export async function generateMetadata({
     alternates: {
       canonical: `/blog/${slug}`,
     },
-    authors: [{ name: "KI Business Hub" }],
+    authors: [{ name: "Nexmoneta" }],
     openGraph: {
       title: article.title,
       description,
@@ -102,12 +102,12 @@ export default async function BlogArticlePage({
     wordCount: article.content ? article.content.trim().split(/\s+/).length : undefined,
     author: {
       "@type": "Organization",
-      name: "KI Business Hub",
+      name: "Nexmoneta",
       url: siteUrl,
     },
     publisher: {
       "@type": "Organization",
-      name: "KI Business Hub",
+      name: "Nexmoneta",
       url: siteUrl,
       logo: {
         "@type": "ImageObject",

@@ -1,5 +1,5 @@
 /**
- * Monetarisierungs-Konfiguration für KI Business Hub
+ * Monetarisierungs-Konfiguration für Nexmoneta
  * Hier können alle Einstellungen für die Geldverdienung konfiguriert werden
  */
 

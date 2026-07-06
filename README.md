@@ -1,4 +1,4 @@
-This is a Next.js project for KI Business Hub.
+This is a Next.js project for Nexmoneta.
 
 ## Getting Started
 
@@ -56,7 +56,7 @@ Important:
 
 ### Live Verification Checklist
 
-1. `https://ki-business-hub.vercel.app/ads.txt` returns:
+1. `https://nexmoneta.com/ads.txt` returns:
 	`google.com, pub-<your-id>, DIRECT, f08c47fec0942fa0`
 2. Production HTML contains the AdSense script URL with `client=ca-pub-...`.
 3. Blog and article pages contain ad blocks (`adsbygoogle`) with slot IDs.

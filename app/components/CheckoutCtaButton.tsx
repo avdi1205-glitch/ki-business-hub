@@ -18,7 +18,7 @@ type CheckoutCtaButtonProps = {
 };
 
 function withSource(href: string, source: string) {
-  const url = new URL(href, "https://ki-business-hub.vercel.app");
+  const url = new URL(href, "https://nexmoneta.com");
   url.searchParams.set("source", source);
   return `${url.pathname}${url.search}${url.hash}`;
 }

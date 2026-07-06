@@ -46,10 +46,10 @@ export async function POST(request: Request) {
       await resend.emails.send({
         from: fromEmail,
         to: normalizedEmail,
-        subject: "Willkommen im KI Business Hub Newsletter",
+        subject: "Willkommen im Nexmoneta Newsletter",
         html: `
           <div style="font-family:Arial,sans-serif;line-height:1.6;color:#0f172a;max-width:560px;margin:0 auto;padding:24px;">
-            <h1 style="margin-bottom:12px;">Willkommen ${name ? String(name) : "im KI Business Hub"}</h1>
+            <h1 style="margin-bottom:12px;">Willkommen ${name ? String(name) : "bei Nexmoneta"}</h1>
             <p>Du bist jetzt im Newsletter für Affiliate-Chancen, KI-Tools und Umsatz-Strategien.</p>
             <p>Als Nächstes bekommst du konkrete Empfehlungen, neue Artikel und Tools mit echtem Monetarisierungspotenzial.</p>
             <p style="margin-top:24px;"><strong>Bonus:</strong> Halte Ausschau nach den Top AI Tools und Conversion-Tipps in den nächsten Mails.</p>

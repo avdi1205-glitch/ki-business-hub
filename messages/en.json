@@ -19,7 +19,7 @@
     "contact": "Contact",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
-    "brandTag": "Earn, test, optimize"
+    "brandTag": "The future of digital income"
   },
   "language": {
     "label": "Language",
@@ -34,7 +34,7 @@
     "heroHighlight": "Start free",
     "heroPrimaryCta": "Start for free",
     "blogArticle": {
-      "siteName": "KI Business Hub",
+      "siteName": "Nexmoneta",
       "breadcrumbHome": "Home",
       "breadcrumbBlog": "Blog",
       "aiGenerated": "AI created",
@@ -66,7 +66,7 @@
     "statUsers": "Active users",
     "statArticles": "Articles per month with Pro",
     "bestTools": {
-      "eyebrow": "KI Business Hub recommendations",
+      "eyebrow": "Nexmoneta recommendations",
       "title": "The best tools for your online business",
       "subtitle": "Compare software for AI, hosting, VPN, automation, and affiliate marketing. Fast, clear, and to the point.",
       "tableTitle": "Comparison table",
@@ -122,7 +122,7 @@
       "createdArticlesTitle": "Created articles",
       "strategistEyebrow": "AI Content Strategist",
       "strategistTitle": "Recommended today:",
-      "strategistSubtitle": "This idea currently has the highest priority for KI Business Hub.",
+      "strategistSubtitle": "This idea currently has the highest priority for Nexmoneta.",
       "category": "Category",
       "priority": "Priority",
       "searchVolume": "Search volume",
@@ -304,14 +304,14 @@
     "newsletterTitle": "Get weekly conversion and tool updates"
   },
   "blog": {
-    "eyebrow": "KI Business Hub Blog",
+    "eyebrow": "Nexmoneta Blog",
     "title": "Articles, tests, and comparisons",
     "subtitle": "Learn more about AI tools, hosting, VPNs, automation, and digital business models.",
     "badge": "AI created",
     "readMore": "Read article →"
   },
   "tools": {
-    "eyebrow": "KI Business Hub tools",
+    "eyebrow": "Nexmoneta tools",
     "title": "Tools for your online business",
     "subtitle": "Discover AI tools, hosting solutions, VPNs, and automation tools for your digital business.",
     "readMore": "Learn more →"
@@ -343,7 +343,7 @@
     "createdArticlesTitle": "Created articles",
     "strategistEyebrow": "AI Content Strategist",
     "strategistTitle": "Recommended today:",
-    "strategistSubtitle": "This idea currently has the highest priority for KI Business Hub.",
+    "strategistSubtitle": "This idea currently has the highest priority for Nexmoneta.",
     "category": "Category",
     "priority": "Priority",
     "searchVolume": "Search volume",
