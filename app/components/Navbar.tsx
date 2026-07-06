@@ -6,14 +6,14 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import LanguageSwitcher from "./LanguageSwitcher";
 
-export default function Navbar() {
+export default function Navbar({ isAdminAuthenticated }: { isAdminAuthenticated: boolean }) {
   const [open, setOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations("nav");
-  const isAdminContext =
-    pathname?.startsWith("/admin") || pathname === "/create-article" || pathname === "/editor";
+  const isAdminContext = isAdminAuthenticated;
+  const isAdminLoginPage = pathname === "/admin-login";
 
   const links = [
     { href: "/", label: t("home") },
@@ -114,7 +114,7 @@ export default function Navbar() {
               </>
             )}
 
-            {!isAdminContext && (
+            {!isAdminAuthenticated && !isAdminLoginPage && (
               <Link
                 href="/admin-login"
                 prefetch={false}
@@ -131,7 +131,7 @@ export default function Navbar() {
 
           {/* Mobile Menu Trigger */}
           <div className="flex items-center gap-2 lg:hidden">
-            {!isAdminContext && (
+            {!isAdminAuthenticated && !isAdminLoginPage && (
               <Link
                 href="/admin-login"
                 prefetch={false}
@@ -233,7 +233,7 @@ export default function Navbar() {
                 </>
               )}
 
-              {!isAdminContext && (
+              {!isAdminAuthenticated && !isAdminLoginPage && (
                 <Link
                   href="/admin-login"
                   prefetch={false}

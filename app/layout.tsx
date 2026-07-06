@@ -9,6 +9,7 @@ import { ExitIntentPopup } from "./components/ExitIntentPopup";
 import { SocialProof } from "./components/SocialProof";
 import { getSiteUrl } from "../lib/site-url";
 import { toAdClientId } from "../lib/adsense";
+import { isAdminSessionAuthenticated } from "@/lib/admin-auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -86,6 +87,7 @@ export default async function RootLayout({
 }>) {
   const locale = await getLocale();
   const messages = await getMessages();
+  const isAdminAuthenticated = await isAdminSessionAuthenticated();
 
   return (
     <html
@@ -169,7 +171,7 @@ gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
       </head>
       <body className="min-h-full" style={{ background: "var(--background)", color: "var(--text-dark)" }}>
         <NextIntlClientProvider messages={messages}>
-          <Navbar />
+          <Navbar isAdminAuthenticated={isAdminAuthenticated} />
           {children}
           <ExitIntentPopup />
           <SocialProof />

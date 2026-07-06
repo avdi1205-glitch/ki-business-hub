@@ -51,6 +51,19 @@ export async function requireAdminSession(nextPath: string) {
   }
 }
 
+export async function isAdminSessionAuthenticated() {
+  const credentials = getExpectedAdminCredentials();
+
+  if (!credentials) {
+    return false;
+  }
+
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get(ADMIN_SESSION_COOKIE)?.value;
+
+  return sessionCookie === createAdminSessionToken(credentials.user, credentials.password);
+}
+
 export function hasValidBasicAuth(request: NextRequest) {
   const credentials = getExpectedAdminCredentials();
   if (!credentials) return false;
