@@ -42,7 +42,7 @@ export default function ConversionHero() {
 
           <div className="mt-10 grid gap-4 sm:grid-cols-3">
             <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-4 backdrop-blur-xl animate-fadeInUp">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Focus</p>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">{locale === "en" ? "Focus" : "Fokus"}</p>
               <p className="mt-2 text-sm leading-6 text-slate-200">Weniger Lärm, mehr klare Pfade.</p>
             </div>
             <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-4 backdrop-blur-xl animate-fadeInUp sm:translate-y-4">
@@ -50,7 +50,7 @@ export default function ConversionHero() {
               <p className="mt-2 text-sm leading-6 text-slate-200">Schneller von der Idee zum Klick.</p>
             </div>
             <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-4 backdrop-blur-xl animate-fadeInUp lg:translate-y-8">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Signal</p>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">{locale === "en" ? "Signal" : "Leitbild"}</p>
               <p className="mt-2 text-sm leading-6 text-slate-200">Design mit stärkerer visuelle Hierarchie.</p>
             </div>
           </div>
@@ -117,19 +117,19 @@ export default function ConversionHero() {
               </Link>
 
               <div className="rounded-[1.75rem] border border-slate-700/80 bg-slate-950/60 p-5">
-                <p className="text-xs font-bold uppercase tracking-[0.24em] text-slate-400">Momentum</p>
+                <p className="text-xs font-bold uppercase tracking-[0.24em] text-slate-400">{locale === "en" ? "Momentum" : "Dynamik"}</p>
                 <div className="mt-4 space-y-3">
                   <div className="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3">
-                    <span className="text-sm font-semibold text-slate-200">Content</span>
-                    <span className="text-sm text-cyan-300">Fast</span>
+                    <span className="text-sm font-semibold text-slate-200">{locale === "en" ? "Content" : "Inhalte"}</span>
+                    <span className="text-sm text-cyan-300">{locale === "en" ? "Fast" : "Schnell"}</span>
                   </div>
                   <div className="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3 sm:translate-x-4">
                     <span className="text-sm font-semibold text-slate-200">Affiliate</span>
-                    <span className="text-sm text-emerald-300">Clear</span>
+                    <span className="text-sm text-emerald-300">{locale === "en" ? "Clear" : "Klar"}</span>
                   </div>
                   <div className="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3 sm:translate-x-8">
                     <span className="text-sm font-semibold text-slate-200">Upgrade</span>
-                    <span className="text-sm text-violet-300">Visible</span>
+                    <span className="text-sm text-violet-300">{locale === "en" ? "Visible" : "Sichtbar"}</span>
                   </div>
                 </div>
               </div>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import AffiliateButton from "../blog/[slug]/AffiliateButton";
 import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 
 type Tool = {
   id: number;
@@ -28,7 +29,15 @@ function createSlug(name: string) {
 
 export default function TopTools({ tools }: { tools: Tool[] }) {
   const t = useTranslations("home");
+  const locale = useLocale();
   const topTools = tools.slice(0, 3);
+
+  const translateBadge = (badge: string) => {
+    if (locale === "en") return badge;
+    if (badge === "Most Popular") return "Am beliebtesten";
+    if (badge === "Best for Images") return "Am besten fuer Bilder";
+    return badge;
+  };
 
   return (
     <section className="mb-12">
@@ -54,7 +63,7 @@ export default function TopTools({ tools }: { tools: Tool[] }) {
 
             {tool.badge && (
               <p className="inline-block rounded-full bg-amber-400 px-3 py-1 mb-3 text-xs font-black uppercase tracking-[0.18em] text-slate-950">
-                {tool.badge}
+                {translateBadge(tool.badge)}
               </p>
             )}
 

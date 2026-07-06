@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "../../lib/prisma";
 import { getTranslations } from "next-intl/server";
+import { getLocale } from "next-intl/server";
 
 function createSlug(name: string) {
   return name
@@ -17,7 +18,16 @@ function createSlug(name: string) {
 
 export default async function ToolsPage() {
   const t = await getTranslations("tools");
+  const locale = await getLocale();
   let tools: Awaited<ReturnType<typeof prisma.affiliateLink.findMany>> = [];
+
+  const translateBadge = (badge: string | null) => {
+    if (!badge) return null;
+    if (locale === "en") return badge;
+    if (badge === "Most Popular") return "Am beliebtesten";
+    if (badge === "Best for Images") return "Am besten fuer Bilder";
+    return badge;
+  };
 
   try {
     tools = await prisma.affiliateLink.findMany({
@@ -105,7 +115,7 @@ export default async function ToolsPage() {
             >
               {tool.badge && (
                 <p className="mb-4 inline-block rounded-full bg-yellow-500 px-3 py-1 text-sm font-bold text-black">
-                  {tool.badge}
+                  {translateBadge(tool.badge)}
                 </p>
               )}
 
