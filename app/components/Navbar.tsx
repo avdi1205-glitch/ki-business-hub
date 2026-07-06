@@ -27,6 +27,7 @@ export default function Navbar({ isAdminAuthenticated }: { isAdminAuthenticated:
     { href: "/admin/dashboard", label: t("dashboard") },
     { href: "/admin", label: t("articles") },
     { href: "/admin/affiliate", label: t("affiliateManager") },
+    { href: "/admin/checkout-rescue", label: t("checkoutRescue") },
     { href: "/create-article", label: t("createArticle") },
   ];
 

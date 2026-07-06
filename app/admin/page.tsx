@@ -77,6 +77,14 @@ export default function AdminPage() {
       color: "#f97316",
       accent: "text-orange-400",
     },
+    {
+      icon: "🛟",
+      name: "Checkout Rescue",
+      desc: "Manuelle Upgrade-Leads aus Checkout-Fallbacks",
+      href: "/admin/checkout-rescue",
+      color: "#14b8a6",
+      accent: "text-teal-400",
+    },
   ];
 
   return (
@@ -86,7 +94,7 @@ export default function AdminPage() {
         <div className="max-w-7xl mx-auto px-8 py-8">
           <div>
             <h1 className="text-4xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>🚀 Admin Dashboard</h1>
-            <p style={{ color: "var(--text-light)" }}>Monetarisierungs-Plattform mit 9 intelligenten Modulen</p>
+            <p style={{ color: "var(--text-light)" }}>Monetarisierungs-Plattform mit 10 intelligenten Modulen</p>
           </div>
         </div>
       </div>

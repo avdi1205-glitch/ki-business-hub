@@ -24,6 +24,7 @@ export default async function DashboardPage() {
   let todayClicks: Awaited<ReturnType<typeof prisma.affiliateClick.findMany>> = [];
   let todayRevenue = 0;
   let subscriberCount = 0;
+  let rescueLeadCount = 0;
   let leadSources: Array<{ source: string | null }> = [];
   let activeTests = 0;
   let completedTests = 0;
@@ -57,6 +58,13 @@ export default async function DashboardPage() {
 
     subscriberCount = await prisma.newsletterSubscriber.count({
       where: { status: "subscribed" },
+    });
+
+    rescueLeadCount = await prisma.newsletterSubscriber.count({
+      where: {
+        status: "lead",
+        source: { startsWith: "checkout-rescue:" },
+      },
     });
 
     [leadSources, activeTests, completedTests] = await Promise.all([
@@ -114,7 +122,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Secondary Stats */}
-      <div className="grid md:grid-cols-5 gap-6 mb-10">
+      <div className="grid md:grid-cols-6 gap-6 mb-10">
         <div className="rounded-xl border p-8" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
           <h2 className="text-xl" style={{ color: "var(--text-light)" }}>Newsletter subscribers</h2>
           <p className="mt-4 text-5xl font-bold" style={{ color: "var(--text-dark)" }}>{subscriberCount}</p>
@@ -134,6 +142,12 @@ export default async function DashboardPage() {
           <h2 className="text-xl" style={{ color: "var(--text-light)" }}>Active A/B tests</h2>
           <p className="mt-4 text-5xl font-bold" style={{ color: "var(--text-dark)" }}>{activeTests}</p>
         </div>
+
+        <Link href="/admin/checkout-rescue" className="rounded-xl border p-8 transition-colors" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
+          <h2 className="text-xl" style={{ color: "var(--text-light)" }}>Checkout Rescue Leads</h2>
+          <p className="mt-4 text-5xl font-bold" style={{ color: "var(--text-dark)" }}>{rescueLeadCount}</p>
+          <p className="mt-2" style={{ color: "var(--text-light)" }}>Manuelle Upgrade-Chancen</p>
+        </Link>
 
         <div className="rounded-xl border p-8" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
           <h2 className="text-xl" style={{ color: "var(--text-light)" }}>Top lead source</h2>
@@ -193,6 +207,12 @@ export default async function DashboardPage() {
           <h2 className="mb-4 text-2xl font-bold" style={{ color: "var(--text-dark)" }}>📈 Funnel analytics</h2>
           <p style={{ color: "var(--text-light)" }}>See which pages and sources generate revenue, clicks, and leads.</p>
           <p className="mt-3" style={{ color: "var(--primary-light)" }}>Go to revenue dashboard →</p>
+        </Link>
+
+        <Link href="/admin/checkout-rescue" className="rounded-xl border p-8 transition-colors" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
+          <h2 className="mb-4 text-2xl font-bold" style={{ color: "var(--text-dark)" }}>🛟 Checkout rescue queue</h2>
+          <p style={{ color: "var(--text-light)" }}>Arbeite plan- und quellenbezogene Upgrade-Anfragen direkt ab.</p>
+          <p className="mt-3" style={{ color: "var(--success-light)" }}>Zur Lead-Queue →</p>
         </Link>
       </div>
 
