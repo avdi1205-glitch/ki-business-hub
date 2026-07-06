@@ -161,3 +161,33 @@ Done means:
 - Checkout redirects to live payment pages
 - Ads render on blog/article pages
 - Affiliate clicks are visible in partner program
+
+## Vercel Env: Copy/Paste Order
+
+Add these keys in this order in Vercel (Production):
+
+```env
+# 1) Direct sales (required for plan payouts)
+PRO_CHECKOUT_URL=
+AGENCY_CHECKOUT_URL=
+
+# 2) AdSense core toggle
+GOOGLE_ADSENSE_ID=pub-
+NEXT_PUBLIC_ADSENSE_ID=pub-
+NEXT_PUBLIC_ADSENSE_ENABLED=true
+
+# 3) AdSense slots
+NEXT_PUBLIC_ADSENSE_SLOT_BLOG_TOP=
+NEXT_PUBLIC_ADSENSE_SLOT_BLOG_GRID=
+NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE_TOP=
+NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE_INLINE=
+NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE_SIDEBAR=
+
+# 4) Compliance toggle (AI labeling notice)
+AI_LABELING_ACTIVE=true
+```
+
+Notes:
+
+- Keep `pub-...` format in IDs (no `ca-` in env values).
+- After saving all variables, redeploy once.
