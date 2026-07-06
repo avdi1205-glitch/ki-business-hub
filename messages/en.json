@@ -9,6 +9,8 @@
     "articles": "Articles",
     "affiliateManager": "Affiliate Manager",
     "createArticle": "Create Article",
+    "adminLogin": "Admin",
+    "logout": "Log out",
     "freeStart": "Start free",
     "mobileStart": "Start",
     "menu": "Menu",
@@ -20,6 +22,16 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "brandTag": "The future of digital income"
+  },
+  "adminAuth": {
+    "title": "Admin Login",
+    "subtitle": "Sign in to access the admin area.",
+    "username": "Username",
+    "password": "Password",
+    "submit": "Sign in",
+    "submitting": "Signing in...",
+    "error": "Login failed. Please check your username and password.",
+    "backHome": "Back to home"
   },
   "language": {
     "label": "Language",

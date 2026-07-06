@@ -1,14 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
   const t = useTranslations("nav");
   const isAdminContext = pathname?.startsWith("/admin") || pathname === "/create-article";
 
@@ -26,6 +28,19 @@ export default function Navbar() {
     { href: "/admin/affiliate", label: t("affiliateManager") },
     { href: "/create-article", label: t("createArticle") },
   ];
+
+  async function handleLogout() {
+    setLoggingOut(true);
+
+    try {
+      await fetch("/api/admin/logout", { method: "POST" });
+    } finally {
+      setOpen(false);
+      setLoggingOut(false);
+      router.push("/");
+      router.refresh();
+    }
+  }
 
   return (
     <>
@@ -87,7 +102,25 @@ export default function Navbar() {
                     </Link>
                   ))}
                 </div>
+
+                <button
+                  onClick={handleLogout}
+                  className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95"
+                  disabled={loggingOut}
+                >
+                  {loggingOut ? "..." : t("logout")}
+                </button>
               </>
+            )}
+
+            {!isAdminContext && (
+              <Link
+                href="/admin-login"
+                prefetch={false}
+                className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95"
+              >
+                {t("adminLogin")}
+              </Link>
             )}
 
             <div className="ml-3">
@@ -178,7 +211,26 @@ export default function Navbar() {
                       {link.label}
                     </Link>
                   ))}
+
+                  <button
+                    onClick={handleLogout}
+                    disabled={loggingOut}
+                    className="mt-3 block w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-left text-base font-semibold text-slate-200 transition-all hover:bg-white/10"
+                  >
+                    {loggingOut ? "..." : t("logout")}
+                  </button>
                 </>
+              )}
+
+              {!isAdminContext && (
+                <Link
+                  href="/admin-login"
+                  prefetch={false}
+                  onClick={() => setOpen(false)}
+                  className="mt-6 block rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-base font-semibold text-slate-200 transition-all hover:bg-white/10"
+                >
+                  {t("adminLogin")}
+                </Link>
               )}
             </div>
 

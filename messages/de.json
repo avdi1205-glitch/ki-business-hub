@@ -9,6 +9,8 @@
     "articles": "Artikel",
     "affiliateManager": "Affiliate Manager",
     "createArticle": "Artikel erstellen",
+    "adminLogin": "Admin",
+    "logout": "Abmelden",
     "freeStart": "Kostenlos starten",
     "mobileStart": "Starten",
     "menu": "Menü",
@@ -20,6 +22,16 @@
     "openMenu": "Menü öffnen",
     "closeMenu": "Menü schließen",
     "brandTag": "Die Zukunft des digitalen Einkommens"
+  },
+  "adminAuth": {
+    "title": "Admin Login",
+    "subtitle": "Melde dich an, um in den Admin-Bereich zu gelangen.",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "submit": "Anmelden",
+    "submitting": "Anmeldung läuft...",
+    "error": "Login fehlgeschlagen. Bitte prüfe Benutzername und Passwort.",
+    "backHome": "Zur Startseite"
   },
   "language": {
     "label": "Sprache",
