@@ -1,25 +1,13 @@
-export default async function KontaktPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ plan?: string; source?: string; intent?: string }>;
-}) {
-  const t = {
-    title: "Kontakt",
-    intro: "Fragen, Feedback oder moechtest du mit uns sprechen?",
-    request: "Anfrage",
-    source: "Quelle",
-    howEarn: "So verdienst du Geld",
-    email: "E-Mail",
-    website: "Website",
-    note: "Hinweis",
-    supportFlow: "So arbeitet der Support",
-  };
-  const { plan, source, intent } = await searchParams;
-  const planLabel = plan?.toLowerCase() === "agency"
-    ? "Agency Plan"
-    : plan?.toLowerCase() === "pro"
-      ? "Pro Plan"
-      : plan?.toUpperCase();
+import Link from "next/link";
+
+type SearchValue = string | string[] | undefined;
+
+function firstValue(value: SearchValue) {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+function describeSource(source: string | undefined) {
+  if (!source) return "Website";
 
   const sourceLabels: Record<string, string> = {
     "hero-start-free-start": "Homepage Hero - Kostenlos starten",
@@ -38,68 +26,224 @@ export default async function KontaktPage({
     "final-cta": "Finale CTA",
   };
 
-  const sourceLabel = source
-    ? sourceLabels[source] || source.replaceAll("-", " ")
-    : "Website";
+  if (sourceLabels[source]) return sourceLabels[source];
+  if (source.startsWith("tools-")) return "Tools Uebersicht";
+  if (source.startsWith("tool-")) return "Tool-Detailseite";
+  if (source.startsWith("blog-")) return "Blog-Artikel";
+  if (source.startsWith("affiliate-")) return "Affiliate-Seite";
+  if (source.startsWith("factory-")) return "Content-Factory";
+
+  return source.replaceAll("-", " ");
+}
+
+export default async function KontaktPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    plan?: SearchValue;
+    source?: SearchValue;
+    intent?: SearchValue;
+    reason?: SearchValue;
+    error?: SearchValue;
+  }>;
+}) {
+  const params = await searchParams;
+  const supportEmail = "support@nexmoneta.com";
+  const plan = firstValue(params.plan)?.toLowerCase();
+  const source = firstValue(params.source);
+  const intent = firstValue(params.intent);
+  const reason = firstValue(params.reason);
+  const error = firstValue(params.error);
+
+  const planConfig = plan === "agency"
+    ? {
+        name: "Agency",
+        accent: "#f59e0b",
+        badge: "Skaliert fuer Team, Kunden und hoehere Publishing-Frequenz",
+        primaryCta: "Agency manuell anfragen",
+        bullets: [
+          "Mehr Volumen fuer Content, SEO und Affiliate-Ausspielung",
+          "Schnellere Umsetzungswege fuer wiederholbare Revenue-Workflows",
+          "Priorisierte Unterstuetzung bei Blockern im Setup",
+        ],
+      }
+    : plan === "pro"
+      ? {
+          name: "Pro",
+          accent: "#06b6d4",
+          badge: "Sauberer Schritt von Testbetrieb zu regelmaessigem Umsatzaufbau",
+          primaryCta: "Pro manuell anfragen",
+          bullets: [
+            "Mehr Output fuer Content und Affiliate-Seiten ohne Bastelchaos",
+            "Klarere Monetarisierungspfade mit weniger Reibung im Alltag",
+            "Schnellerer Support fuer konkrete Umsetzungsfragen",
+          ],
+        }
+      : null;
+
+  const sourceLabel = describeSource(source);
+  const headline = planConfig ? `${planConfig.name} anfragen` : "Kontakt";
+  const intro = planConfig
+    ? `Du warst schon nah am ${planConfig.name}-Upgrade. Wenn der direkte Checkout gerade noch nicht live ist, holen wir dich ohne Umweg manuell in den naechsten Schritt.`
+    : "Fragen, Feedback oder moechtest du mit uns ueber deinen naechsten Umsatzschritt sprechen?";
+
+  const mailSubject = encodeURIComponent(
+    planConfig
+      ? `${planConfig.name} Anfrage ueber ${sourceLabel}`
+      : `Kontaktanfrage ueber ${sourceLabel}`,
+  );
+
+  const mailBody = encodeURIComponent(
+    [
+      "Hallo Nexmoneta-Team,",
+      "",
+      planConfig
+        ? `ich moechte den ${planConfig.name}-Plan manuell anfragen.`
+        : "ich moechte mehr ueber euer Angebot erfahren.",
+      source ? `Quelle: ${source}` : "Quelle: website",
+      intent ? `Intent: ${intent}` : "Intent: kontakt",
+      "",
+      "Mein aktuelles Ziel:",
+      "",
+      "Meine Fragen:",
+    ].join("\n"),
+  );
+
+  const mailtoHref = `mailto:${supportEmail}?subject=${mailSubject}&body=${mailBody}`;
 
   return (
-    <main className="min-h-screen p-10" style={{ background: "var(--background)", color: "var(--text-dark)" }}>
-      <section className="mx-auto max-w-4xl rounded-2xl p-10" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
-        <h1 className="mb-8 text-5xl font-bold" style={{ color: "var(--text-dark)" }}>
-          {t.title}
-        </h1>
+    <main
+      className="min-h-screen px-6 py-10 sm:px-8 lg:px-10"
+      style={{
+        background: "radial-gradient(circle at top, rgba(8,145,178,0.18), transparent 32%), var(--background)",
+        color: "var(--text-dark)",
+      }}
+    >
+      <section
+        className="mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-xl sm:p-10"
+        style={{ backgroundColor: "var(--background-elevated)" }}
+      >
+        <div className="grid gap-8 lg:grid-cols-[1.3fr_0.9fr]">
+          <div>
+            <div className="mb-5 flex flex-wrap gap-3 text-xs font-bold uppercase tracking-[0.24em]">
+              <span className="rounded-full border border-cyan-400/30 bg-cyan-500/10 px-4 py-2 text-cyan-200">
+                Umsatzpfad aktiv
+              </span>
+              {(planConfig || intent === "upgrade") && (
+                <span
+                  className="rounded-full border px-4 py-2"
+                  style={{
+                    color: planConfig?.accent || "#f8fafc",
+                    borderColor: `${planConfig?.accent || "#94a3b8"}55`,
+                    background: `${planConfig?.accent || "#94a3b8"}14`,
+                  }}
+                >
+                  {planConfig ? planConfig.name : "Upgrade"}
+                </span>
+              )}
+            </div>
 
-        <p className="mb-6" style={{ color: "var(--text-light)" }}>
-          {t.intro}
-        </p>
+            <h1 className="max-w-3xl text-4xl font-black sm:text-5xl" style={{ color: "var(--text-dark)" }}>
+              {headline}
+            </h1>
 
-        {(plan || intent === "upgrade") && (
-          <div className="mb-8 rounded-xl p-5" style={{ background: "rgba(59, 130, 246, 0.08)", border: "1px solid rgba(59, 130, 246, 0.24)" }}>
-            <p className="font-semibold" style={{ color: "var(--text-dark)" }}>
-              {t.request}: {plan ? planLabel : "Upgrade"}
+            <p className="mt-5 max-w-3xl text-lg leading-8" style={{ color: "var(--text-light)" }}>
+              {intro}
             </p>
-            <p className="mt-2 text-sm" style={{ color: "var(--text-light)" }}>
-              {t.source}: {sourceLabel}. Setze PRO_CHECKOUT_URL und AGENCY_CHECKOUT_URL in Vercel, damit Kunden direkt bezahlen koennen.
-            </p>
+
+            {(reason === "checkout_url_missing" || error === "invalid_plan") && (
+              <div className="mt-6 rounded-2xl border border-amber-400/25 bg-amber-500/10 p-5">
+                <p className="font-semibold" style={{ color: "var(--text-dark)" }}>
+                  {reason === "checkout_url_missing"
+                    ? "Der direkte Bezahl-Link ist gerade noch nicht live."
+                    : "Die gewuenschte Upgrade-Route war nicht gueltig."}
+                </p>
+                <p className="mt-2 text-sm leading-7" style={{ color: "var(--text-light)" }}>
+                  Du kannst trotzdem direkt anfragen. Wir sehen bereits, von welcher Seite du kommst, und koennen dich ohne extra Rueckfragen in den passenden Flow bringen.
+                </p>
+              </div>
+            )}
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Link
+                href={mailtoHref}
+                className="rounded-2xl px-6 py-4 text-center font-black text-white transition-all duration-300 hover:-translate-y-1"
+                style={{
+                  background: `linear-gradient(135deg, ${planConfig?.accent || "#06b6d4"}, #10b981)`,
+                  boxShadow: "0 18px 40px rgba(8,145,178,0.22)",
+                }}
+              >
+                {planConfig ? planConfig.primaryCta : "Support direkt anschreiben"}
+              </Link>
+              <Link
+                href="/content-factory"
+                className="rounded-2xl border border-emerald-300/20 bg-emerald-500/10 px-6 py-4 text-center font-black text-emerald-100 transition-all duration-300 hover:-translate-y-1 hover:bg-emerald-500/20"
+              >
+                Kostenlos weiter testen
+              </Link>
+              <Link
+                href="/tools"
+                className="rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-center font-black text-slate-100 transition-all duration-300 hover:-translate-y-1 hover:bg-white/10"
+              >
+                Erst Tools vergleichen
+              </Link>
+            </div>
+
+            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">Quelle</p>
+                <p className="mt-3 text-lg font-bold" style={{ color: "var(--text-dark)" }}>{sourceLabel}</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">Intent</p>
+                <p className="mt-3 text-lg font-bold" style={{ color: "var(--text-dark)" }}>{intent || "Kontakt"}</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">Antwortweg</p>
+                <p className="mt-3 text-lg font-bold" style={{ color: "var(--text-dark)" }}>support@nexmoneta.com</p>
+              </div>
+            </div>
           </div>
-        )}
 
-        <div className="space-y-4" style={{ color: "var(--text-light)" }}>
-          <p>
-            <strong>{t.email}:</strong><br />
-            deine@email.de
-          </p>
+          <div className="space-y-5">
+            <div className="rounded-[2rem] border border-white/10 bg-slate-950/40 p-6 text-slate-100">
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-emerald-300/80">Naechster Schritt</p>
+              <h2 className="mt-3 text-2xl font-black text-white">
+                {planConfig ? `${planConfig.name} passt, wenn du nicht nur testen willst.` : "So holen wir dich in den passenden Flow."}
+              </h2>
+              <p className="mt-3 text-sm leading-7 text-slate-300">
+                {planConfig?.badge || "Wir priorisieren manuelle Rueckmeldungen fuer Upgrade-, Support- und Revenue-Fragen mit klarem Kontext aus der Quelle."}
+              </p>
+              <div className="mt-5 space-y-3">
+                {(planConfig?.bullets || [
+                  "Klare Einordnung, welcher Plan zu deinem aktuellen Umsatz-Ziel passt",
+                  "Schneller naechster Schritt statt allgemeinem Hin-und-her",
+                  "Konkreter manueller Rueckkanal, solange Payment Links noch fehlen",
+                ]).map((bullet) => (
+                  <div key={bullet} className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200">
+                    {bullet}
+                  </div>
+                ))}
+              </div>
+            </div>
 
-          <p>
-            <strong>{t.website}:</strong><br />
-            Nexmoneta
-          </p>
+            <div className="rounded-[2rem] border border-cyan-400/20 bg-cyan-500/10 p-6">
+              <h2 className="text-2xl font-black" style={{ color: "var(--text-dark)" }}>Support-Flow</h2>
+              <div className="mt-4 space-y-3 text-sm leading-7" style={{ color: "var(--text-light)" }}>
+                <p>1. Standardfragen werden schnell vorqualifiziert, damit Umsatz-Themen nicht in allgemeinem Support untergehen.</p>
+                <p>2. Billing, Account-Faelle, Bugs und planbezogene Rueckfragen gehen direkt in die menschliche Bearbeitung.</p>
+                <p>3. Aktive Pro- und Agency-Nutzer werden bei dringenden Blockern priorisiert weitergezogen.</p>
+              </div>
+            </div>
 
-          <div className="pt-6">
-            <p className="text-sm" style={{ color: "#fbbf24" }}>
-              {t.note}: Vor dem Launch bitte die echte Support-E-Mail eintragen.
-            </p>
-            <p className="mt-2 text-sm" style={{ color: "var(--text-muted)" }}>
-              Wenn du Stripe Payment Links oder Lemon Squeezy Links nutzt, hinterlege sie in Vercel als PRO_CHECKOUT_URL und AGENCY_CHECKOUT_URL. Dann funktionieren die Upgrade-Buttons direkt.
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-8 rounded-xl p-6" style={{ background: "rgba(16, 185, 129, 0.08)", border: "1px solid rgba(16, 185, 129, 0.24)" }}>
-          <h2 className="mb-3 text-2xl font-bold" style={{ color: "var(--text-dark)" }}>{t.supportFlow}</h2>
-          <div className="space-y-2 text-sm" style={{ color: "var(--text-light)" }}>
-            <p>1. Bot-Antwort zuerst bei Standardfragen, Onboarding und schnellen Rueckfragen.</p>
-            <p>2. Menschliche Uebergabe bei Billing, account-spezifischen Themen, Bugs und Sonderfaellen.</p>
-            <p>3. Priorisierte Bearbeitung fuer aktive Pro- und Agency-Nutzer bei dringenden Blockern.</p>
-          </div>
-        </div>
-
-        <div className="mt-8 rounded-xl p-6" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
-          <h2 className="mb-3 text-2xl font-bold" style={{ color: "var(--text-dark)" }}>{t.howEarn}</h2>
-          <div className="space-y-2 text-sm" style={{ color: "var(--text-light)" }}>
-            <p>1. Affiliate-Klicks und Verkaeufe laufen ueber deine Partnerprogramme.</p>
-            <p>2. Direkter Plan-Umsatz laeuft ueber deinen Zahlungsanbieter, z. B. Stripe Payment Links.</p>
-            <p>3. Newsletter und A/B-Tests helfen dir, mehr Klicks und mehr bezahlte Conversions zu erreichen.</p>
+            <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6">
+              <h2 className="text-2xl font-black" style={{ color: "var(--text-dark)" }}>Monetarisierungs-Logik</h2>
+              <div className="mt-4 space-y-3 text-sm leading-7" style={{ color: "var(--text-light)" }}>
+                <p>1. Tools und Artikel erzeugen Nachfrage und qualifizieren den Bedarf.</p>
+                <p>2. Content Factory, Tracking und Affiliate-Platzierung machen aus Interesse einen wiederholbaren Umsatzpfad.</p>
+                <p>3. Bezahlte Plaene lohnen sich dann, wenn du Volumen, Tempo und Conversion sauberer steuern willst.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
