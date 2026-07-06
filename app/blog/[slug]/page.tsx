@@ -278,13 +278,13 @@ export default async function BlogArticlePage({
                 <div>
                   <h3 className="text-2xl font-black text-white sm:text-3xl">
                     {locale === "en"
-                      ? "Turn this article into a repeatable content and affiliate workflow."
-                      : "Mach aus diesem Artikel einen wiederholbaren Content- und Affiliate-Workflow."}
+                      ? "Turn this article into a repeatable content and affiliate workflow when it fits your setup."
+                      : "Mach aus diesem Artikel einen wiederholbaren Content- und Affiliate-Workflow, wenn es zu deinem Setup passt."}
                   </h3>
                   <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300 sm:text-base">
                     {locale === "en"
-                      ? "A single recommendation helps. A repeatable system for publishing, monetizing, and tracking pays much more. That is the upgrade path into Pro and Agency."
-                      : "Eine einzelne Empfehlung hilft. Ein wiederholbares System fuer Veröffentlichen, Monetarisieren und Tracking bringt deutlich mehr. Genau das ist der Upgrade-Pfad in Pro und Agency."}
+                      ? "A single recommendation helps. A repeatable system for publishing, monetizing, and tracking usually goes further. That is where Pro and Agency can become useful."
+                      : "Eine einzelne Empfehlung hilft. Ein wiederholbares System fuer Veröffentlichen, Monetarisieren und Tracking bringt meist deutlich mehr. Genau dort koennen Pro und Agency sinnvoll werden."}
                   </p>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-3 lg:w-[40rem]">
@@ -298,12 +298,12 @@ export default async function BlogArticlePage({
                     href="/api/checkout?plan=pro"
                     ctaKey={`blog-${slug}-pro`}
                     variantA={{
-                      label: locale === "en" ? "💎 Unlock Pro for EUR 39" : "💎 Pro fuer 39 EUR freischalten",
+                      label: locale === "en" ? "💎 See Pro for EUR 39" : "💎 Pro fuer 39 EUR ansehen",
                       sourceSuffix: "variant-a",
                       className: "rounded-2xl border border-sky-300/20 bg-sky-500/10 px-4 py-3 text-center font-black text-sky-100 transition-all duration-300 hover:-translate-y-1 hover:bg-sky-500/20",
                     }}
                     variantB={{
-                      label: locale === "en" ? "⚡ Activate Pro now" : "⚡ Pro jetzt aktivieren",
+                      label: locale === "en" ? "⚡ See Pro" : "⚡ Pro ansehen",
                       sourceSuffix: "variant-b",
                       className: "rounded-2xl border border-sky-300/20 bg-sky-500/10 px-4 py-3 text-center font-black text-sky-100 transition-all duration-300 hover:-translate-y-1 hover:bg-sky-500/20",
                     }}
@@ -312,12 +312,12 @@ export default async function BlogArticlePage({
                     href="/api/checkout?plan=agency"
                     ctaKey={`blog-${slug}-agency`}
                     variantA={{
-                      label: locale === "en" ? "👑 Start Agency for EUR 149" : "👑 Agency fuer 149 EUR starten",
+                      label: locale === "en" ? "👑 See Agency for EUR 149" : "👑 Agency fuer 149 EUR ansehen",
                       sourceSuffix: "variant-a",
                       className: "rounded-2xl border border-amber-300/20 bg-amber-500/10 px-4 py-3 text-center font-black text-amber-100 transition-all duration-300 hover:-translate-y-1 hover:bg-amber-500/20",
                     }}
                     variantB={{
-                      label: locale === "en" ? "🏢 Activate Agency for teams" : "🏢 Agency fuer Teams aktivieren",
+                      label: locale === "en" ? "🏢 See Agency" : "🏢 Agency ansehen",
                       sourceSuffix: "variant-b",
                       className: "rounded-2xl border border-amber-300/20 bg-amber-500/10 px-4 py-3 text-center font-black text-amber-100 transition-all duration-300 hover:-translate-y-1 hover:bg-amber-500/20",
                     }}

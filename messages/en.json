@@ -173,13 +173,13 @@
       "generating": "Generating...",
       "startFactory": "Start Content Factory",
       "offerEyebrow": "Next revenue step",
-      "offerTitle": "If the workflow fits, unlock more output and more monetization right away.",
-      "offerSubtitle": "The Content Factory gives you the entry point. Pro and Agency give you more volume, more automation, and a clearer revenue path for real production.",
+      "offerTitle": "If the workflow fits, you can unlock more output and more monetization.",
+      "offerSubtitle": "The Content Factory gives you the entry point. Pro and Agency make sense when you want more volume, more automation, and a clearer revenue path for real production.",
       "offerFreeCta": "Keep testing for free",
-      "offerProA": "Unlock Pro for EUR 39",
-      "offerProB": "Activate Pro for more output",
-      "offerAgencyA": "Start Agency for EUR 149",
-      "offerAgencyB": "Activate Agency for teams"
+      "offerProA": "See Pro for EUR 39",
+      "offerProB": "See Pro",
+      "offerAgencyA": "See Agency for EUR 149",
+      "offerAgencyB": "See Agency"
     },
     "statPrice": "Starting price for Pro",
     "trustFree": "Test for free and upgrade only when it truly helps",
@@ -336,13 +336,13 @@
     "subtitle": "Discover AI tools, hosting solutions, VPNs, and automation tools for your digital business.",
     "readMore": "Learn more →",
     "offerEyebrow": "Direct revenue path",
-    "offerTitle": "Compare tools, then move straight into your workflow.",
-    "offerSubtitle": "If you already know you want to publish regularly and grow affiliate clicks, take the clear entry point instead of opening more tabs.",
+    "offerTitle": "Compare tools, then choose the workflow that fits you best.",
+    "offerSubtitle": "If you want to test first, start free. If you already know you want to publish regularly and grow affiliate clicks, you can look at Pro or Agency directly.",
     "offerFreeCta": "Start free",
-    "offerProA": "Start Pro for EUR 39",
-    "offerProB": "Unlock Pro now",
-    "offerAgencyA": "Start Agency for EUR 149",
-    "offerAgencyB": "Activate Agency for teams"
+    "offerProA": "See Pro for EUR 39",
+    "offerProB": "See Pro",
+    "offerAgencyA": "See Agency for EUR 149",
+    "offerAgencyB": "See Agency"
   },
   "affiliate": {
     "eyebrow": "Affiliate recommendations",
@@ -351,13 +351,13 @@
     "readMore": "Learn more",
     "cta": "View offer",
     "offerEyebrow": "More than clicks",
-    "offerTitle": "Get more than recommendations, get the full monetization workflow.",
-    "offerSubtitle": "Affiliate clicks work better when content, tracking, and follow-up work together. That is exactly what Pro and Agency are for.",
+    "offerTitle": "Get more than recommendations and add the full monetization workflow when you need it.",
+    "offerSubtitle": "Affiliate clicks work better when content, tracking, and follow-up work together. If you want to build that more systematically, take a look at Pro or Agency.",
     "offerFreeCta": "Start a free workflow",
-    "offerProA": "Unlock Pro for EUR 39",
-    "offerProB": "Activate Pro for more clicks",
-    "offerAgencyA": "Start Agency for EUR 149",
-    "offerAgencyB": "Activate Agency for teams"
+    "offerProA": "See Pro for EUR 39",
+    "offerProB": "See Pro",
+    "offerAgencyA": "See Agency for EUR 149",
+    "offerAgencyB": "See Agency"
   },
   "footer": {
     "newsletter": "Get weekly conversion and tool updates"

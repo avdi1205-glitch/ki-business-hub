@@ -145,13 +145,13 @@ export default async function ToolDetailPage({
             <div>
               <h2 className="text-2xl font-black text-white sm:text-3xl">
                 {isEn
-                  ? "If the tool fits, move directly into the workflow that monetizes it."
-                  : "Wenn das Tool passt, geh direkt in den Workflow, der es monetarisiert."}
+                  ? "If the tool fits, move into the workflow that helps you use it productively."
+                  : "Wenn das Tool passt, geh in den Workflow, der dir hilft, es produktiv einzusetzen."}
               </h2>
               <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300 sm:text-base">
                 {isEn
-                  ? "The tool itself can help, but the bigger lift comes when content, affiliate placement, and automation work together. That is where Pro and Agency pay off."
-                  : "Das Tool allein hilft, aber der groessere Hebel entsteht erst, wenn Content, Affiliate-Platzierung und Automatisierung zusammenspielen. Genau dafuer lohnen sich Pro und Agency."}
+                  ? "The tool itself can help, but the bigger lift often comes when content, affiliate placement, and automation work together. That is where Pro and Agency can become useful."
+                  : "Das Tool allein hilft, aber der groessere Hebel entsteht oft erst, wenn Content, Affiliate-Platzierung und Automatisierung zusammenspielen. Genau dort koennen Pro und Agency sinnvoll werden."}
               </p>
             </div>
             <div className="grid gap-3 sm:grid-cols-3 lg:w-[40rem]">
@@ -165,12 +165,12 @@ export default async function ToolDetailPage({
                 href="/api/checkout?plan=pro"
                 ctaKey={`tool-${slug}-pro`}
                 variantA={{
-                  label: isEn ? "💎 Unlock Pro for EUR 39" : "💎 Pro fuer 39 EUR freischalten",
+                  label: isEn ? "💎 See Pro for EUR 39" : "💎 Pro fuer 39 EUR ansehen",
                   sourceSuffix: "variant-a",
                   className: "rounded-2xl border border-sky-300/20 bg-sky-500/10 px-4 py-3 text-center font-black text-sky-100 transition-all duration-300 hover:-translate-y-1 hover:bg-sky-500/20",
                 }}
                 variantB={{
-                  label: isEn ? "⚡ Activate Pro now" : "⚡ Pro jetzt aktivieren",
+                  label: isEn ? "⚡ See Pro" : "⚡ Pro ansehen",
                   sourceSuffix: "variant-b",
                   className: "rounded-2xl border border-sky-300/20 bg-sky-500/10 px-4 py-3 text-center font-black text-sky-100 transition-all duration-300 hover:-translate-y-1 hover:bg-sky-500/20",
                 }}
@@ -179,12 +179,12 @@ export default async function ToolDetailPage({
                 href="/api/checkout?plan=agency"
                 ctaKey={`tool-${slug}-agency`}
                 variantA={{
-                  label: isEn ? "👑 Start Agency for EUR 149" : "👑 Agency fuer 149 EUR starten",
+                  label: isEn ? "👑 See Agency for EUR 149" : "👑 Agency fuer 149 EUR ansehen",
                   sourceSuffix: "variant-a",
                   className: "rounded-2xl border border-amber-300/20 bg-amber-500/10 px-4 py-3 text-center font-black text-amber-100 transition-all duration-300 hover:-translate-y-1 hover:bg-amber-500/20",
                 }}
                 variantB={{
-                  label: isEn ? "🏢 Activate Agency for teams" : "🏢 Agency fuer Teams aktivieren",
+                  label: isEn ? "🏢 See Agency" : "🏢 Agency ansehen",
                   sourceSuffix: "variant-b",
                   className: "rounded-2xl border border-amber-300/20 bg-amber-500/10 px-4 py-3 text-center font-black text-amber-100 transition-all duration-300 hover:-translate-y-1 hover:bg-amber-500/20",
                 }}
