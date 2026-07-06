@@ -113,77 +113,77 @@ export default function Navbar() {
 
       {/* Mobile Menu Overlay */}
       {open && (
-        <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden" onClick={() => setOpen(false)} />
+        <>
+          <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden" onClick={() => setOpen(false)} />
+
+          {/* Mobile Menu */}
+          <div
+            className="fixed right-0 top-0 z-50 h-screen w-80 max-w-[90vw] overflow-y-auto lg:hidden"
+            style={{
+              background: "linear-gradient(180deg, rgba(15,23,42,0.98) 0%, rgba(15,23,42,0.94) 100%)",
+              borderLeft: "1px solid rgba(148, 163, 184, 0.16)",
+            }}
+          >
+            {/* Close Button */}
+            <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
+              <h2 className="text-lg font-bold text-white">Menu</h2>
+              <button
+                onClick={() => setOpen(false)}
+                className="rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-xl font-bold text-slate-100 hover:bg-white/10 transition-all"
+                aria-label="Close menu"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Navigation Links */}
+            <div className="space-y-1 px-4 py-6">
+              <p className="mb-3 px-2 text-xs font-bold uppercase tracking-widest text-slate-500">Main</p>
+              {links.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className="block rounded-lg px-4 py-3 text-base font-semibold transition-all hover:bg-white/10"
+                  style={{
+                    color: pathname === link.href ? "#10b981" : "#cbd5e1",
+                    background: pathname === link.href ? "rgba(16, 185, 129, 0.1)" : "transparent",
+                  }}
+                >
+                  {link.label}
+                </Link>
+              ))}
+
+              <p className="mb-4 mt-6 px-2 text-xs font-bold uppercase tracking-widest text-slate-500">Admin</p>
+              {adminLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className="block rounded-lg px-4 py-3 text-base font-semibold transition-all hover:bg-white/10"
+                  style={{
+                    color: pathname === link.href ? "#f59e0b" : "#cbd5e1",
+                    background: pathname === link.href ? "rgba(245, 158, 11, 0.1)" : "transparent",
+                  }}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+
+            {/* CTA Button */}
+            <div className="border-t border-white/10 px-6 py-6">
+              <Link
+                href="/content-factory"
+                onClick={() => setOpen(false)}
+                className="block w-full rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 py-3 text-center font-bold text-slate-950 shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all active:scale-95"
+              >
+                🚀 {t("freeStart")}
+              </Link>
+            </div>
+          </div>
+        </>
       )}
-
-      {/* Mobile Menu */}
-      <div
-        className={`fixed right-0 top-0 z-50 h-screen w-80 max-w-[90vw] overflow-y-auto transform transition-transform duration-300 lg:hidden ${
-          open ? "translate-x-0" : "translate-x-full"
-        }`}
-        style={{
-          background: "linear-gradient(180deg, rgba(15,23,42,0.98) 0%, rgba(15,23,42,0.94) 100%)",
-          borderLeft: "1px solid rgba(148, 163, 184, 0.16)",
-        }}
-      >
-        {/* Close Button */}
-        <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
-          <h2 className="text-lg font-bold text-white">Menu</h2>
-          <button
-            onClick={() => setOpen(false)}
-            className="rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-xl font-bold text-slate-100 hover:bg-white/10 transition-all"
-            aria-label="Close menu"
-          >
-            ✕
-          </button>
-        </div>
-
-        {/* Navigation Links */}
-        <div className="space-y-1 px-4 py-6">
-          <p className="px-2 text-xs font-bold uppercase tracking-widest text-slate-500 mb-3">Main</p>
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setOpen(false)}
-              className="block rounded-lg px-4 py-3 text-base font-semibold transition-all hover:bg-white/10"
-              style={{
-                color: pathname === link.href ? "#10b981" : "#cbd5e1",
-                background: pathname === link.href ? "rgba(16, 185, 129, 0.1)" : "transparent",
-              }}
-            >
-              {link.label}
-            </Link>
-          ))}
-
-          <p className="px-2 text-xs font-bold uppercase tracking-widest text-slate-500 my-4 mt-6">Admin</p>
-          {adminLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setOpen(false)}
-              className="block rounded-lg px-4 py-3 text-base font-semibold transition-all hover:bg-white/10"
-              style={{
-                color: pathname === link.href ? "#f59e0b" : "#cbd5e1",
-                background: pathname === link.href ? "rgba(245, 158, 11, 0.1)" : "transparent",
-              }}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </div>
-
-        {/* CTA Button */}
-        <div className="border-t border-white/10 px-6 py-6">
-          <Link
-            href="/content-factory"
-            onClick={() => setOpen(false)}
-            className="block w-full rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 py-3 text-center font-bold text-slate-950 shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all active:scale-95"
-          >
-            🚀 {t("freeStart")}
-          </Link>
-        </div>
-      </div>
     </>
   );
 }
