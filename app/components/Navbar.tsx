@@ -10,6 +10,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const t = useTranslations("nav");
+  const isAdminContext = pathname?.startsWith("/admin") || pathname === "/create-article";
 
   const links = [
     { href: "/", label: t("home") },
@@ -66,24 +67,28 @@ export default function Navbar() {
               ))}
             </div>
 
-            <div className="h-8 w-px bg-white/10 mx-2" />
+            {isAdminContext && (
+              <>
+                <div className="h-8 w-px bg-white/10 mx-2" />
 
-            <div className="flex items-center gap-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-md p-1.5">
-              {adminLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  prefetch={false}
-                  className="rounded-full px-4 py-2 text-sm font-semibold transition-all hover:bg-white/20 active:scale-95"
-                  style={{
-                    color: pathname === link.href ? "#fff" : "#cbd5e1",
-                    background: pathname === link.href ? "rgba(245, 158, 11, 0.2)" : "transparent",
-                  }}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
+                <div className="flex items-center gap-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-md p-1.5">
+                  {adminLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      prefetch={false}
+                      className="rounded-full px-4 py-2 text-sm font-semibold transition-all hover:bg-white/20 active:scale-95"
+                      style={{
+                        color: pathname === link.href ? "#fff" : "#cbd5e1",
+                        background: pathname === link.href ? "rgba(245, 158, 11, 0.2)" : "transparent",
+                      }}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </>
+            )}
 
             <div className="ml-3">
               <LanguageSwitcher />
@@ -155,22 +160,26 @@ export default function Navbar() {
                 </Link>
               ))}
 
-              <p className="mb-4 mt-6 px-2 text-xs font-bold uppercase tracking-widest text-slate-500">Admin</p>
-              {adminLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  prefetch={false}
-                  onClick={() => setOpen(false)}
-                  className="block rounded-lg px-4 py-3 text-base font-semibold transition-all hover:bg-white/10"
-                  style={{
-                    color: pathname === link.href ? "#f59e0b" : "#cbd5e1",
-                    background: pathname === link.href ? "rgba(245, 158, 11, 0.1)" : "transparent",
-                  }}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {isAdminContext && (
+                <>
+                  <p className="mb-4 mt-6 px-2 text-xs font-bold uppercase tracking-widest text-slate-500">Admin</p>
+                  {adminLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      prefetch={false}
+                      onClick={() => setOpen(false)}
+                      className="block rounded-lg px-4 py-3 text-base font-semibold transition-all hover:bg-white/10"
+                      style={{
+                        color: pathname === link.href ? "#f59e0b" : "#cbd5e1",
+                        background: pathname === link.href ? "rgba(245, 158, 11, 0.1)" : "transparent",
+                      }}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </>
+              )}
             </div>
 
             {/* CTA Button */}
