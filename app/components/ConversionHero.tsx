@@ -25,7 +25,7 @@ export default function ConversionHero() {
             {locale === "en" ? "Affiliate intelligence" : "Affiliate-Intelligenz"}
           </p>
 
-          <h1 className="display-heading max-w-4xl text-5xl font-black text-white sm:text-6xl lg:text-8xl animate-fadeInUp">
+          <h1 className="display-heading max-w-4xl text-4xl font-black text-white sm:text-6xl lg:text-8xl animate-fadeInUp">
             <span className="block bg-gradient-to-r from-cyan-200 via-sky-200 to-emerald-200 bg-clip-text text-transparent">
               {t("heroTitle1")}
             </span>
@@ -55,19 +55,19 @@ export default function ConversionHero() {
             </div>
           </div>
 
-          <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+          <div className="mt-10 grid gap-4 sm:grid-cols-3">
             <CheckoutCtaButton
               href="/content-factory"
               ctaKey="hero-start"
               variantA={{
                 label: `🚀 ${t("heroPrimaryCta")}`,
                 sourceSuffix: "free-start",
-                className: "rounded-2xl border border-emerald-300/20 bg-gradient-to-r from-emerald-500 to-cyan-500 px-8 py-4 text-lg font-black text-white shadow-[0_18px_50px_rgba(16,185,129,0.28)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(16,185,129,0.38)] active:scale-95",
+                className: "w-full rounded-2xl border border-emerald-300/20 bg-gradient-to-r from-emerald-500 to-cyan-500 px-6 py-4 text-base font-black leading-tight text-white shadow-[0_18px_50px_rgba(16,185,129,0.28)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(16,185,129,0.38)] active:scale-95 sm:text-lg",
               }}
               variantB={{
                 label: `⚡ ${t("heroPrimaryAltCta")}`,
                 sourceSuffix: "direct-start",
-                className: "rounded-2xl border border-cyan-300/20 bg-white/5 px-8 py-4 text-lg font-black text-slate-100 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/10 active:scale-95",
+                className: "w-full rounded-2xl border border-cyan-300/20 bg-white/5 px-6 py-4 text-base font-black leading-tight text-slate-100 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/10 active:scale-95 sm:text-lg",
               }}
             />
 
@@ -75,14 +75,14 @@ export default function ConversionHero() {
               href="/api/checkout?plan=pro"
               ctaKey="hero-pro"
               variantA={{
-                label: `💎 Pro – 39 €`,
+                label: `💎 Pro 39 €/Monat`,
                 sourceSuffix: "price-view",
-                className: "rounded-2xl border border-sky-300/20 bg-sky-500/10 px-8 py-4 text-lg font-bold text-sky-100 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-sky-500/20 active:scale-95",
+                className: "w-full rounded-2xl border border-sky-300/20 bg-sky-500/10 px-6 py-4 text-base font-bold leading-tight text-sky-100 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-sky-500/20 active:scale-95 sm:text-lg",
               }}
               variantB={{
                 label: `✨ Pro freischalten`,
                 sourceSuffix: "direct-pro",
-                className: "rounded-2xl border border-sky-300/20 bg-sky-500/10 px-8 py-4 text-lg font-bold text-sky-100 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-sky-500/20 active:scale-95",
+                className: "w-full rounded-2xl border border-sky-300/20 bg-sky-500/10 px-6 py-4 text-base font-bold leading-tight text-sky-100 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-sky-500/20 active:scale-95 sm:text-lg",
               }}
             />
 
@@ -90,14 +90,14 @@ export default function ConversionHero() {
               href="/api/checkout?plan=agency"
               ctaKey="hero-agency"
               variantA={{
-                label: `👑 Agency – 149 €`,
+                label: `👑 Agency 149 €/Monat`,
                 sourceSuffix: "price-view",
-                className: "rounded-2xl border border-violet-300/20 bg-violet-500/10 px-8 py-4 text-lg font-bold text-violet-100 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-violet-500/20 active:scale-95",
+                className: "w-full rounded-2xl border border-violet-300/20 bg-violet-500/10 px-6 py-4 text-base font-bold leading-tight text-violet-100 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-violet-500/20 active:scale-95 sm:text-lg",
               }}
               variantB={{
                 label: `🔥 Agency freischalten`,
                 sourceSuffix: "direct-agency",
-                className: "rounded-2xl border border-violet-300/20 bg-violet-500/10 px-8 py-4 text-lg font-bold text-violet-100 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-violet-500/20 active:scale-95",
+                className: "w-full rounded-2xl border border-violet-300/20 bg-violet-500/10 px-6 py-4 text-base font-bold leading-tight text-violet-100 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-violet-500/20 active:scale-95 sm:text-lg",
               }}
             />
           </div>
