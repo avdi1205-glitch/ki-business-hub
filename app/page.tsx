@@ -258,10 +258,12 @@ export default async function Home() {
       <FeaturesSection />
 
       {/* Testimonials Section */}
-      <TestimonialsSection />
+      <div className="animate-fadeInUp">
+        <TestimonialsSection />
+      </div>
 
       {/* Unique Value Proposition - Einzigartig */}
-        <section className="py-24">
+        <section className="py-24 animate-fadeInUp" style={{ animationDelay: "120ms" }}>
         <div className="mx-auto max-w-6xl px-4">
           <div className="mb-16 max-w-3xl">
             <p className="mb-4 text-xs font-bold uppercase tracking-[0.28em] text-violet-300/80">Warum Nexmoneta</p>
@@ -270,7 +272,7 @@ export default async function Home() {
             </h2>
           </div>
           <div className="grid gap-8 md:grid-cols-3">
-            <div className="rounded-[2rem] border border-cyan-400/20 bg-cyan-500/10 p-8 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 md:translate-y-8">
+            <div className="rounded-[2rem] border border-cyan-400/20 bg-cyan-500/10 p-8 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 md:translate-y-8 animate-fadeInUp" style={{ animationDelay: "80ms" }}>
               <div className="text-4xl mb-4">🤖</div>
               <h3 className="text-2xl font-bold mb-2" style={{ color: "#f8fafc" }}>{t("uniqueAi")}</h3>
               <p className="leading-7" style={{ color: "#dbeafe" }}>
@@ -278,7 +280,7 @@ export default async function Home() {
               </p>
             </div>
 
-            <div className="rounded-[2rem] border border-emerald-400/20 bg-emerald-500/10 p-8 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1">
+            <div className="rounded-[2rem] border border-emerald-400/20 bg-emerald-500/10 p-8 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 animate-fadeInUp" style={{ animationDelay: "180ms" }}>
               <div className="text-4xl mb-4">📊</div>
               <h3 className="text-2xl font-bold mb-2" style={{ color: "#f8fafc" }}>{t("uniqueRoi")}</h3>
               <p className="leading-7" style={{ color: "#dcfce7" }}>
@@ -286,7 +288,7 @@ export default async function Home() {
               </p>
             </div>
 
-            <div className="rounded-[2rem] border border-violet-400/20 bg-violet-500/10 p-8 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 md:-translate-y-8">
+            <div className="rounded-[2rem] border border-violet-400/20 bg-violet-500/10 p-8 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 md:-translate-y-8 animate-fadeInUp" style={{ animationDelay: "280ms" }}>
               <div className="text-4xl mb-4">⚡</div>
               <h3 className="text-2xl font-bold mb-2" style={{ color: "#f8fafc" }}>{t("uniqueAutomation")}</h3>
               <p className="leading-7" style={{ color: "#ede9fe" }}>
@@ -298,7 +300,7 @@ export default async function Home() {
         </section>
 
       {/* Latest Articles */}
-        <section className="py-24">
+        <section className="py-24 animate-fadeInUp" style={{ animationDelay: "220ms" }}>
         <div className="mx-auto max-w-6xl px-4">
           <div className="mb-16 max-w-3xl">
             <p className="mb-4 text-xs font-bold uppercase tracking-[0.28em] text-amber-300/80">Neuer Content</p>
@@ -308,11 +310,12 @@ export default async function Home() {
           </div>
 
           <div className="grid gap-8 md:grid-cols-3">
-            {articles.slice(0, 3).map((article) => (
+            {articles.slice(0, 3).map((article, idx) => (
               <Link
                 key={article.id}
                 href={article.slug ? `/blog/${article.slug}` : "#"}
-                className="group overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 transition-all duration-300 hover:-translate-y-1 hover:border-amber-300/30 hover:bg-white/10"
+                className="group overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 transition-all duration-300 hover:-translate-y-1 hover:border-amber-300/30 hover:bg-white/10 animate-fadeInUp"
+                style={{ animationDelay: `${idx * 90}ms` }}
               >
                 <div className="h-2 bg-gradient-to-r from-cyan-400 via-emerald-400 to-violet-400" />
                 <div className="p-6">
@@ -352,7 +355,7 @@ export default async function Home() {
       <FAQSection />
 
       {/* Final CTA */}
-        <section className="py-24 text-white">
+        <section className="py-24 text-white animate-fadeInUp" style={{ animationDelay: "120ms" }}>
         <div className="mx-auto max-w-4xl rounded-[2.5rem] border border-white/10 bg-white/6 px-4 py-12 text-center backdrop-blur-2xl sm:px-8">
           <p className="mb-4 text-xs font-bold uppercase tracking-[0.28em] text-cyan-300/80">Letzter Schritt</p>
           <h2 className="display-heading text-4xl font-black md:text-5xl">
