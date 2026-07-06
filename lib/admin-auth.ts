@@ -1,4 +1,6 @@
 import type { NextRequest } from "next/server";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export const ADMIN_SESSION_COOKIE = "nm_admin_session";
 
@@ -32,6 +34,21 @@ export function hasValidAdminSession(request: NextRequest) {
   if (!sessionCookie) return false;
 
   return sessionCookie === createAdminSessionToken(credentials.user, credentials.password);
+}
+
+export async function requireAdminSession(nextPath: string) {
+  const credentials = getExpectedAdminCredentials();
+
+  if (!credentials) {
+    throw new Error("Admin guard is not configured.");
+  }
+
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get(ADMIN_SESSION_COOKIE)?.value;
+
+  if (sessionCookie !== createAdminSessionToken(credentials.user, credentials.password)) {
+    redirect(`/admin-login?next=${encodeURIComponent(nextPath)}`);
+  }
 }
 
 export function hasValidBasicAuth(request: NextRequest) {

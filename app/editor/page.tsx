@@ -3,6 +3,7 @@ import { prisma } from "../../lib/prisma";
 import { getLocale } from "next-intl/server";
 import TranslateArticleButton from "./TranslateArticleButton";
 import TranslateAllMissingButton from "./TranslateAllMissingButton";
+import { requireAdminSession } from "@/lib/admin-auth";
 
 function statusColor(status: string) {
   if (status === "Veröffentlicht" || status === "published") return "text-green-400";
@@ -13,6 +14,8 @@ function statusColor(status: string) {
 }
 
 export default async function EditorPage() {
+  await requireAdminSession("/editor");
+
   const locale = await getLocale();
   const isEn = locale === "en";
   const rawArticles = await prisma.article.findMany({
