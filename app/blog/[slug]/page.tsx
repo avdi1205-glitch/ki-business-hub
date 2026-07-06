@@ -6,6 +6,7 @@ import { getSiteUrl } from "../../../lib/site-url";
 import GoogleAd from "../../components/GoogleAd";
 import NewsletterForm from "@/app/components/NewsletterForm";
 import OptimizedAffiliateButton from "@/app/components/OptimizedAffiliateButton";
+import CheckoutCtaButton from "@/app/components/CheckoutCtaButton";
 import { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 
@@ -268,6 +269,62 @@ export default async function BlogArticlePage({
                 />
               </div>
             )}
+
+            <section className="mt-10 rounded-[2rem] border border-emerald-400/20 bg-gradient-to-br from-emerald-500/12 to-cyan-500/8 p-8 shadow-2xl shadow-slate-950/20 backdrop-blur-xl">
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-emerald-300/80">
+                {locale === "en" ? "Next revenue step" : "Naechster Umsatzschritt"}
+              </p>
+              <div className="mt-3 grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+                <div>
+                  <h3 className="text-2xl font-black text-white sm:text-3xl">
+                    {locale === "en"
+                      ? "Turn this article into a repeatable content and affiliate workflow."
+                      : "Mach aus diesem Artikel einen wiederholbaren Content- und Affiliate-Workflow."}
+                  </h3>
+                  <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300 sm:text-base">
+                    {locale === "en"
+                      ? "A single recommendation helps. A repeatable system for publishing, monetizing, and tracking pays much more. That is the upgrade path into Pro and Agency."
+                      : "Eine einzelne Empfehlung hilft. Ein wiederholbares System fuer Veröffentlichen, Monetarisieren und Tracking bringt deutlich mehr. Genau das ist der Upgrade-Pfad in Pro und Agency."}
+                  </p>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-3 lg:w-[40rem]">
+                  <Link
+                    href="/content-factory"
+                    className="rounded-2xl border border-emerald-300/20 bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-3 text-center font-black text-white shadow-[0_18px_40px_rgba(16,185,129,0.22)] transition-all duration-300 hover:-translate-y-1"
+                  >
+                    🚀 {locale === "en" ? "Start free" : "Kostenlos starten"}
+                  </Link>
+                  <CheckoutCtaButton
+                    href="/api/checkout?plan=pro"
+                    ctaKey={`blog-${slug}-pro`}
+                    variantA={{
+                      label: locale === "en" ? "💎 Unlock Pro for EUR 39" : "💎 Pro fuer 39 EUR freischalten",
+                      sourceSuffix: "variant-a",
+                      className: "rounded-2xl border border-sky-300/20 bg-sky-500/10 px-4 py-3 text-center font-black text-sky-100 transition-all duration-300 hover:-translate-y-1 hover:bg-sky-500/20",
+                    }}
+                    variantB={{
+                      label: locale === "en" ? "⚡ Activate Pro now" : "⚡ Pro jetzt aktivieren",
+                      sourceSuffix: "variant-b",
+                      className: "rounded-2xl border border-sky-300/20 bg-sky-500/10 px-4 py-3 text-center font-black text-sky-100 transition-all duration-300 hover:-translate-y-1 hover:bg-sky-500/20",
+                    }}
+                  />
+                  <CheckoutCtaButton
+                    href="/api/checkout?plan=agency"
+                    ctaKey={`blog-${slug}-agency`}
+                    variantA={{
+                      label: locale === "en" ? "👑 Start Agency for EUR 149" : "👑 Agency fuer 149 EUR starten",
+                      sourceSuffix: "variant-a",
+                      className: "rounded-2xl border border-amber-300/20 bg-amber-500/10 px-4 py-3 text-center font-black text-amber-100 transition-all duration-300 hover:-translate-y-1 hover:bg-amber-500/20",
+                    }}
+                    variantB={{
+                      label: locale === "en" ? "🏢 Activate Agency for teams" : "🏢 Agency fuer Teams aktivieren",
+                      sourceSuffix: "variant-b",
+                      className: "rounded-2xl border border-amber-300/20 bg-amber-500/10 px-4 py-3 text-center font-black text-amber-100 transition-all duration-300 hover:-translate-y-1 hover:bg-amber-500/20",
+                    }}
+                  />
+                </div>
+              </div>
+            </section>
 
             {/* All Recommended Tools */}
             {mainTools.length > 0 && (

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { prisma } from "../../../lib/prisma";
 import AffiliateButton from "../../blog/[slug]/AffiliateButton";
 import { getLocale } from "next-intl/server";
+import CheckoutCtaButton from "../../components/CheckoutCtaButton";
 
 function createSlug(name: string) {
   return name
@@ -132,6 +133,62 @@ export default async function ToolDetailPage({
               >
                 Weitere Tools vergleichen
               </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-8 rounded-[2rem] border border-emerald-400/20 bg-gradient-to-br from-emerald-500/12 to-cyan-500/8 p-6 shadow-2xl shadow-slate-950/20 backdrop-blur-xl">
+          <p className="text-xs font-bold uppercase tracking-[0.24em] text-emerald-300/80">
+            {isEn ? "Next revenue step" : "Naechster Umsatzschritt"}
+          </p>
+          <div className="mt-3 grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div>
+              <h2 className="text-2xl font-black text-white sm:text-3xl">
+                {isEn
+                  ? "If the tool fits, move directly into the workflow that monetizes it."
+                  : "Wenn das Tool passt, geh direkt in den Workflow, der es monetarisiert."}
+              </h2>
+              <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300 sm:text-base">
+                {isEn
+                  ? "The tool itself can help, but the bigger lift comes when content, affiliate placement, and automation work together. That is where Pro and Agency pay off."
+                  : "Das Tool allein hilft, aber der groessere Hebel entsteht erst, wenn Content, Affiliate-Platzierung und Automatisierung zusammenspielen. Genau dafuer lohnen sich Pro und Agency."}
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-3 lg:w-[40rem]">
+              <Link
+                href="/content-factory"
+                className="rounded-2xl border border-emerald-300/20 bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-3 text-center font-black text-white shadow-[0_18px_40px_rgba(16,185,129,0.22)] transition-all duration-300 hover:-translate-y-1"
+              >
+                🚀 {isEn ? "Start free" : "Kostenlos starten"}
+              </Link>
+              <CheckoutCtaButton
+                href="/api/checkout?plan=pro"
+                ctaKey={`tool-${slug}-pro`}
+                variantA={{
+                  label: isEn ? "💎 Unlock Pro for EUR 39" : "💎 Pro fuer 39 EUR freischalten",
+                  sourceSuffix: "variant-a",
+                  className: "rounded-2xl border border-sky-300/20 bg-sky-500/10 px-4 py-3 text-center font-black text-sky-100 transition-all duration-300 hover:-translate-y-1 hover:bg-sky-500/20",
+                }}
+                variantB={{
+                  label: isEn ? "⚡ Activate Pro now" : "⚡ Pro jetzt aktivieren",
+                  sourceSuffix: "variant-b",
+                  className: "rounded-2xl border border-sky-300/20 bg-sky-500/10 px-4 py-3 text-center font-black text-sky-100 transition-all duration-300 hover:-translate-y-1 hover:bg-sky-500/20",
+                }}
+              />
+              <CheckoutCtaButton
+                href="/api/checkout?plan=agency"
+                ctaKey={`tool-${slug}-agency`}
+                variantA={{
+                  label: isEn ? "👑 Start Agency for EUR 149" : "👑 Agency fuer 149 EUR starten",
+                  sourceSuffix: "variant-a",
+                  className: "rounded-2xl border border-amber-300/20 bg-amber-500/10 px-4 py-3 text-center font-black text-amber-100 transition-all duration-300 hover:-translate-y-1 hover:bg-amber-500/20",
+                }}
+                variantB={{
+                  label: isEn ? "🏢 Activate Agency for teams" : "🏢 Agency fuer Teams aktivieren",
+                  sourceSuffix: "variant-b",
+                  className: "rounded-2xl border border-amber-300/20 bg-amber-500/10 px-4 py-3 text-center font-black text-amber-100 transition-all duration-300 hover:-translate-y-1 hover:bg-amber-500/20",
+                }}
+              />
             </div>
           </div>
         </div>
