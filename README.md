@@ -60,3 +60,12 @@ Important:
 	`google.com, pub-<your-id>, DIRECT, f08c47fec0942fa0`
 2. Production HTML contains the AdSense script URL with `client=ca-pub-...`.
 3. Blog and article pages contain ad blocks (`adsbygoogle`) with slot IDs.
+
+## AI Labeling Toggle
+
+Use this variable in Vercel (Production) to control the create-article compliance notice:
+
+- `AI_LABELING_ACTIVE=false` shows the "starting in August" wording.
+- `AI_LABELING_ACTIVE=true` shows the active mandatory labeling wording.
+
+After changing the variable, redeploy in Vercel.
