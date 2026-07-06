@@ -52,18 +52,34 @@ export default function ConversionHero() {
             }}
           />
 
-          {/* Secondary CTA */}
+          {/* Secondary CTA - Pro */}
           <CheckoutCtaButton
             href="/api/checkout?plan=pro"
             ctaKey="hero-pro"
             variantA={{
-              label: `Pro`,
+              label: `Pro – 39 €`,
               sourceSuffix: "price-view",
               className: "px-8 py-4 bg-blue-500/20 border-2 border-blue-400 text-blue-300 font-bold text-lg rounded-lg hover:bg-blue-500/30 transition-all duration-300",
             }}
             variantB={{
-              label: `Agency`,
+              label: `Pro freischalten`,
               sourceSuffix: "direct-pro",
+              className: "px-8 py-4 bg-blue-500/20 border-2 border-blue-400 text-blue-300 font-bold text-lg rounded-lg hover:bg-blue-500/30 transition-all duration-300",
+            }}
+          />
+
+          {/* Agency CTA */}
+          <CheckoutCtaButton
+            href="/api/checkout?plan=agency"
+            ctaKey="hero-agency"
+            variantA={{
+              label: `Agency – 149 €`,
+              sourceSuffix: "price-view",
+              className: "px-8 py-4 bg-cyan-500/20 border-2 border-cyan-400 text-cyan-200 font-bold text-lg rounded-lg hover:bg-cyan-500/30 transition-all duration-300",
+            }}
+            variantB={{
+              label: `Agency freischalten`,
+              sourceSuffix: "direct-agency",
               className: "px-8 py-4 bg-cyan-500/20 border-2 border-cyan-400 text-cyan-200 font-bold text-lg rounded-lg hover:bg-cyan-500/30 transition-all duration-300",
             }}
           />
