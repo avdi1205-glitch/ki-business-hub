@@ -9,6 +9,7 @@ type ParsedRescueSource = {
 };
 
 type LeadWorkflowStatus = "lead" | "lead_new" | "lead_contacted" | "lead_won" | "lead_lost";
+type QueueFilter = "all" | "open" | "new" | "contacted" | "won" | "lost";
 
 function parseRescueSource(raw: string | null): ParsedRescueSource {
   const fallback: ParsedRescueSource = {
@@ -68,16 +69,60 @@ function statusClassName(status: LeadWorkflowStatus) {
   return "border-amber-400/35 bg-amber-500/12 text-amber-100";
 }
 
-export default async function CheckoutRescueAdminPage() {
+function normalizeFilter(raw: string | undefined): QueueFilter {
+  if (raw === "open" || raw === "new" || raw === "contacted" || raw === "won" || raw === "lost") {
+    return raw;
+  }
+  return "all";
+}
+
+function buildStatusFilter(filter: QueueFilter) {
+  if (filter === "all") {
+    return { startsWith: "lead" };
+  }
+
+  if (filter === "open") {
+    return { in: ["lead", "lead_new", "lead_contacted"] };
+  }
+
+  if (filter === "new") {
+    return { in: ["lead", "lead_new"] };
+  }
+
+  if (filter === "contacted") {
+    return "lead_contacted";
+  }
+
+  if (filter === "won") {
+    return "lead_won";
+  }
+
+  return "lead_lost";
+}
+
+function formatRate(won: number, total: number) {
+  if (!total) return "0.0%";
+  return `${((won / total) * 100).toFixed(1)}%`;
+}
+
+export default async function CheckoutRescueAdminPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
+  const { status: statusParam } = await searchParams;
+  const activeFilter = normalizeFilter(statusParam);
+  const statusFilter = buildStatusFilter(activeFilter);
+
   const now = new Date();
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
   const weekStart = new Date(now);
   weekStart.setDate(now.getDate() - 7);
 
-  const [recentLeads, monthLeadsCount, weekLeadsCount] = await Promise.all([
+  const [recentLeads, allRescueStates, monthLeadsCount, weekLeadsCount] = await Promise.all([
     prisma.newsletterSubscriber.findMany({
       where: {
-        status: { startsWith: "lead" },
+        status: statusFilter,
         source: { startsWith: "checkout-rescue:" },
       },
       orderBy: { createdAt: "desc" },
@@ -89,6 +134,16 @@ export default async function CheckoutRescueAdminPage() {
         status: true,
         source: true,
         createdAt: true,
+      },
+    }),
+    prisma.newsletterSubscriber.findMany({
+      where: {
+        status: { startsWith: "lead" },
+        source: { startsWith: "checkout-rescue:" },
+      },
+      select: {
+        status: true,
+        source: true,
       },
     }),
     prisma.newsletterSubscriber.count({
@@ -142,6 +197,50 @@ export default async function CheckoutRescueAdminPage() {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 6);
 
+  const conversionByPlan = Object.entries(
+    allRescueStates.reduce<Record<string, { total: number; won: number }>>((acc, lead) => {
+      const parsedSource = parseRescueSource(lead.source);
+      const plan = parsedSource.plan || "unknown";
+      const current = acc[plan] || { total: 0, won: 0 };
+      current.total += 1;
+      if (lead.status === "lead_won") {
+        current.won += 1;
+      }
+      acc[plan] = current;
+      return acc;
+    }, {})
+  )
+    .map(([plan, values]) => ({
+      plan,
+      total: values.total,
+      won: values.won,
+      rate: formatRate(values.won, values.total),
+    }))
+    .sort((left, right) => right.total - left.total)
+    .slice(0, 6);
+
+  const conversionBySource = Object.entries(
+    allRescueStates.reduce<Record<string, { total: number; won: number }>>((acc, lead) => {
+      const parsedSource = parseRescueSource(lead.source);
+      const source = parsedSource.source || "website";
+      const current = acc[source] || { total: 0, won: 0 };
+      current.total += 1;
+      if (lead.status === "lead_won") {
+        current.won += 1;
+      }
+      acc[source] = current;
+      return acc;
+    }, {})
+  )
+    .map(([source, values]) => ({
+      source,
+      total: values.total,
+      won: values.won,
+      rate: formatRate(values.won, values.total),
+    }))
+    .sort((left, right) => right.total - left.total)
+    .slice(0, 8);
+
   const stageBreakdown = parsed.reduce<Record<LeadWorkflowStatus, number>>((acc, lead) => {
     const stage = (lead.status as LeadWorkflowStatus) || "lead_new";
     acc[stage] = (acc[stage] || 0) + 1;
@@ -153,6 +252,15 @@ export default async function CheckoutRescueAdminPage() {
     lead_won: 0,
     lead_lost: 0,
   });
+
+  const filterTabs: Array<{ key: QueueFilter; label: string }> = [
+    { key: "all", label: "Alle" },
+    { key: "open", label: "Offen" },
+    { key: "new", label: "Neu" },
+    { key: "contacted", label: "Kontaktiert" },
+    { key: "won", label: "Gewonnen" },
+    { key: "lost", label: "Verloren" },
+  ];
 
   return (
     <main className="min-h-screen px-6 py-10" style={{ background: "var(--background)", color: "var(--text-dark)" }}>
@@ -200,6 +308,34 @@ export default async function CheckoutRescueAdminPage() {
           </div>
         </section>
 
+        <section className="rounded-2xl border p-6" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
+          <h2 className="mb-4 text-xl font-bold">Queue-Filter</h2>
+          <div className="flex flex-wrap gap-2">
+            {filterTabs.map((tab) => {
+              const isActive = activeFilter === tab.key;
+              const href = tab.key === "all" ? "/admin/checkout-rescue" : `/admin/checkout-rescue?status=${tab.key}`;
+
+              return (
+                <Link
+                  key={tab.key}
+                  href={href}
+                  className="rounded-lg border px-4 py-2 text-sm font-semibold transition-colors"
+                  style={{
+                    borderColor: isActive ? "rgba(6, 182, 212, 0.5)" : "rgba(255,255,255,0.14)",
+                    background: isActive ? "rgba(6, 182, 212, 0.14)" : "rgba(255,255,255,0.03)",
+                    color: isActive ? "#cffafe" : "#e2e8f0",
+                  }}
+                >
+                  {tab.label}
+                </Link>
+              );
+            })}
+          </div>
+          <p className="mt-3 text-sm" style={{ color: "var(--text-light)" }}>
+            Aktiver Filter: <span className="font-semibold text-slate-100">{filterTabs.find((tab) => tab.key === activeFilter)?.label}</span>
+          </p>
+        </section>
+
         <section className="grid gap-6 lg:grid-cols-3">
           <div className="rounded-2xl border p-6" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
             <h2 className="mb-4 text-xl font-bold">Top Plaene</h2>
@@ -243,6 +379,50 @@ export default async function CheckoutRescueAdminPage() {
                   <div key={source} className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-4 py-3">
                     <span className="font-semibold">{prettySource(source)}</span>
                     <span className="font-bold">{count}</span>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </section>
+
+        <section className="grid gap-6 lg:grid-cols-2">
+          <div className="rounded-2xl border p-6" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
+            <h2 className="mb-4 text-xl font-bold">Conversion nach Plan</h2>
+            <div className="space-y-3">
+              {conversionByPlan.length === 0 ? (
+                <p style={{ color: "var(--text-light)" }}>Keine Plan-Konvertierung vorhanden.</p>
+              ) : (
+                conversionByPlan.map((row) => (
+                  <div key={row.plan} className="rounded-lg border border-white/10 bg-white/5 px-4 py-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="font-semibold uppercase">{row.plan}</span>
+                      <span className="font-bold text-emerald-200">{row.rate}</span>
+                    </div>
+                    <p className="mt-1 text-sm" style={{ color: "var(--text-light)" }}>
+                      {row.won} gewonnen / {row.total} gesamt
+                    </p>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          <div className="rounded-2xl border p-6" style={{ background: "var(--background-elevated)", borderColor: "rgba(255,255,255,0.1)" }}>
+            <h2 className="mb-4 text-xl font-bold">Conversion nach Quelle</h2>
+            <div className="space-y-3">
+              {conversionBySource.length === 0 ? (
+                <p style={{ color: "var(--text-light)" }}>Keine Quellen-Konvertierung vorhanden.</p>
+              ) : (
+                conversionBySource.map((row) => (
+                  <div key={row.source} className="rounded-lg border border-white/10 bg-white/5 px-4 py-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="font-semibold">{prettySource(row.source)}</span>
+                      <span className="font-bold text-emerald-200">{row.rate}</span>
+                    </div>
+                    <p className="mt-1 text-sm" style={{ color: "var(--text-light)" }}>
+                      {row.won} gewonnen / {row.total} gesamt
+                    </p>
                   </div>
                 ))
               )}
