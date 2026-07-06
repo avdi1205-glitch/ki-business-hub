@@ -12,7 +12,8 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations("nav");
-  const isAdminContext = pathname?.startsWith("/admin") || pathname === "/create-article";
+  const isAdminContext =
+    pathname?.startsWith("/admin") || pathname === "/create-article" || pathname === "/editor";
 
   const links = [
     { href: "/", label: t("home") },

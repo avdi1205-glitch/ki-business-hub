@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getExpectedAdminCredentials, hasValidAdminSession, hasValidBasicAuth } from "./lib/admin-auth";
 
-const PROTECTED_PREFIXES = ["/admin", "/api/internal-bots"];
+const PROTECTED_PREFIXES = ["/admin", "/api/internal-bots", "/create-article", "/editor"];
 const ADMIN_LOGIN_PATH = "/admin-login";
 
 function isProtectedPath(pathname: string) {
