@@ -19,7 +19,7 @@
     "contact": "Contact",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
-    "brandTag": "Digital income with AI"
+    "brandTag": "The future of digital income"
   },
   "language": {
     "label": "Language",
@@ -228,8 +228,8 @@
     "pricingAgencyCta": "Unlock Agency now",
     "pricingProHint": "Ideal if you want to build content and affiliate revenue consistently.",
     "pricingAgencyHint": "Useful if you manage multiple brands, clients, or team members.",
-    "pricingProVariantB": "Make more revenue with Pro",
-    "pricingAgencyVariantB": "Handle more projects with Agency",
+    "pricingProVariantB": "Pro €39/month",
+    "pricingAgencyVariantB": "Agency €149/month",
     "pricingGuaranteeTitle": "🛡️ Try 30 days risk free",
     "pricingGuaranteeBody": "If it does not fit your workflow, you get your money back.",
     "pricingEnvNote": "For paid plans, set PRO_CHECKOUT_URL and AGENCY_CHECKOUT_URL in Vercel.",

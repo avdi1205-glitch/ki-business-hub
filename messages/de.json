@@ -19,7 +19,7 @@
     "contact": "Kontakt",
     "openMenu": "Menü öffnen",
     "closeMenu": "Menü schließen",
-    "brandTag": "Digitales Einkommen mit KI"
+    "brandTag": "Die Zukunft des digitalen Einkommens"
   },
   "language": {
     "label": "Sprache",
@@ -228,8 +228,8 @@
     "pricingAgencyCta": "Agency jetzt freischalten",
     "pricingProHint": "Ideal, wenn du regelmäßig Inhalte und Affiliate-Umsatz aufbauen willst.",
     "pricingAgencyHint": "Sinnvoll, wenn du mehrere Marken, Kunden oder Teammitglieder steuerst.",
-    "pricingProVariantB": "Mehr Umsatz mit Pro",
-    "pricingAgencyVariantB": "Mehr Projekte mit Agency",
+    "pricingProVariantB": "Pro 39 EUR/Monat",
+    "pricingAgencyVariantB": "Agency 149 EUR/Monat",
     "pricingGuaranteeTitle": "🛡️ 30 Tage ohne Risiko testen",
     "pricingGuaranteeBody": "Wenn es nicht zu deinem Workflow passt, bekommst du dein Geld zurück.",
     "pricingEnvNote": "Für bezahlte Pläne kannst du PRO_CHECKOUT_URL und AGENCY_CHECKOUT_URL in Vercel hinterlegen.",

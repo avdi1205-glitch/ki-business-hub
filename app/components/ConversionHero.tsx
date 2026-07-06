@@ -80,7 +80,7 @@ export default function ConversionHero() {
                 className: "w-full rounded-2xl border border-sky-300/20 bg-sky-500/10 px-6 py-4 text-base font-bold leading-tight text-sky-100 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-sky-500/20 active:scale-95 sm:text-lg",
               }}
               variantB={{
-                label: `✨ Pro freischalten`,
+                label: `✨ Pro 39 €/Monat`,
                 sourceSuffix: "direct-pro",
                 className: "w-full rounded-2xl border border-sky-300/20 bg-sky-500/10 px-6 py-4 text-base font-bold leading-tight text-sky-100 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-sky-500/20 active:scale-95 sm:text-lg",
               }}
@@ -95,7 +95,7 @@ export default function ConversionHero() {
                 className: "w-full rounded-2xl border border-violet-300/20 bg-violet-500/10 px-6 py-4 text-base font-bold leading-tight text-violet-100 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-violet-500/20 active:scale-95 sm:text-lg",
               }}
               variantB={{
-                label: `🔥 Agency freischalten`,
+                label: `🔥 Agency 149 €/Monat`,
                 sourceSuffix: "direct-agency",
                 className: "w-full rounded-2xl border border-violet-300/20 bg-violet-500/10 px-6 py-4 text-base font-bold leading-tight text-violet-100 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-violet-500/20 active:scale-95 sm:text-lg",
               }}

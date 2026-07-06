@@ -44,7 +44,7 @@ export default function Navbar() {
             </span>
             <span className="flex flex-col leading-tight">
               <span className="text-sm font-bold text-white">Nexmoneta</span>
-              <span className="text-xs text-slate-400 hidden sm:block whitespace-nowrap">{t("brandTag")}</span>
+              <span className="hidden max-w-[11rem] text-[10px] leading-tight text-slate-400 lg:block">{t("brandTag")}</span>
             </span>
           </Link>
 
