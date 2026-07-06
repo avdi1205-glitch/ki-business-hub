@@ -8,7 +8,7 @@ export default function AdminPage() {
     {
       icon: "🤖",
       name: "Content Factory",
-      desc: "AI-powered article generation",
+      desc: "KI-gestuetzte Artikel-Erstellung",
       href: "/content-factory",
       color: "#3b82f6",
       accent: "text-blue-400",
@@ -16,7 +16,7 @@ export default function AdminPage() {
     {
       icon: "📧",
       name: "Newsletter",
-      desc: "Automated email campaigns",
+      desc: "Automatisierte E-Mail-Kampagnen",
       href: "/admin/newsletter",
       color: "#3b82f6",
       accent: "text-blue-400",
@@ -24,7 +24,7 @@ export default function AdminPage() {
     {
       icon: "🔍",
       name: "SEO-Analyzer",
-      desc: "Article optimization for rankings",
+      desc: "Artikel-Optimierung fuer bessere Rankings",
       href: "/admin/seo-analyzer",
       color: "#8b5cf6",
       accent: "text-purple-400",
@@ -32,7 +32,7 @@ export default function AdminPage() {
     {
       icon: "🎯",
       name: "Affiliate-Match",
-      desc: "Smart tool recommendations",
+      desc: "Smarte Tool-Empfehlungen",
       href: "/admin/affiliate-match",
       color: "#ec4899",
       accent: "text-pink-400",
@@ -40,7 +40,7 @@ export default function AdminPage() {
     {
       icon: "📅",
       name: "Auto-Publishing",
-      desc: "Scheduled publishing",
+      desc: "Geplantes Veröffentlichen",
       href: "/admin/auto-publishing",
       color: "#10b981",
       accent: "text-green-400",
@@ -48,7 +48,7 @@ export default function AdminPage() {
     {
       icon: "🧪",
       name: "A/B-Testing",
-      desc: "CTA text optimization",
+      desc: "Optimierung von CTA-Texten",
       href: "/admin/ab-testing",
       color: "#f59e0b",
       accent: "text-amber-400",
@@ -56,7 +56,7 @@ export default function AdminPage() {
     {
       icon: "📊",
       name: "Analytics",
-      desc: "Revenue & performance",
+      desc: "Umsatz und Performance",
       href: "/admin/earnings",
       color: "#06b6d4",
       accent: "text-cyan-400",
@@ -64,7 +64,7 @@ export default function AdminPage() {
     {
       icon: "💸",
       name: "Umsatz-Navigator",
-      desc: "Weekly revenue playbook with action priorities",
+      desc: "Woechentlicher Umsatz-Plan mit klaren Prioritaeten",
       href: "/admin/revenue-navigator",
       color: "#10b981",
       accent: "text-emerald-400",
@@ -72,7 +72,7 @@ export default function AdminPage() {
     {
       icon: "🧠",
       name: "Interne Bots",
-      desc: "Sales, SEO, Content Ops and Support copilots",
+      desc: "Sales-, SEO-, Content-Ops- und Support-Copiloten",
       href: "/admin/internal-bots",
       color: "#f97316",
       accent: "text-orange-400",
@@ -86,7 +86,7 @@ export default function AdminPage() {
         <div className="max-w-7xl mx-auto px-8 py-8">
           <div>
             <h1 className="text-4xl font-bold mb-2" style={{ color: "var(--text-dark)" }}>🚀 Admin Dashboard</h1>
-            <p style={{ color: "var(--text-light)" }}>Monetization platform with 8 intelligent skills</p>
+            <p style={{ color: "var(--text-light)" }}>Monetarisierungs-Plattform mit 9 intelligenten Modulen</p>
           </div>
         </div>
       </div>
@@ -96,9 +96,9 @@ export default function AdminPage() {
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
           {[
-            { label: "This week", value: "€487.50", change: "+28%" },
-            { label: "This month", value: "€2.145", change: "+42%" },
-            { label: "Articles", value: "39", change: "+6 generated" },
+            { label: "Diese Woche", value: "€487.50", change: "+28%" },
+            { label: "Diesen Monat", value: "€2.145", change: "+42%" },
+            { label: "Artikel", value: "39", change: "+6 generiert" },
             { label: "Conversion", value: "8.2%", change: "+1.5%" },
           ].map((stat, idx) => (
             <div key={idx} className="rounded-xl border p-6 transition-shadow" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
@@ -124,7 +124,7 @@ export default function AdminPage() {
                 <p className="text-sm mb-4" style={{ color: "var(--text-light)" }}>{skill.desc}</p>
                 
                 <div className="flex items-center text-sm font-medium transition-transform group-hover:translate-x-1" style={{ color: skill.color }}>
-                  Open →
+                  Oeffnen →
                 </div>
               </div>
             </Link>
@@ -133,15 +133,15 @@ export default function AdminPage() {
 
         {/* Recent Activity */}
         <div className="mt-12">
-          <h2 className="text-2xl font-bold mb-6" style={{ color: "var(--text-dark)" }}>📊 Recent activity</h2>
+          <h2 className="text-2xl font-bold mb-6" style={{ color: "var(--text-dark)" }}>📊 Letzte Aktivitaeten</h2>
           
           <div className="rounded-xl border p-6" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
             <div className="space-y-4">
               {[
-                { action: "Newsletter sent", details: "1,250 subscribers", time: "2 hours ago", icon: "📧" },
-                { action: "SEO analysis completed", details: "39 articles analyzed", time: "4 hours ago", icon: "🔍" },
-                { action: "Affiliate links added", details: "12 new matches", time: "6 hours ago", icon: "🎯" },
-                { action: "3 articles published", details: "via auto-publishing", time: "8 hours ago", icon: "📅" },
+                { action: "Newsletter versendet", details: "1.250 Abonnenten", time: "vor 2 Stunden", icon: "📧" },
+                { action: "SEO-Analyse abgeschlossen", details: "39 Artikel analysiert", time: "vor 4 Stunden", icon: "🔍" },
+                { action: "Affiliate-Links hinzugefuegt", details: "12 neue Matches", time: "vor 6 Stunden", icon: "🎯" },
+                { action: "3 Artikel veroeffentlicht", details: "via Auto-Publishing", time: "vor 8 Stunden", icon: "📅" },
               ].map((item, idx) => (
                 <div key={idx} className="flex items-center gap-4 pb-4 border-b last:border-0 last:pb-0" style={{ borderColor: "rgba(255,255,255,0.1)" }}>
                   <div className="text-2xl">{item.icon}</div>

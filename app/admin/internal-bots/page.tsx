@@ -30,13 +30,13 @@ type HistoryItem = {
 const botLabels: Record<BotType, { title: string; subtitle: string }> = {
   sales: { title: "Sales Bot", subtitle: "Upsell, Pricing, Offer-Positionierung" },
   seo: { title: "SEO Bot", subtitle: "Rankings, Cluster, interne Verlinkung" },
-  "content-ops": { title: "Content Ops Bot", subtitle: "Pipeline, Sprint-Plan, Automationen" },
+  "content-ops": { title: "Content-Ops Bot", subtitle: "Pipeline, Sprint-Plan, Automationen" },
   support: { title: "Support Bot", subtitle: "Bot zuerst, Team-Eskalation bei Sonderfaellen" },
 };
 
 const roleLabels: Record<TeamRole, string> = {
   owner: "Owner (alle Bots)",
-  growth: "Growth (Sales/SEO/Ops)",
+  growth: "Growth (Sales/SEO/Content-Ops)",
   content: "Content (SEO/Ops)",
   support: "Support (nur Support Bot)",
 };
@@ -511,7 +511,7 @@ export default function InternalBotsPage() {
         </div>
 
         <div className="mb-6 rounded-xl border p-5" style={{ background: "rgba(16,185,129,0.08)", borderColor: "rgba(16,185,129,0.25)" }}>
-          <p className="text-sm font-semibold">Support-Policy (Bot + Team)</p>
+          <p className="text-sm font-semibold">Support-Regelwerk (Bot + Team)</p>
           <div className="mt-2 space-y-1 text-sm" style={{ color: "var(--text-light)" }}>
             <p>1. Bot antwortet zuerst bei Standardfragen und Onboarding.</p>
             <p>2. Team uebernimmt bei Billing, account-spezifischen Faellen, Bugs und Eskalationen.</p>
