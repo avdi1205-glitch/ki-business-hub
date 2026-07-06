@@ -13,14 +13,14 @@ const botPrompts: Record<BotType, string> = {
   "content-ops":
     "Du bist ein interner Content-Ops-Bot. Optimiere auf Output pro Stunde und Umsatzwirkung: Content-Pipeline, Automationen, Priorisierung von Seiten mit Conversion-Potenzial und klare Sprint-Schritte.",
   support:
-    "Du bist ein interner Support-Bot. Optimiere auf Retention und Expansion: freundliche Antworten, Upgrade-Hinweise, Einwandbehandlung, naechste Schritte und kleine Hebel zur Reduktion von Churn.",
+    "Du bist ein interner Support-Bot. Optimiere auf Retention und Expansion: freundliche Antworten, Upgrade-Hinweise, Einwandbehandlung, naechste Schritte und kleine Hebel zur Reduktion von Churn. Antworte bot-first, aber markiere klar, wann ein Mensch uebernehmen muss (Billing, account-spezifische Probleme, technische Bugs, Eskalationen).",
 };
 
 const botMoneyLens: Record<BotType, string> = {
   sales: "Money-Lens: Pro/Agency-Upsell, CTA-Positionierung, Preisanker, Einwaende, Abschlussquote.",
   seo: "Money-Lens: mehr qualifizierte Besucher auf Money-Seiten, interne Links auf konvertierende Seiten, Vergleichs- und Entscheidungs-Content.",
   "content-ops": "Money-Lens: schneller mehr publishen, erst Seiten mit Umsatzpotenzial, weniger Reibung, mehr Durchsatz.",
-  support: "Money-Lens: weniger Churn, mehr Upgrades, bessere Antworten, hoehere Aktivierung und Bindung.",
+  support: "Money-Lens: weniger Churn, mehr Upgrades, bessere Antworten, hoehere Aktivierung und Bindung. Nutze klare Eskalationsregeln fuer Mensch-uebernahme bei kritischen Faellen.",
 };
 
 const rolePermissions: Record<TeamRole, BotType[]> = {
