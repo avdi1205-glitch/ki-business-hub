@@ -164,67 +164,87 @@ export default async function Home() {
         }}
       />
 
-      <main style={{ background: "var(--background)", minHeight: "100vh" }}>
-      {/* Conversion Hero */}
-      <ConversionHero />
+      <main className="relative isolate min-h-screen overflow-hidden mesh-background text-slate-100">
+        <div className="noise-overlay" />
+        <div className="orbital-glow left-[-8rem] top-[8rem] h-72 w-72 bg-cyan-500/25" />
+        <div className="orbital-glow right-[-6rem] top-[24rem] h-80 w-80 bg-emerald-500/20" style={{ animationDelay: "-3s" }} />
+        <div className="orbital-glow left-[44%] top-[68rem] h-96 w-96 bg-violet-500/15" style={{ animationDelay: "-6s" }} />
 
-      <section className="px-6 pb-4 pt-0">
-        <div className="mx-auto max-w-6xl rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur">
-          <p className="mb-4 text-sm font-bold uppercase tracking-wide text-cyan-300">Schneller Einstieg</p>
-          <div className="grid gap-4 md:grid-cols-3">
+        {/* Conversion Hero */}
+        <ConversionHero />
+
+        <section className="px-4 pb-8 pt-2 sm:px-6">
+          <div className="mx-auto grid max-w-6xl gap-4 lg:grid-cols-[1.35fr_0.85fr]">
             <Link
               href="/tools"
-              className="rounded-2xl border border-white/10 bg-white/10 p-5 transition hover:bg-white/15"
+              className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/6 p-6 shadow-2xl shadow-cyan-950/20 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/30 hover:bg-white/10 md:p-8"
             >
-              <p className="text-sm font-bold text-cyan-300">Ich will die besten Tools vergleichen</p>
-              <p className="mt-2 text-sm leading-6 text-slate-200">Ratings, Preise und Empfehlungen auf einen Blick.</p>
+              <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/10 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <p className="mb-4 text-xs font-bold uppercase tracking-[0.28em] text-cyan-300/80">Schneller Einstieg</p>
+              <h2 className="display-heading max-w-xl text-3xl font-black text-white sm:text-4xl lg:text-5xl">
+                Das ist kein Standard-Layout. Es ist ein schneller Weg zu Entscheidungen.
+              </h2>
+              <p className="mt-5 max-w-xl text-base leading-8 text-slate-300 sm:text-lg">
+                Tools vergleichen, Empfehlungen finden, Inhalte strukturieren: der visuelle Pfad bleibt klar, aber dynamischer und stärker auf Conversion ausgelegt.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3 text-sm font-semibold">
+                <span className="rounded-full border border-cyan-400/20 bg-cyan-500/10 px-4 py-2 text-cyan-200">Asymmetrisch</span>
+                <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-slate-200">Bewegte Tiefe</span>
+                <span className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-4 py-2 text-emerald-200">Klare Hierarchie</span>
+              </div>
             </Link>
-            <Link
-              href="/affiliate"
-              className="rounded-2xl border border-white/10 bg-white/10 p-5 transition hover:bg-white/15"
-            >
-              <p className="text-sm font-bold text-cyan-300">Ich will passende Empfehlungen finden</p>
-              <p className="mt-2 text-sm leading-6 text-slate-200">Direkt zu passenden Empfehlungen und Detailseiten.</p>
-            </Link>
-            <Link
-              href="/blog"
-              className="rounded-2xl border border-white/10 bg-white/10 p-5 transition hover:bg-white/15"
-            >
-              <p className="text-sm font-bold text-cyan-300">Ich will mich zuerst informieren</p>
-              <p className="mt-2 text-sm leading-6 text-slate-200">Erst lesen, dann schneller entscheiden.</p>
-            </Link>
-          </div>
-        </div>
-      </section>
 
-      <section className="px-6 pb-3">
-        <div className="mx-auto max-w-6xl rounded-2xl border border-cyan-400/20 bg-cyan-500/5 px-5 py-4 text-sm leading-7 text-slate-200">
-          <span className="font-semibold text-cyan-300">Oder direkt entscheiden:</span> Wenn du schon weißt, was du brauchst, nimm oben die passende Strecke. Wenn du unsicher bist, helfen dir die Top-Tools beim Vergleichen.
-        </div>
-      </section>
+            <div className="grid gap-4">
+              <Link
+                href="/affiliate"
+                className="group rounded-[1.75rem] border border-white/10 bg-slate-950/50 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-400/30 hover:bg-slate-900/70"
+              >
+                <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300/80">Direkter Pfad</p>
+                <p className="mt-3 text-2xl font-black text-white">Empfehlungen, die wie ein Premium-Editor wirken.</p>
+                <p className="mt-3 text-sm leading-7 text-slate-300">Mehr visuelle Spannung, weniger graue Standardboxen.</p>
+              </Link>
+
+              <Link
+                href="/blog"
+                className="group rounded-[1.75rem] border border-white/10 bg-white/5 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-violet-400/30 hover:bg-white/10"
+              >
+                <p className="text-xs font-bold uppercase tracking-[0.22em] text-violet-300/80">Explorativ</p>
+                <p className="mt-3 text-2xl font-black text-white">Lesen, bevor man klickt. Aber schöner inszeniert.</p>
+                <p className="mt-3 text-sm leading-7 text-slate-300">Ein ruhigerer Einstieg für Besucher, die erst Orientierung wollen.</p>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <section className="px-4 pb-3 sm:px-6">
+          <div className="mx-auto max-w-6xl rounded-[2rem] border border-cyan-400/15 bg-cyan-500/6 px-5 py-4 text-sm leading-7 text-slate-200 backdrop-blur-xl">
+            <span className="font-semibold text-cyan-300">Oder direkt entscheiden:</span> Wenn du schon weißt, was du brauchst, nimm oben die passende Strecke. Wenn du unsicher bist, helfen dir die Top-Tools beim Vergleichen.
+          </div>
+        </section>
 
       {/* Top Tools Section */}
-      <section className="py-20" style={{ background: "linear-gradient(135deg, var(--background) 0%, var(--background-alt) 100%)" }}>
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
-              🏆 {t("topToolsTitle")}
+        <section className="py-20 sm:py-24">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="mb-16 max-w-3xl">
+            <p className="mb-4 text-xs font-bold uppercase tracking-[0.28em] text-cyan-300/80">Top Tools</p>
+            <h2 className="display-heading text-4xl font-black text-white sm:text-5xl md:text-6xl">
+              {t("topToolsTitle")}
             </h2>
-            <p className="text-xl leading-8" style={{ color: "var(--text-light)" }}>
+            <p className="mt-5 text-lg leading-8 text-slate-300 sm:text-xl">
               {t("topToolsSubtitle")}
             </p>
           </div>
 
           <div className="mb-8 grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5 shadow-lg shadow-slate-950/20 transition-transform duration-300 hover:-translate-y-1">
               <p className="text-sm font-bold text-emerald-300">Mehr Klarheit</p>
               <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>Schnell sehen, was sich fuer dich lohnt.</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5 shadow-lg shadow-slate-950/20 transition-transform duration-300 hover:-translate-y-1 md:translate-y-6">
               <p className="text-sm font-bold text-emerald-300">Weniger Recherche</p>
               <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>Weniger Tabs, schneller zum naechsten Schritt.</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5 shadow-lg shadow-slate-950/20 transition-transform duration-300 hover:-translate-y-1 md:-translate-y-4">
               <p className="text-sm font-bold text-emerald-300">Schneller Umsatzpfad</p>
               <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>Direkt zu den stärksten Klickpfaden.</p>
             </div>
@@ -241,20 +261,16 @@ export default async function Home() {
       <TestimonialsSection />
 
       {/* Unique Value Proposition - Einzigartig */}
-      <section
-        className="py-24"
-        style={{
-          background: "linear-gradient(180deg, #0f172a 0%, #111827 100%)",
-        }}
-      >
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4" style={{ color: "#f8fafc" }}>
+        <section className="py-24">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="mb-16 max-w-3xl">
+            <p className="mb-4 text-xs font-bold uppercase tracking-[0.28em] text-violet-300/80">Warum Nexmoneta</p>
+            <h2 className="display-heading text-4xl font-black text-white sm:text-5xl md:text-6xl">
               🚀 {t("uniqueTitle")}
             </h2>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="p-8 rounded-xl" style={{ background: "rgba(30, 64, 175, 0.28)", border: "1px solid rgba(96, 165, 250, 0.45)", backdropFilter: "blur(10px)" }}>
+          <div className="grid gap-8 md:grid-cols-3">
+            <div className="rounded-[2rem] border border-cyan-400/20 bg-cyan-500/10 p-8 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 md:translate-y-8">
               <div className="text-4xl mb-4">🤖</div>
               <h3 className="text-2xl font-bold mb-2" style={{ color: "#f8fafc" }}>{t("uniqueAi")}</h3>
               <p className="leading-7" style={{ color: "#dbeafe" }}>
@@ -262,7 +278,7 @@ export default async function Home() {
               </p>
             </div>
 
-            <div className="p-8 rounded-xl" style={{ background: "rgba(5, 150, 105, 0.26)", border: "1px solid rgba(74, 222, 128, 0.45)", backdropFilter: "blur(10px)" }}>
+            <div className="rounded-[2rem] border border-emerald-400/20 bg-emerald-500/10 p-8 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1">
               <div className="text-4xl mb-4">📊</div>
               <h3 className="text-2xl font-bold mb-2" style={{ color: "#f8fafc" }}>{t("uniqueRoi")}</h3>
               <p className="leading-7" style={{ color: "#dcfce7" }}>
@@ -270,7 +286,7 @@ export default async function Home() {
               </p>
             </div>
 
-            <div className="p-8 rounded-xl" style={{ background: "rgba(91, 33, 182, 0.28)", border: "1px solid rgba(196, 181, 253, 0.45)", backdropFilter: "blur(10px)" }}>
+            <div className="rounded-[2rem] border border-violet-400/20 bg-violet-500/10 p-8 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 md:-translate-y-8">
               <div className="text-4xl mb-4">⚡</div>
               <h3 className="text-2xl font-bold mb-2" style={{ color: "#f8fafc" }}>{t("uniqueAutomation")}</h3>
               <p className="leading-7" style={{ color: "#ede9fe" }}>
@@ -279,34 +295,34 @@ export default async function Home() {
             </div>
           </div>
         </div>
-      </section>
+        </section>
 
       {/* Latest Articles */}
-      <section className="py-24" style={{ background: "linear-gradient(135deg, var(--background) 0%, var(--background-alt) 100%)" }}>
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4" style={{ color: "var(--text-dark)" }}>
+        <section className="py-24">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="mb-16 max-w-3xl">
+            <p className="mb-4 text-xs font-bold uppercase tracking-[0.28em] text-amber-300/80">Neuer Content</p>
+            <h2 className="display-heading text-4xl font-black text-white sm:text-5xl md:text-6xl">
               📝 {t("latestArticlesTitle")}
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid gap-8 md:grid-cols-3">
             {articles.slice(0, 3).map((article) => (
               <Link
                 key={article.id}
                 href={article.slug ? `/blog/${article.slug}` : "#"}
-                className="group rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl"
-                style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}
+                className="group overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 transition-all duration-300 hover:-translate-y-1 hover:border-amber-300/30 hover:bg-white/10"
               >
-                <div className="h-2 bg-gradient-to-r from-blue-500 to-green-500" />
+                <div className="h-2 bg-gradient-to-r from-cyan-400 via-emerald-400 to-violet-400" />
                 <div className="p-6">
-                  <h3 className="text-xl font-bold mb-2 group-hover:text-blue-400 transition-colors" style={{ color: "var(--text-dark)" }}>
+                  <h3 className="text-xl font-bold mb-2 transition-colors group-hover:text-cyan-300" style={{ color: "var(--text-dark)" }}>
                     {article.title}
                   </h3>
                   <p className="mb-4 leading-7" style={{ color: "var(--text-light)" }}>
                     {article.content.substring(0, 100)}...
                   </p>
-                  <div className="flex items-center gap-2 text-blue-400 font-semibold group-hover:translate-x-1 transition-transform">
+                  <div className="flex items-center gap-2 font-semibold text-cyan-300 transition-transform group-hover:translate-x-1">
                     {t("articleReadMore")}
                   </div>
                 </div>
@@ -336,12 +352,13 @@ export default async function Home() {
       <FAQSection />
 
       {/* Final CTA */}
-      <section className="py-24 bg-gradient-to-r from-slate-900 to-slate-800 text-white">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+        <section className="py-24 text-white">
+        <div className="mx-auto max-w-4xl rounded-[2.5rem] border border-white/10 bg-white/6 px-4 py-12 text-center backdrop-blur-2xl sm:px-8">
+          <p className="mb-4 text-xs font-bold uppercase tracking-[0.28em] text-cyan-300/80">Letzter Schritt</p>
+          <h2 className="display-heading text-4xl font-black md:text-5xl">
             {t("finalTitle")}
           </h2>
-          <p className="text-xl leading-8 mb-8" style={{ color: "#e2e8f0" }}>
+          <p className="mx-auto mb-8 mt-6 max-w-2xl text-xl leading-8 text-slate-200">
             {t("finalSubtitle")}
           </p>
           <div className="flex flex-col items-center gap-4">
