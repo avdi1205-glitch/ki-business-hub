@@ -138,3 +138,26 @@ You are money-ready when all 3 are true:
 1. Affiliate network shows tracked clicks/conversions under your account.
 2. AdSense account is approved and ad impressions are visible.
 3. Pro/Agency checkout links redirect to live checkout and can complete payment.
+
+## Today: 5 Quick Steps
+
+If you only do five things today, do these in order:
+
+1. Set live checkout links in Vercel:
+	- `PRO_CHECKOUT_URL=...`
+	- `AGENCY_CHECKOUT_URL=...`
+2. Set AdSense production variables:
+	- `GOOGLE_ADSENSE_ID`, `NEXT_PUBLIC_ADSENSE_ID`, `NEXT_PUBLIC_ADSENSE_ENABLED=true`, plus slots
+3. Redeploy production once after saving all variables.
+4. Run two checkout tests on production:
+	- `/api/checkout?plan=pro&source=today-check`
+	- `/api/checkout?plan=agency&source=today-check`
+5. Click one affiliate link yourself and verify it appears in both:
+	- app stats (internal tracking)
+	- partner dashboard (real payout source)
+
+Done means:
+
+- Checkout redirects to live payment pages
+- Ads render on blog/article pages
+- Affiliate clicks are visible in partner program
