@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CheckoutRescueLeadForm from "./CheckoutRescueLeadForm";
 
 type SearchValue = string | string[] | undefined;
 
@@ -233,6 +234,22 @@ export default async function KontaktPage({
                 <p>1. Standardfragen werden schnell vorqualifiziert, damit Umsatz-Themen nicht in allgemeinem Support untergehen.</p>
                 <p>2. Billing, Account-Faelle, Bugs und planbezogene Rueckfragen gehen direkt in die menschliche Bearbeitung.</p>
                 <p>3. Aktive Pro- und Agency-Nutzer werden bei dringenden Blockern priorisiert weitergezogen.</p>
+              </div>
+            </div>
+
+            <div className="rounded-[2rem] border border-emerald-300/20 bg-emerald-500/10 p-6">
+              <h2 className="text-2xl font-black" style={{ color: "var(--text-dark)" }}>Schnelle Rueckmeldung</h2>
+              <p className="mt-3 text-sm leading-7" style={{ color: "var(--text-light)" }}>
+                Wenn du keine Mail verfassen willst, hinterlasse hier deine Adresse. Wir speichern Quelle und Plan-Kontext automatisch,
+                damit du eine passende Antwort statt Standard-Text bekommst.
+              </p>
+              <div className="mt-4">
+                <CheckoutRescueLeadForm
+                  plan={plan}
+                  source={source}
+                  intent={intent}
+                  reason={reason}
+                />
               </div>
             </div>
 

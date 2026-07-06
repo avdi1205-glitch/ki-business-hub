@@ -13,6 +13,13 @@ function prettifyKey(key: string, isEn: boolean) {
   if (key.startsWith("blog-") && key.endsWith("-mid")) return `Blog Mid CTA: ${key.replace("blog-", "").replace("-mid", "")}`;
   if (key.startsWith("blog-") && key.endsWith("-grid")) return `Blog Tool Grid: ${key.replace("blog-", "").replace("-grid", "")}`;
   if (key.startsWith("blog-")) return `Blog: ${key.replace("blog-", "")}`;
+  if (key.startsWith("checkout-rescue:")) {
+    const [, plan = "unknown", intent = "contact", reason = "none", source = "website"] = key.split(":");
+    const humanSource = source.replaceAll("-", " ");
+    return isEn
+      ? `Checkout rescue - ${plan.toUpperCase()} - ${humanSource} (${intent}/${reason})`
+      : `Checkout Rescue - ${plan.toUpperCase()} - ${humanSource} (${intent}/${reason})`;
+  }
   return key;
 }
 
@@ -34,7 +41,7 @@ export default async function Stats() {
   const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
   const nextMonthStart = new Date(now.getFullYear(), now.getMonth() + 1, 1);
 
-  const [monthClicks, lastMonthClicks, subscribers, allArticles, topAffiliates] = await Promise.all([
+  const [monthClicks, lastMonthClicks, subscribers, checkoutRescueLeads, allArticles, topAffiliates] = await Promise.all([
     prisma.affiliateClick.findMany({
       where: { createdAt: { gte: monthStart, lt: nextMonthStart } },
     }),
@@ -43,6 +50,13 @@ export default async function Stats() {
     }),
     prisma.newsletterSubscriber.findMany({
       where: { status: "subscribed" },
+      select: { source: true },
+    }),
+    prisma.newsletterSubscriber.findMany({
+      where: {
+        status: "lead",
+        createdAt: { gte: monthStart, lt: nextMonthStart },
+      },
       select: { source: true },
     }),
     prisma.article.findMany({
@@ -69,6 +83,16 @@ export default async function Stats() {
   const topLeadSources = Object.entries(sourceBreakdown)
     .sort((left, right) => right[1] - left[1])
     .slice(0, 4);
+
+  const rescueLeadSourceBreakdown = checkoutRescueLeads.reduce<Record<string, number>>((accumulator, lead) => {
+    const key = lead.source || "unknown";
+    accumulator[key] = (accumulator[key] || 0) + 1;
+    return accumulator;
+  }, {});
+
+  const topRescueLeadSources = Object.entries(rescueLeadSourceBreakdown)
+    .sort((left, right) => right[1] - left[1])
+    .slice(0, 5);
 
   const pageClickBreakdown = monthClicks.reduce<Record<string, { clicks: number; revenue: number }>>((accumulator, click) => {
     const key = click.source || click.articleSlug || "unknown";
@@ -125,7 +149,7 @@ export default async function Stats() {
             : "Echte Kennzahlen für Umsatz, Klicks, Leads und Content-Output."}
         </p>
 
-        <div className="mt-12 grid gap-8 md:grid-cols-4">
+        <div className="mt-12 grid gap-8 md:grid-cols-5">
           <div className="rounded-2xl p-8" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
             <h2 className="text-xl font-bold">{isEn ? "🔗 Affiliate clicks" : "🔗 Affiliate Klicks"}</h2>
             <p className="mt-4 text-4xl font-bold">{monthClicks.length}</p>
@@ -142,6 +166,14 @@ export default async function Stats() {
             <h2 className="text-xl font-bold">📧 Subscriber</h2>
             <p className="mt-4 text-4xl font-bold">{subscribers.length}</p>
             <p style={{ color: "var(--text-light)" }}>{isEn ? "Top source" : "Top Quelle"}: {topLeadSources[0] ? prettifyKey(topLeadSources[0][0], isEn) : "-"}</p>
+          </div>
+
+          <div className="rounded-2xl p-8" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
+            <h2 className="text-xl font-bold">🛟 {isEn ? "Checkout leads" : "Checkout-Leads"}</h2>
+            <p className="mt-4 text-4xl font-bold">{checkoutRescueLeads.length}</p>
+            <p style={{ color: "var(--text-light)" }}>
+              {isEn ? "Top rescue source" : "Top Rescue-Quelle"}: {topRescueLeadSources[0] ? prettifyKey(topRescueLeadSources[0][0], isEn) : "-"}
+            </p>
           </div>
 
           <div className="rounded-2xl p-8" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
@@ -233,6 +265,24 @@ export default async function Stats() {
             </div>
           </section>
         </div>
+
+        <section className="mt-8 rounded-2xl p-8" style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}>
+          <h2 className="mb-6 text-2xl font-bold">{isEn ? "🛟 Checkout rescue sources" : "🛟 Checkout-Rescue-Quellen"}</h2>
+          <div className="space-y-4">
+            {topRescueLeadSources.length === 0 ? (
+              <p style={{ color: "var(--text-light)" }}>
+                {isEn ? "No checkout rescue leads yet." : "Noch keine Checkout-Rescue-Leads vorhanden."}
+              </p>
+            ) : (
+              topRescueLeadSources.map(([source, count]) => (
+                <div key={source} className="flex items-center justify-between rounded-xl p-4" style={{ background: "rgba(34, 197, 94, 0.08)", border: "1px solid rgba(34, 197, 94, 0.2)" }}>
+                  <span style={{ color: "var(--text-light)" }}>{prettifyKey(source, isEn)}</span>
+                  <span className="font-bold">{count}</span>
+                </div>
+              ))
+            )}
+          </div>
+        </section>
       </div>
     </main>
   );
