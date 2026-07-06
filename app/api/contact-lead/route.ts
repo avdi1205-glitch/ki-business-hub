@@ -45,7 +45,7 @@ export async function POST(request: Request) {
         data: {
           name: normalizedName,
           source: leadSource,
-          status: keepSubscribed ? "subscribed" : "lead",
+          status: keepSubscribed ? "subscribed" : "lead_new",
         },
       });
     } else {
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
           email: normalizedEmail,
           name: normalizedName,
           source: leadSource,
-          status: "lead",
+          status: "lead_new",
         },
       });
     }

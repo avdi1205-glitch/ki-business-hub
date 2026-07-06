@@ -8,6 +8,8 @@ type ParsedRescueSource = {
   source: string;
 };
 
+type LeadWorkflowStatus = "lead" | "lead_new" | "lead_contacted" | "lead_won" | "lead_lost";
+
 function parseRescueSource(raw: string | null): ParsedRescueSource {
   const fallback: ParsedRescueSource = {
     plan: "unknown",
@@ -46,6 +48,26 @@ function prettyReason(reason: string) {
   return reason.replaceAll("_", " ");
 }
 
+function prettyStatus(status: LeadWorkflowStatus) {
+  if (status === "lead_won") return "Gewonnen";
+  if (status === "lead_lost") return "Verloren";
+  if (status === "lead_contacted") return "Kontaktiert";
+  return "Neu";
+}
+
+function statusClassName(status: LeadWorkflowStatus) {
+  if (status === "lead_won") {
+    return "border-emerald-400/35 bg-emerald-500/12 text-emerald-100";
+  }
+  if (status === "lead_lost") {
+    return "border-rose-400/35 bg-rose-500/12 text-rose-100";
+  }
+  if (status === "lead_contacted") {
+    return "border-cyan-400/35 bg-cyan-500/12 text-cyan-100";
+  }
+  return "border-amber-400/35 bg-amber-500/12 text-amber-100";
+}
+
 export default async function CheckoutRescueAdminPage() {
   const now = new Date();
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -55,7 +77,7 @@ export default async function CheckoutRescueAdminPage() {
   const [recentLeads, monthLeadsCount, weekLeadsCount] = await Promise.all([
     prisma.newsletterSubscriber.findMany({
       where: {
-        status: "lead",
+        status: { startsWith: "lead" },
         source: { startsWith: "checkout-rescue:" },
       },
       orderBy: { createdAt: "desc" },
@@ -64,20 +86,21 @@ export default async function CheckoutRescueAdminPage() {
         id: true,
         email: true,
         name: true,
+        status: true,
         source: true,
         createdAt: true,
       },
     }),
     prisma.newsletterSubscriber.count({
       where: {
-        status: "lead",
+        status: { startsWith: "lead" },
         source: { startsWith: "checkout-rescue:" },
         createdAt: { gte: monthStart },
       },
     }),
     prisma.newsletterSubscriber.count({
       where: {
-        status: "lead",
+        status: { startsWith: "lead" },
         source: { startsWith: "checkout-rescue:" },
         createdAt: { gte: weekStart },
       },
@@ -119,6 +142,18 @@ export default async function CheckoutRescueAdminPage() {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 6);
 
+  const stageBreakdown = parsed.reduce<Record<LeadWorkflowStatus, number>>((acc, lead) => {
+    const stage = (lead.status as LeadWorkflowStatus) || "lead_new";
+    acc[stage] = (acc[stage] || 0) + 1;
+    return acc;
+  }, {
+    lead: 0,
+    lead_new: 0,
+    lead_contacted: 0,
+    lead_won: 0,
+    lead_lost: 0,
+  });
+
   return (
     <main className="min-h-screen px-6 py-10" style={{ background: "var(--background)", color: "var(--text-dark)" }}>
       <div className="mx-auto max-w-7xl space-y-8">
@@ -138,7 +173,7 @@ export default async function CheckoutRescueAdminPage() {
           </div>
         </div>
 
-        <section className="grid gap-6 md:grid-cols-4">
+        <section className="grid gap-6 md:grid-cols-5">
           <div className="rounded-2xl border p-6" style={{ background: "rgba(16,185,129,0.08)", borderColor: "rgba(16,185,129,0.3)" }}>
             <p className="text-sm" style={{ color: "var(--success-light)" }}>Leads gesamt</p>
             <p className="mt-2 text-4xl font-black">{recentLeads.length}</p>
@@ -155,6 +190,13 @@ export default async function CheckoutRescueAdminPage() {
             <p className="text-sm" style={{ color: "var(--premium-light)" }}>Top Plan</p>
             <p className="mt-2 text-2xl font-black uppercase">{topPlans[0]?.[0] || "-"}</p>
             <p className="mt-1 text-xs" style={{ color: "var(--text-light)" }}>{topPlans[0] ? `${topPlans[0][1]} Leads` : "Keine Daten"}</p>
+          </div>
+          <div className="rounded-2xl border p-6" style={{ background: "rgba(34,197,94,0.08)", borderColor: "rgba(34,197,94,0.3)" }}>
+            <p className="text-sm" style={{ color: "var(--success-light)" }}>Gewonnen</p>
+            <p className="mt-2 text-4xl font-black">{stageBreakdown.lead_won}</p>
+            <p className="mt-1 text-xs" style={{ color: "var(--text-light)" }}>
+              Offen: {stageBreakdown.lead + stageBreakdown.lead_new + stageBreakdown.lead_contacted}
+            </p>
           </div>
         </section>
 
@@ -222,12 +264,14 @@ export default async function CheckoutRescueAdminPage() {
                     <th className="pb-3">Kontakt</th>
                     <th className="pb-3">Plan</th>
                     <th className="pb-3">Quelle</th>
+                    <th className="pb-3">Status</th>
                     <th className="pb-3">Grund</th>
                     <th className="pb-3">Aktion</th>
                   </tr>
                 </thead>
                 <tbody>
                   {parsed.map((lead) => {
+                    const workflowStatus = (lead.status as LeadWorkflowStatus) || "lead_new";
                     const mailSubject = encodeURIComponent(`Rescue Lead ${lead.parsed.plan.toUpperCase()} - ${prettySource(lead.parsed.source)}`);
                     const mailBody = encodeURIComponent([
                       `Lead-ID: ${lead.id}`,
@@ -248,14 +292,54 @@ export default async function CheckoutRescueAdminPage() {
                         </td>
                         <td className="py-3 uppercase" style={{ color: "var(--text-dark)" }}>{lead.parsed.plan}</td>
                         <td className="py-3" style={{ color: "var(--text-light)" }}>{prettySource(lead.parsed.source)}</td>
+                        <td className="py-3">
+                          <span className={`inline-flex rounded-md border px-2 py-1 text-xs font-semibold ${statusClassName(workflowStatus)}`}>
+                            {prettyStatus(workflowStatus)}
+                          </span>
+                        </td>
                         <td className="py-3" style={{ color: "var(--text-light)" }}>{prettyReason(lead.parsed.reason)}</td>
                         <td className="py-3">
-                          <Link
-                            href={`mailto:${lead.email}?subject=${mailSubject}&body=${mailBody}`}
-                            className="inline-flex rounded-lg border border-cyan-400/30 bg-cyan-500/10 px-3 py-1.5 font-semibold text-cyan-100 hover:bg-cyan-500/20"
-                          >
-                            Antworten
-                          </Link>
+                          <div className="flex flex-wrap gap-2">
+                            <Link
+                              href={`mailto:${lead.email}?subject=${mailSubject}&body=${mailBody}`}
+                              className="inline-flex rounded-lg border border-cyan-400/30 bg-cyan-500/10 px-3 py-1.5 font-semibold text-cyan-100 hover:bg-cyan-500/20"
+                            >
+                              Antworten
+                            </Link>
+
+                            {workflowStatus !== "lead_contacted" && workflowStatus !== "lead_won" && workflowStatus !== "lead_lost" && (
+                              <form action="/api/contact-lead/status" method="post">
+                                <input type="hidden" name="leadId" value={lead.id} />
+                                <input type="hidden" name="status" value="lead_contacted" />
+                                <input type="hidden" name="redirectTo" value="/admin/checkout-rescue" />
+                                <button type="submit" className="inline-flex rounded-lg border border-cyan-400/30 bg-cyan-500/10 px-3 py-1.5 font-semibold text-cyan-100 hover:bg-cyan-500/20">
+                                  Kontaktiert
+                                </button>
+                              </form>
+                            )}
+
+                            {workflowStatus !== "lead_won" && (
+                              <form action="/api/contact-lead/status" method="post">
+                                <input type="hidden" name="leadId" value={lead.id} />
+                                <input type="hidden" name="status" value="lead_won" />
+                                <input type="hidden" name="redirectTo" value="/admin/checkout-rescue" />
+                                <button type="submit" className="inline-flex rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-1.5 font-semibold text-emerald-100 hover:bg-emerald-500/20">
+                                  Gewonnen
+                                </button>
+                              </form>
+                            )}
+
+                            {workflowStatus !== "lead_lost" && (
+                              <form action="/api/contact-lead/status" method="post">
+                                <input type="hidden" name="leadId" value={lead.id} />
+                                <input type="hidden" name="status" value="lead_lost" />
+                                <input type="hidden" name="redirectTo" value="/admin/checkout-rescue" />
+                                <button type="submit" className="inline-flex rounded-lg border border-rose-400/30 bg-rose-500/10 px-3 py-1.5 font-semibold text-rose-100 hover:bg-rose-500/20">
+                                  Verloren
+                                </button>
+                              </form>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     );

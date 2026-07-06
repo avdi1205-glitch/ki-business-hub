@@ -62,7 +62,7 @@ export default async function DashboardPage() {
 
     rescueLeadCount = await prisma.newsletterSubscriber.count({
       where: {
-        status: "lead",
+        status: { startsWith: "lead" },
         source: { startsWith: "checkout-rescue:" },
       },
     });

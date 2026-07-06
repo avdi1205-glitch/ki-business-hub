@@ -54,7 +54,7 @@ export default async function Stats() {
     }),
     prisma.newsletterSubscriber.findMany({
       where: {
-        status: "lead",
+        status: { startsWith: "lead" },
         createdAt: { gte: monthStart, lt: nextMonthStart },
       },
       select: { source: true },
