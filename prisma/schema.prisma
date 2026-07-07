@@ -142,3 +142,30 @@ model InternalBotRun {
   @@index([favorite, createdAt(sort: Desc)])
   @@index([recurringTaskKey])
 }
+
+model CustomerEntitlement {
+  id               Int      @id @default(autoincrement())
+  email            String
+  plan             String
+  status           String   @default("active")
+  stripeCustomerId String?
+  stripeSessionId  String?  @unique
+  source           String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+}
+
+model CustomerLoginToken {
+  id        Int      @id @default(autoincrement())
+  email     String
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([expiresAt])
+}

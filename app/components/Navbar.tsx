@@ -6,7 +6,13 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import LanguageSwitcher from "./LanguageSwitcher";
 
-export default function Navbar({ isAdminAuthenticated }: { isAdminAuthenticated: boolean }) {
+export default function Navbar({
+  isAdminAuthenticated,
+  isCustomerAuthenticated,
+}: {
+  isAdminAuthenticated: boolean;
+  isCustomerAuthenticated: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const pathname = usePathname();
@@ -21,6 +27,7 @@ export default function Navbar({ isAdminAuthenticated }: { isAdminAuthenticated:
     { href: "/tools", label: t("tools") },
     { href: "/beste-tools", label: t("bestTools") },
     { href: "/affiliate", label: t("affiliate") },
+    { href: "/konto", label: t("account") },
   ];
 
   const adminLinks = [
@@ -122,6 +129,15 @@ export default function Navbar({ isAdminAuthenticated }: { isAdminAuthenticated:
                 className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95"
               >
                 {t("adminLogin")}
+              </Link>
+            )}
+
+            {!isCustomerAuthenticated && (
+              <Link
+                href="/konto/login"
+                className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95"
+              >
+                {t("account")}
               </Link>
             )}
 
@@ -259,6 +275,16 @@ export default function Navbar({ isAdminAuthenticated }: { isAdminAuthenticated:
                   className="mt-6 block rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-base font-semibold text-slate-200 transition-all hover:bg-white/10"
                 >
                   {t("adminLogin")}
+                </Link>
+              )}
+
+              {!isCustomerAuthenticated && (
+                <Link
+                  href="/konto/login"
+                  onClick={() => setOpen(false)}
+                  className="mt-3 block rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-base font-semibold text-slate-200 transition-all hover:bg-white/10"
+                >
+                  {t("account")}
                 </Link>
               )}
             </div>

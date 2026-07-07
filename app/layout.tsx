@@ -10,6 +10,7 @@ import { SocialProof } from "./components/SocialProof";
 import { getSiteUrl } from "../lib/site-url";
 import { toAdClientId } from "../lib/adsense";
 import { isAdminSessionAuthenticated } from "@/lib/admin-auth";
+import { isCustomerSessionAuthenticated } from "@/lib/customer-auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -88,6 +89,7 @@ export default async function RootLayout({
   const locale = await getLocale();
   const messages = await getMessages();
   const isAdminAuthenticated = await isAdminSessionAuthenticated();
+  const isCustomerAuthenticated = await isCustomerSessionAuthenticated();
 
   return (
     <html
@@ -171,7 +173,7 @@ gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
       </head>
       <body className="min-h-full" style={{ background: "var(--background)", color: "var(--text-dark)" }}>
         <NextIntlClientProvider messages={messages}>
-          <Navbar isAdminAuthenticated={isAdminAuthenticated} />
+          <Navbar isAdminAuthenticated={isAdminAuthenticated} isCustomerAuthenticated={isCustomerAuthenticated} />
           {children}
           <ExitIntentPopup />
           <SocialProof />
