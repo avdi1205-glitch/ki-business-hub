@@ -3,6 +3,9 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin();
 
+const buildWorkers = Number.parseInt(process.env.NEXT_BUILD_CPUS ?? "2", 10);
+const normalizedBuildWorkers = Number.isFinite(buildWorkers) && buildWorkers > 0 ? buildWorkers : 2;
+
 const nextConfig: NextConfig = {
   // Image Optimization
   images: {
@@ -17,6 +20,13 @@ const nextConfig: NextConfig = {
 
   // Performance
   compress: true,
+
+  experimental: {
+    // Keep build concurrency conservative to prevent worker OOM on smaller machines/CI.
+    cpus: normalizedBuildWorkers,
+    memoryBasedWorkersCount: true,
+    webpackMemoryOptimizations: true,
+  },
 
   // Security Headers
   async headers() {

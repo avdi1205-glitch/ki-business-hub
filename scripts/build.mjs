@@ -2,10 +2,11 @@ import { spawnSync } from "node:child_process";
 
 const env = { ...process.env };
 const isVercel = env.VERCEL === "1";
+const maxOldSpaceSize = env.BUILD_MAX_OLD_SPACE_SIZE ?? "6144";
 
 const nodeOptions = env.NODE_OPTIONS ?? "";
 if (!nodeOptions.includes("--max-old-space-size")) {
-  env.NODE_OPTIONS = `${nodeOptions} --max-old-space-size=4096`.trim();
+  env.NODE_OPTIONS = `${nodeOptions} --max-old-space-size=${maxOldSpaceSize}`.trim();
 }
 
 if (!env.DIRECT_URL && env.DATABASE_URL) {
