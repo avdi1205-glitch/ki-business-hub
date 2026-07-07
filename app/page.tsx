@@ -222,6 +222,43 @@ export default async function Home() {
           </div>
         </section>
 
+      {/* Unique Value Proposition - Einzigartig */}
+        <section className="py-24 animate-fadeInUp" style={{ animationDelay: "120ms" }}>
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="mb-16 max-w-3xl">
+            <p className="mb-4 text-xs font-bold uppercase tracking-[0.28em] text-violet-300/80">Warum Nexmoneta</p>
+            <h2 className="display-heading text-4xl font-black text-white sm:text-5xl md:text-6xl">
+              🚀 {t("uniqueTitle")}
+            </h2>
+          </div>
+          <div className="grid gap-8 md:grid-cols-3">
+            <div className="rounded-[2rem] border border-cyan-400/20 bg-cyan-500/10 p-8 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 md:translate-y-8 animate-fadeInUp" style={{ animationDelay: "80ms" }}>
+              <div className="text-4xl mb-4">🤖</div>
+              <h3 className="text-2xl font-bold mb-2" style={{ color: "#f8fafc" }}>{t("uniqueAi")}</h3>
+              <p className="leading-7" style={{ color: "#dbeafe" }}>
+                {t("uniqueAiText")}
+              </p>
+            </div>
+
+            <div className="rounded-[2rem] border border-emerald-400/20 bg-emerald-500/10 p-8 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 animate-fadeInUp" style={{ animationDelay: "180ms" }}>
+              <div className="text-4xl mb-4">📊</div>
+              <h3 className="text-2xl font-bold mb-2" style={{ color: "#f8fafc" }}>{t("uniqueRoi")}</h3>
+              <p className="leading-7" style={{ color: "#dcfce7" }}>
+                {t("uniqueRoiText")}
+              </p>
+            </div>
+
+            <div className="rounded-[2rem] border border-violet-400/20 bg-violet-500/10 p-8 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 md:-translate-y-8 animate-fadeInUp" style={{ animationDelay: "280ms" }}>
+              <div className="text-4xl mb-4">⚡</div>
+              <h3 className="text-2xl font-bold mb-2" style={{ color: "#f8fafc" }}>{t("uniqueAutomation")}</h3>
+              <p className="leading-7" style={{ color: "#ede9fe" }}>
+                {t("uniqueAutomationText")}
+              </p>
+            </div>
+          </div>
+        </div>
+        </section>
+
       {/* Top Tools Section */}
         <section className="py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-4">
@@ -261,43 +298,6 @@ export default async function Home() {
       <div className="animate-fadeInUp">
         <TestimonialsSection />
       </div>
-
-      {/* Unique Value Proposition - Einzigartig */}
-        <section className="py-24 animate-fadeInUp" style={{ animationDelay: "120ms" }}>
-        <div className="mx-auto max-w-6xl px-4">
-          <div className="mb-16 max-w-3xl">
-            <p className="mb-4 text-xs font-bold uppercase tracking-[0.28em] text-violet-300/80">Warum Nexmoneta</p>
-            <h2 className="display-heading text-4xl font-black text-white sm:text-5xl md:text-6xl">
-              🚀 {t("uniqueTitle")}
-            </h2>
-          </div>
-          <div className="grid gap-8 md:grid-cols-3">
-            <div className="rounded-[2rem] border border-cyan-400/20 bg-cyan-500/10 p-8 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 md:translate-y-8 animate-fadeInUp" style={{ animationDelay: "80ms" }}>
-              <div className="text-4xl mb-4">🤖</div>
-              <h3 className="text-2xl font-bold mb-2" style={{ color: "#f8fafc" }}>{t("uniqueAi")}</h3>
-              <p className="leading-7" style={{ color: "#dbeafe" }}>
-                {t("uniqueAiText")}
-              </p>
-            </div>
-
-            <div className="rounded-[2rem] border border-emerald-400/20 bg-emerald-500/10 p-8 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 animate-fadeInUp" style={{ animationDelay: "180ms" }}>
-              <div className="text-4xl mb-4">📊</div>
-              <h3 className="text-2xl font-bold mb-2" style={{ color: "#f8fafc" }}>{t("uniqueRoi")}</h3>
-              <p className="leading-7" style={{ color: "#dcfce7" }}>
-                {t("uniqueRoiText")}
-              </p>
-            </div>
-
-            <div className="rounded-[2rem] border border-violet-400/20 bg-violet-500/10 p-8 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 md:-translate-y-8 animate-fadeInUp" style={{ animationDelay: "280ms" }}>
-              <div className="text-4xl mb-4">⚡</div>
-              <h3 className="text-2xl font-bold mb-2" style={{ color: "#f8fafc" }}>{t("uniqueAutomation")}</h3>
-              <p className="leading-7" style={{ color: "#ede9fe" }}>
-                {t("uniqueAutomationText")}
-              </p>
-            </div>
-          </div>
-        </div>
-        </section>
 
       {/* Latest Articles */}
         <section className="py-24 animate-fadeInUp" style={{ animationDelay: "220ms" }}>

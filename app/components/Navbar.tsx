@@ -153,10 +153,26 @@ export default function Navbar({ isAdminAuthenticated }: { isAdminAuthenticated:
 
             <button
               onClick={() => setOpen(!open)}
-              className="rounded-lg border border-white/20 bg-white/5 backdrop-blur-md px-3 py-2.5 text-xl font-bold text-slate-100 hover:bg-white/10 transition-all active:scale-95"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/20 bg-white/5 text-slate-100 backdrop-blur-md transition-all hover:bg-white/10 active:scale-95"
               aria-label={t("openMenu")}
+              aria-expanded={open}
+              aria-controls="mobile-menu-panel"
             >
-              ☰
+              <span className="sr-only">{t("openMenu")}</span>
+              <span className="relative block h-4 w-5">
+                <span
+                  className="absolute left-0 top-0 h-0.5 w-5 rounded-full bg-current transition-all duration-200"
+                  style={{ transform: open ? "translateY(7px) rotate(45deg)" : "none" }}
+                />
+                <span
+                  className="absolute left-0 top-[7px] h-0.5 w-5 rounded-full bg-current transition-all duration-200"
+                  style={{ opacity: open ? 0 : 1 }}
+                />
+                <span
+                  className="absolute left-0 top-[14px] h-0.5 w-5 rounded-full bg-current transition-all duration-200"
+                  style={{ transform: open ? "translateY(-7px) rotate(-45deg)" : "none" }}
+                />
+              </span>
             </button>
           </div>
         </div>
@@ -169,6 +185,7 @@ export default function Navbar({ isAdminAuthenticated }: { isAdminAuthenticated:
 
           {/* Mobile Menu */}
           <div
+            id="mobile-menu-panel"
             className="fixed right-0 top-0 z-50 h-screen w-80 max-w-[90vw] overflow-y-auto lg:hidden"
             style={{
               background: "linear-gradient(180deg, rgba(15,23,42,0.98) 0%, rgba(15,23,42,0.94) 100%)",
@@ -180,7 +197,7 @@ export default function Navbar({ isAdminAuthenticated }: { isAdminAuthenticated:
               <h2 className="text-lg font-bold text-white">Menu</h2>
               <button
                 onClick={() => setOpen(false)}
-                className="rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-xl font-bold text-slate-100 hover:bg-white/10 transition-all"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/20 bg-white/5 text-2xl font-bold text-slate-100 transition-all hover:bg-white/10"
                 aria-label="Close menu"
               >
                 ✕
