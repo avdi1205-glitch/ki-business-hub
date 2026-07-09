@@ -175,6 +175,16 @@ gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
         <NextIntlClientProvider messages={messages}>
           <Navbar isAdminAuthenticated={isAdminAuthenticated} isCustomerAuthenticated={isCustomerAuthenticated} />
           {children}
+          <footer className="border-t border-white/10 bg-slate-950/50 px-4 py-8 sm:px-6">
+            <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-sm text-slate-300 sm:flex-row">
+              <p>Nexmoneta</p>
+              <nav className="flex flex-wrap items-center gap-4">
+                <a href="/kontakt" className="transition hover:text-white">Kontakt</a>
+                <a href="/impressum" className="transition hover:text-white">Impressum</a>
+                <a href="/datenschutz" className="transition hover:text-white">Datenschutz</a>
+              </nav>
+            </div>
+          </footer>
           <ExitIntentPopup />
           <SocialProof />
         </NextIntlClientProvider>
