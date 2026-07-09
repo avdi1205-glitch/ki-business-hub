@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: TypeScript + Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      # Provide dummy values so the build can run without a real database.
+      DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+      DIRECT_URL: postgresql://ci:ci@localhost:5432/ci
+      # Prevent Prisma migrate from running during CI build.
+      RUN_PRISMA_MIGRATIONS: "0"
+      # Give the Next.js worker enough memory (mirrors local build script).
+      BUILD_MAX_OLD_SPACE_SIZE: "6144"
+      NODE_OPTIONS: --max-old-space-size=6144
+      # Required env vars with safe dummy values so Next.js can compile.
+      NEXT_PUBLIC_SITE_URL: https://nexmoneta.com
+      ADMIN_BASIC_USER: ci
+      ADMIN_BASIC_PASSWORD: ci
+      CUSTOMER_SESSION_SECRET: ci-secret-32-chars-minimum-padded
+      NEXT_PUBLIC_ADSENSE_ENABLED: "false"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: TypeScript check
+        run: npx tsc --noEmit
+
+      - name: Build
+        run: npm run build
