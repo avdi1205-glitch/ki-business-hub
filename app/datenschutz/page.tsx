@@ -3,6 +3,7 @@ import { getLocale } from "next-intl/server";
 export default async function DatenschutzPage() {
   const locale = await getLocale();
   const isEn = locale === "en";
+  const supportEmail = "kontakt@nexmoneta.com";
 
   return (
     <main className="min-h-screen p-10" style={{ background: "var(--background)", color: "var(--text-dark)" }}>
@@ -26,7 +27,7 @@ export default async function DatenschutzPage() {
             <p>
               {isEn ? "Your name" : "Dein Name"}<br />
               {isEn ? "Your address" : "Deine Adresse"}<br />
-              deine@email.de
+              {supportEmail}
             </p>
           </div>
 
@@ -61,8 +62,8 @@ export default async function DatenschutzPage() {
 
             <p>
               {isEn
-                ? "If you have questions about privacy, you can contact us by email at any time."
-                : "Wenn du Fragen zum Datenschutz hast, kannst du uns jederzeit per E-Mail kontaktieren."}
+                ? `If you have questions about privacy, you can contact us at ${supportEmail} at any time.`
+                : `Wenn du Fragen zum Datenschutz hast, kannst du uns jederzeit unter ${supportEmail} per E-Mail kontaktieren.`}
             </p>
           </div>
 

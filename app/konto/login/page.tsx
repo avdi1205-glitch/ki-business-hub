@@ -17,6 +17,9 @@ export default async function CustomerLoginPage({
           <p className="mt-3 text-slate-300">
             Gib die E-Mail ein, die du beim Kauf in Stripe verwendet hast. Wir senden dir einen sicheren Login-Link.
           </p>
+          <p className="mt-2 text-sm font-medium text-emerald-300">
+            Die Kauf-E-Mail ist Pflicht, damit dein Zugang automatisch zugeordnet werden kann.
+          </p>
 
           {params.error && (
             <p className="mt-4 rounded-lg border border-amber-400/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">

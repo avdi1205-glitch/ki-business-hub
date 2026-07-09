@@ -3,6 +3,7 @@ import { getLocale } from "next-intl/server";
 export default async function ImpressumPage() {
   const locale = await getLocale();
   const isEn = locale === "en";
+  const supportEmail = "kontakt@nexmoneta.com";
 
   return (
     <main className="min-h-screen p-10" style={{ background: "var(--background)", color: "var(--text-dark)" }}>
@@ -28,7 +29,7 @@ export default async function ImpressumPage() {
 
           <p>
             <strong>Email:</strong><br />
-            deine@email.de
+            {supportEmail}
           </p>
 
           <p>

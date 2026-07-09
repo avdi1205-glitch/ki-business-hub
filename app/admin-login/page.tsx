@@ -1,91 +1,106 @@
 "use client";
 
-import Link from "next/link";
+import { FormEvent, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, useState } from "react";
-import { useTranslations } from "next-intl";
 
 export default function AdminLoginPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const t = useTranslations("adminAuth");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+	const router = useRouter();
+	const searchParams = useSearchParams();
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setSubmitting(true);
-    setError("");
+	const nextPath = useMemo(() => {
+		const raw = searchParams.get("next") || "/admin/dashboard";
+		return raw.startsWith("/") ? raw : "/admin/dashboard";
+	}, [searchParams]);
 
-    const nextPath = searchParams.get("next") || "/admin/dashboard";
+	const [username, setUsername] = useState("");
+	const [password, setPassword] = useState("");
+	const [error, setError] = useState<string | null>(null);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const response = await fetch("/api/admin/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password, nextPath }),
-    });
+	async function onSubmit(event: FormEvent<HTMLFormElement>) {
+		event.preventDefault();
+		setError(null);
+		setIsSubmitting(true);
 
-    if (!response.ok) {
-      setSubmitting(false);
-      setError(t("error"));
-      return;
-    }
+		try {
+			const response = await fetch("/api/admin/login", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ username, password, nextPath }),
+			});
 
-    const payload = (await response.json()) as { nextPath?: string };
-    router.push(payload.nextPath || "/admin/dashboard");
-    router.refresh();
-  }
+			const payload = await response.json().catch(() => ({}));
 
-  return (
-    <main className="min-h-screen bg-slate-950 px-4 py-16 text-slate-100 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-md rounded-[2rem] border border-white/10 bg-white/5 p-8 shadow-2xl shadow-black/30 backdrop-blur-xl">
-        <p className="text-xs font-bold uppercase tracking-[0.28em] text-cyan-300">Admin</p>
-        <h1 className="mt-4 text-3xl font-black text-white">{t("title")}</h1>
-        <p className="mt-3 text-sm leading-6 text-slate-300">{t("subtitle")}</p>
+			if (!response.ok) {
+				const message = typeof payload?.error === "string" ? payload.error : "Login fehlgeschlagen.";
+				setError(message);
+				return;
+			}
 
-        <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
-          <label className="block">
-            <span className="mb-2 block text-sm font-semibold text-slate-200">{t("username")}</span>
-            <input
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
-              className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-slate-100 outline-none transition focus:border-cyan-400/40"
-              autoComplete="username"
-              required
-            />
-          </label>
+			const redirectPath = typeof payload?.nextPath === "string" && payload.nextPath.startsWith("/")
+				? payload.nextPath
+				: nextPath;
 
-          <label className="block">
-            <span className="mb-2 block text-sm font-semibold text-slate-200">{t("password")}</span>
-            <input
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              className="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-slate-100 outline-none transition focus:border-cyan-400/40"
-              autoComplete="current-password"
-              required
-            />
-          </label>
+			router.replace(redirectPath);
+			router.refresh();
+		} catch {
+			setError("Netzwerkfehler. Bitte erneut versuchen.");
+		} finally {
+			setIsSubmitting(false);
+		}
+	}
 
-          {error && <p className="text-sm text-rose-300">{error}</p>}
+	return (
+		<main className="min-h-screen px-6 py-10 sm:px-8 lg:px-10" style={{ background: "var(--background)", color: "var(--text-dark)" }}>
+			<section className="mx-auto w-full max-w-md rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl">
+				<h1 className="text-3xl font-black">Admin Login</h1>
+				<p className="mt-2 text-sm" style={{ color: "var(--text-light)" }}>
+					Melde dich mit deinen Admin-Zugangsdaten an.
+				</p>
 
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full rounded-2xl bg-gradient-to-r from-cyan-400 to-emerald-400 px-4 py-3 font-black text-slate-950 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            {submitting ? t("submitting") : t("submit")}
-          </button>
-        </form>
+				<form className="mt-6 space-y-4" onSubmit={onSubmit}>
+					<label className="block text-sm font-bold" htmlFor="username">
+						Benutzername
+					</label>
+					<input
+						id="username"
+						name="username"
+						autoComplete="username"
+						className="w-full rounded-xl border border-white/15 bg-slate-950/40 px-4 py-3"
+						value={username}
+						onChange={(event) => setUsername(event.target.value)}
+						required
+					/>
 
-        <Link href="/" className="mt-6 inline-block text-sm font-semibold text-slate-300 transition hover:text-white">
-          ← {t("backHome")}
-        </Link>
-      </div>
-    </main>
-  );
+					<label className="block text-sm font-bold" htmlFor="password">
+						Passwort
+					</label>
+					<input
+						id="password"
+						name="password"
+						type="password"
+						autoComplete="current-password"
+						className="w-full rounded-xl border border-white/15 bg-slate-950/40 px-4 py-3"
+						value={password}
+						onChange={(event) => setPassword(event.target.value)}
+						required
+					/>
+
+					{error && (
+						<p className="rounded-xl border border-rose-400/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-100">
+							{error}
+						</p>
+					)}
+
+					<button
+						type="submit"
+						disabled={isSubmitting}
+						className="w-full rounded-xl bg-cyan-500 px-4 py-3 font-black text-white transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:opacity-60"
+					>
+						{isSubmitting ? "Anmeldung..." : "Einloggen"}
+					</button>
+				</form>
+			</section>
+		</main>
+	);
 }

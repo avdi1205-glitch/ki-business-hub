@@ -53,8 +53,13 @@ export default function CheckoutCtaButton({
   }, [href, ctaKey, current.sourceSuffix]);
 
   return (
-    <Link href={finalHref} className={current.className}>
-      {variant ? current.label : defaultLabel}
-    </Link>
+    <div className="space-y-2">
+      <Link href={finalHref} className={current.className}>
+        {variant ? current.label : defaultLabel}
+      </Link>
+      <p className="text-xs leading-5 text-slate-400">
+        Bitte verwende beim Kauf dieselbe E-Mail wie später fuer deinen Zugang.
+      </p>
+    </div>
   );
 }

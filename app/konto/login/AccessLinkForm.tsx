@@ -33,7 +33,7 @@ export default function AccessLinkForm() {
     <form onSubmit={onSubmit} className="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-6">
       <div>
         <label htmlFor="customer-email" className="mb-2 block text-sm font-semibold text-slate-200">
-          E-Mail vom Kauf
+          E-Mail vom Kauf <span className="text-emerald-300">*</span>
         </label>
         <input
           id="customer-email"
@@ -44,6 +44,9 @@ export default function AccessLinkForm() {
           className="w-full rounded-lg border border-white/10 bg-slate-950/60 px-4 py-3 text-slate-100 outline-none focus:border-emerald-400/50"
           placeholder="du@beispiel.de"
         />
+        <p className="mt-2 text-xs leading-5 text-slate-400">
+          Bitte dieselbe E-Mail verwenden wie beim Kauf. Nur so können wir den Zugangslink deinem Paket zuordnen.
+        </p>
       </div>
 
       <button

@@ -29,6 +29,9 @@ export default async function CustomerAccountPage() {
           <p className="mt-3 text-slate-300">
             Diese Freischaltung ist mit deiner Kauf-E-Mail verbunden: <strong>{email}</strong>
           </p>
+          <p className="mt-2 text-sm text-slate-400">
+            Wenn du dich mit einer anderen E-Mail anmeldest, kann der Zugang nicht automatisch zugeordnet werden.
+          </p>
         </section>
 
         <section className="rounded-2xl border border-white/10 bg-white/5 p-6">
