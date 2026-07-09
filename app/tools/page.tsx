@@ -101,6 +101,32 @@ export default async function ToolsPage() {
           </div>
         </div>
 
+        <div className="mb-8 rounded-[2rem] border border-cyan-400/20 bg-gradient-to-br from-cyan-500/12 to-emerald-500/8 p-6 shadow-2xl shadow-slate-950/20 backdrop-blur-xl">
+          <p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-300/80">Neues Kernprodukt</p>
+          <div className="mt-3 grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div>
+              <h2 className="text-2xl font-black text-white sm:text-3xl">Revenue Navigator</h2>
+              <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300 sm:text-base">
+                Das Tool zeigt dir den naechsten Umsatzhebel, kombiniert Content, Affiliate, Leads und Abo-Modelle und gibt dir einen klaren Scan statt Bauchgefuehl.
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:w-[34rem]">
+              <Link
+                href="/revenue-navigator"
+                className="rounded-2xl border border-cyan-300/20 bg-gradient-to-r from-cyan-500 to-emerald-500 px-4 py-3 text-center font-black text-white shadow-[0_18px_40px_rgba(34,211,238,0.18)] transition-all duration-300 hover:-translate-y-1"
+              >
+                Tool oeffnen
+              </Link>
+              <Link
+                href="/revenue-navigator#pricing"
+                className="rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-center font-black text-slate-100 transition-all duration-300 hover:-translate-y-1 hover:bg-white/10"
+              >
+                Abo-Modelle ansehen
+              </Link>
+            </div>
+          </div>
+        </div>
+
         <div className="mb-8 rounded-[2rem] border border-cyan-400/20 bg-gradient-to-br from-cyan-500/12 to-blue-500/8 p-6 shadow-2xl shadow-slate-950/20 backdrop-blur-xl">
           <p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-300/80">{t("offerEyebrow")}</p>
           <div className="mt-3 grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
