@@ -98,11 +98,7 @@ export default async function BlogPage() {
           </div>
         </div>
 
-        {blogTopAdSlot && (
-          <div className="mb-8 rounded-xl border border-white/10 bg-white/5 p-4">
-            <GoogleAd slot={blogTopAdSlot} size="responsive" />
-          </div>
-        )}
+        {blogTopAdSlot && <GoogleAd slot={blogTopAdSlot} size="responsive" className="mb-8" />}
 
         <div className="grid gap-6 md:grid-cols-3">
           {localizedArticles.map((article) => (
@@ -140,11 +136,7 @@ export default async function BlogPage() {
           ))}
         </div>
 
-        {blogGridAdSlot && (
-          <div className="mt-10 rounded-xl border border-white/10 bg-white/5 p-4">
-            <GoogleAd slot={blogGridAdSlot} size="responsive" />
-          </div>
-        )}
+        {blogGridAdSlot && <GoogleAd slot={blogGridAdSlot} size="responsive" className="mt-10" />}
       </section>
     </main>
   );

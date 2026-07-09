@@ -129,7 +129,7 @@ export default async function AffiliatePage() {
                 href="/api/checkout?plan=pro"
                 ctaKey="affiliate-pro"
                 variantA={{
-                  label: `💎 ${t("offerProA")}`,
+                  label: `${t("offerProA")}`,
                   sourceSuffix: "variant-a",
                   className: "rounded-2xl border border-sky-300/20 bg-sky-500/10 px-4 py-3 text-center font-black text-sky-100 transition-all duration-300 hover:-translate-y-1 hover:bg-sky-500/20",
                 }}
@@ -143,7 +143,7 @@ export default async function AffiliatePage() {
                 href="/api/checkout?plan=agency"
                 ctaKey="affiliate-agency"
                 variantA={{
-                  label: `👑 ${t("offerAgencyA")}`,
+                  label: `${t("offerAgencyA")}`,
                   sourceSuffix: "variant-a",
                   className: "rounded-2xl border border-amber-300/20 bg-amber-500/10 px-4 py-3 text-center font-black text-amber-100 transition-all duration-300 hover:-translate-y-1 hover:bg-amber-500/20",
                 }}

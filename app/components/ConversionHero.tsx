@@ -51,12 +51,12 @@ export default function ConversionHero() {
               variantA={{
                 label: isEn ? "Start free" : "Kostenlos starten",
                 sourceSuffix: "free-start",
-                className: "rounded-xl bg-white px-6 py-3 text-sm font-bold text-slate-900 transition hover:bg-slate-100 active:scale-95",
+                className: "rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:opacity-90 active:scale-95",
               }}
               variantB={{
                 label: isEn ? "Start free" : "Kostenlos starten",
                 sourceSuffix: "direct-start",
-                className: "rounded-xl bg-white px-6 py-3 text-sm font-bold text-slate-900 transition hover:bg-slate-100 active:scale-95",
+                className: "rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:opacity-90 active:scale-95",
               }}
             />
             <CheckoutCtaButton
