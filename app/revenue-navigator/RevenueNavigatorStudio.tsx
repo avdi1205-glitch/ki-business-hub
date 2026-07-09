@@ -260,6 +260,7 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
   }
 
   const renderedRecommendations = data?.recommendations && data.recommendations.length > 0 ? data.recommendations : starterPreview.recommendations || [];
+  const primaryRecommendation = renderedRecommendations[0];
   const currentLift = data?.projectedMonthlyLift ?? starterPreview.projectedMonthlyLift ?? 0;
   const currentSummary = data?.summary || starterPreview.summary;
 
@@ -476,21 +477,44 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
                   : "Dieser kostenlose Scan reicht, um deinen ersten Hebel zu verstehen. Upgrade spaeter nur, wenn du woechentliche Richtung und tieferes Tracking willst."}
               </div>
 
-              <div className="mt-6 space-y-3">
-                {renderedRecommendations.slice(0, 3).map((rec, index) => (
-                  <article key={rec.id} className="rounded-2xl border border-white/10 bg-slate-950/30 p-4">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <h3 className="text-lg font-bold text-white">{index + 1}. {rec.title}</h3>
+              <div className="mt-6 rounded-[1.75rem] border border-cyan-400/20 bg-gradient-to-br from-cyan-500/12 via-slate-950/40 to-emerald-500/10 p-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-200/70">
+                  {isEn ? "Primary action" : "Hauptaktion"}
+                </p>
+                <h3 className="mt-2 text-2xl font-black text-white">
+                  {primaryRecommendation ? primaryRecommendation.title : (isEn ? "No recommendation yet" : "Noch keine Empfehlung")}
+                </h3>
+                {primaryRecommendation && (
+                  <>
+                    <p className="mt-3 text-sm leading-7 text-slate-300">
+                      <strong>{isEn ? "Why this first:" : "Warum zuerst:"}</strong> {primaryRecommendation.why}
+                    </p>
+                    <p className="mt-2 text-sm leading-7 text-slate-300">
+                      <strong>{isEn ? "Do this now:" : "Jetzt tun:"}</strong> {primaryRecommendation.action}
+                    </p>
+                    <div className="mt-4 flex flex-wrap items-center gap-3">
                       <span className={[
                         "rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.18em]",
-                        priorityBorder(rec.priority),
+                        priorityBorder(primaryRecommendation.priority),
                       ].join(" ")}>
-                        {rec.priority}
+                        {primaryRecommendation.priority}
+                      </span>
+                      <span className="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1 text-sm font-semibold text-emerald-200">
+                        {isEn ? "Potential" : "Potenzial"} +{formatCurrency(primaryRecommendation.estimatedMonthlyLift)}
                       </span>
                     </div>
-                    <p className="mt-2 text-sm leading-6 text-slate-300"><strong>{isEn ? "Why:" : "Warum:"}</strong> {rec.why}</p>
-                    <p className="mt-1 text-sm leading-6 text-slate-300"><strong>{isEn ? "Action:" : "Aktion:"}</strong> {rec.action}</p>
-                    <p className="mt-3 text-sm font-semibold text-emerald-200">+{formatCurrency(rec.estimatedMonthlyLift)}</p>
+                  </>
+                )}
+              </div>
+
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                {renderedRecommendations.slice(1, 3).map((rec) => (
+                  <article key={rec.id} className="rounded-2xl border border-white/10 bg-slate-950/20 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                      {isEn ? "Support action" : "Begleitaktion"}
+                    </p>
+                    <h4 className="mt-2 text-base font-bold text-white">{rec.title}</h4>
+                    <p className="mt-2 text-sm leading-6 text-slate-300">{rec.action}</p>
                   </article>
                 ))}
               </div>
