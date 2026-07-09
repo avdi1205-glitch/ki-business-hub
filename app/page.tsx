@@ -164,45 +164,38 @@ export default async function Home() {
         }}
       />
 
-      <main className="relative isolate min-h-screen overflow-hidden mesh-background text-slate-100">
-        <div className="noise-overlay" />
-        <div className="orbital-glow left-[-8rem] top-[8rem] h-72 w-72 bg-cyan-500/25" />
-        <div className="orbital-glow right-[-6rem] top-[24rem] h-80 w-80 bg-emerald-500/20" style={{ animationDelay: "-3s" }} />
-        <div className="orbital-glow left-[44%] top-[68rem] h-96 w-96 bg-violet-500/15" style={{ animationDelay: "-6s" }} />
+      <main className="relative isolate min-h-screen text-slate-100" style={{ background: "#080e1a" }}>
 
         {/* Conversion Hero */}
         <ConversionHero />
 
-      {/* Unique Value Proposition - Einzigartig */}
-        <section className="py-24 animate-fadeInUp" style={{ animationDelay: "120ms" }}>
+      {/* Unique Value Proposition */}
+        <section className="py-24">
         <div className="mx-auto max-w-6xl px-4">
           <div className="mb-16 max-w-3xl">
-            <p className="mb-4 text-xs font-bold uppercase tracking-[0.28em] text-violet-300/80">Warum Nexmoneta</p>
-            <h2 className="display-heading text-4xl font-black text-white sm:text-5xl md:text-6xl">
-              🚀 {t("uniqueTitle")}
+            <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-slate-500">Warum Nexmoneta</p>
+            <h2 className="text-4xl font-black text-white sm:text-5xl">
+              {t("uniqueTitle")}
             </h2>
           </div>
-          <div className="grid gap-8 md:grid-cols-3">
-            <div className="rounded-[2rem] border border-cyan-400/20 bg-cyan-500/10 p-8 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 md:translate-y-8 animate-fadeInUp" style={{ animationDelay: "80ms" }}>
-              <div className="text-4xl mb-4">🤖</div>
-              <h3 className="text-2xl font-bold mb-2" style={{ color: "#f8fafc" }}>{t("uniqueAi")}</h3>
-              <p className="leading-7" style={{ color: "#dbeafe" }}>
+          <div className="grid gap-6 md:grid-cols-3">
+            <div className="rounded-2xl border border-white/[0.08] p-7" style={{ background: "rgba(255,255,255,0.02)" }}>
+              <h3 className="text-lg font-bold text-white">{t("uniqueAi")}</h3>
+              <p className="mt-2 text-sm leading-7 text-slate-400">
                 {t("uniqueAiText")}
               </p>
             </div>
 
-            <div className="rounded-[2rem] border border-emerald-400/20 bg-emerald-500/10 p-8 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 animate-fadeInUp" style={{ animationDelay: "180ms" }}>
-              <div className="text-4xl mb-4">📊</div>
-              <h3 className="text-2xl font-bold mb-2" style={{ color: "#f8fafc" }}>{t("uniqueRoi")}</h3>
-              <p className="leading-7" style={{ color: "#dcfce7" }}>
+            <div className="rounded-2xl border border-white/[0.08] p-7" style={{ background: "rgba(255,255,255,0.02)" }}>
+              <h3 className="text-lg font-bold text-white">{t("uniqueRoi")}</h3>
+              <p className="mt-2 text-sm leading-7 text-slate-400">
                 {t("uniqueRoiText")}
               </p>
             </div>
 
-            <div className="rounded-[2rem] border border-violet-400/20 bg-violet-500/10 p-8 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 md:-translate-y-8 animate-fadeInUp" style={{ animationDelay: "280ms" }}>
-              <div className="text-4xl mb-4">⚡</div>
-              <h3 className="text-2xl font-bold mb-2" style={{ color: "#f8fafc" }}>{t("uniqueAutomation")}</h3>
-              <p className="leading-7" style={{ color: "#ede9fe" }}>
+            <div className="rounded-2xl border border-white/[0.08] p-7" style={{ background: "rgba(255,255,255,0.02)" }}>
+              <h3 className="text-lg font-bold text-white">{t("uniqueAutomation")}</h3>
+              <p className="mt-2 text-sm leading-7 text-slate-400">
                 {t("uniqueAutomationText")}
               </p>
             </div>
@@ -213,29 +206,14 @@ export default async function Home() {
       {/* Top Tools Section */}
         <section className="py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-4">
-          <div className="mb-16 max-w-3xl">
-            <p className="mb-4 text-xs font-bold uppercase tracking-[0.28em] text-cyan-300/80">Top Tools</p>
-            <h2 className="display-heading text-4xl font-black text-white sm:text-5xl md:text-6xl">
+          <div className="mb-12 max-w-2xl">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-slate-500">Top Tools</p>
+            <h2 className="text-4xl font-black text-white sm:text-5xl">
               {t("topToolsTitle")}
             </h2>
-            <p className="mt-5 text-lg leading-8 text-slate-300 sm:text-xl">
+            <p className="mt-4 text-lg leading-8 text-slate-400">
               {t("topToolsSubtitle")}
             </p>
-          </div>
-
-          <div className="mb-8 grid gap-4 md:grid-cols-3">
-            <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5 shadow-lg shadow-slate-950/20 transition-transform duration-300 hover:-translate-y-1">
-              <p className="text-sm font-bold text-emerald-300">Mehr Klarheit</p>
-              <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>Schnell sehen, was sich für dich lohnt.</p>
-            </div>
-            <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5 shadow-lg shadow-slate-950/20 transition-transform duration-300 hover:-translate-y-1 md:translate-y-6">
-              <p className="text-sm font-bold text-emerald-300">Weniger Recherche</p>
-              <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>Weniger Tabs, schneller zum nächsten Schritt.</p>
-            </div>
-            <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5 shadow-lg shadow-slate-950/20 transition-transform duration-300 hover:-translate-y-1 md:-translate-y-4">
-              <p className="text-sm font-bold text-emerald-300">Direkt zum Ziel</p>
-              <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>Direkt zu den stärksten Klickpfaden.</p>
-            </div>
           </div>
 
           <TopTools tools={tools} />
@@ -251,12 +229,12 @@ export default async function Home() {
       </div>
 
       {/* Latest Articles */}
-        <section className="py-24 animate-fadeInUp" style={{ animationDelay: "220ms" }}>
+        <section className="py-24">
         <div className="mx-auto max-w-6xl px-4">
-          <div className="mb-16 max-w-3xl">
-            <p className="mb-4 text-xs font-bold uppercase tracking-[0.28em] text-amber-300/80">Neuer Content</p>
-            <h2 className="display-heading text-4xl font-black text-white sm:text-5xl md:text-6xl">
-              📝 {t("latestArticlesTitle")}
+          <div className="mb-12 max-w-2xl">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-slate-500">Neuer Content</p>
+            <h2 className="text-4xl font-black text-white sm:text-5xl">
+              {t("latestArticlesTitle")}
             </h2>
           </div>
 
@@ -319,22 +297,22 @@ export default async function Home() {
             <div className="flex flex-col gap-4 sm:flex-row">
               <Link
                 href="/content-factory"
-                className="px-10 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg rounded-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105"
+                className="px-10 py-4 rounded-xl bg-white font-bold text-slate-900 text-base transition hover:bg-slate-100"
               >
-                🚀 {t("finalFreeCta")}
+                {t("finalFreeCta")}
               </Link>
               <CheckoutCtaButton
                 href="/api/checkout?plan=pro"
                 ctaKey="final-pro"
                 variantA={{
-                  label: `💎 ${t("finalProCta")}`,
+                  label: t("finalProCta"),
                   sourceSuffix: "variant-a",
-                  className: "px-10 py-4 rounded-lg border border-cyan-400/30 bg-cyan-500/10 text-cyan-100 font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:bg-cyan-500/20",
+                  className: "px-10 py-4 rounded-xl border border-cyan-400/30 bg-cyan-500/10 text-cyan-100 font-bold text-base transition hover:bg-cyan-500/20",
                 }}
                 variantB={{
-                  label: `⚡ ${t("finalProAltCta")}`,
+                  label: t("finalProAltCta"),
                   sourceSuffix: "variant-b",
-                  className: "px-10 py-4 rounded-lg border border-emerald-400/30 bg-emerald-500/10 text-emerald-100 font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:bg-emerald-500/20",
+                  className: "px-10 py-4 rounded-xl border border-cyan-400/30 bg-cyan-500/10 text-cyan-100 font-bold text-base transition hover:bg-cyan-500/20",
                 }}
               />
             </div>
