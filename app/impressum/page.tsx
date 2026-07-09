@@ -3,7 +3,7 @@ import { getLocale } from "next-intl/server";
 export default async function ImpressumPage() {
   const locale = await getLocale();
   const isEn = locale === "en";
-  const supportEmail = "kontakt@nexmoneta.com";
+  const supportEmail = "nexmoneta@gmail.com";
   const legalName = "Avdi Morina";
   const legalAddress = "Klepsauerstr. 60, 74677 Dörzbach, Deutschland";
 

@@ -49,7 +49,7 @@ export default async function KontaktPage({
   }>;
 }) {
   const params = await searchParams;
-  const supportEmail = "kontakt@nexmoneta.com";
+  const supportEmail = "nexmoneta@gmail.com";
   const plan = firstValue(params.plan)?.toLowerCase();
   const source = firstValue(params.source);
   const intent = firstValue(params.intent);
@@ -201,7 +201,7 @@ export default async function KontaktPage({
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">Antwortweg</p>
-                <p className="mt-3 text-lg font-bold" style={{ color: "var(--text-dark)" }}>{supportEmail}</p>
+                <p className="mt-3 break-all text-base font-bold sm:text-lg" style={{ color: "var(--text-dark)" }}>{supportEmail}</p>
               </div>
             </div>
           </div>
