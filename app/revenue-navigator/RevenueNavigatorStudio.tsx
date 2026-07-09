@@ -126,6 +126,12 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
   const [captureEmail, setCaptureEmail] = useState("");
   const [captureStatus, setCaptureStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [captureMessage, setCaptureMessage] = useState("");
+  const [agencyName, setAgencyName] = useState("");
+  const [agencyEmail, setAgencyEmail] = useState("");
+  const [agencyCompany, setAgencyCompany] = useState("");
+  const [agencyTeam, setAgencyTeam] = useState("2-5");
+  const [agencyStatus, setAgencyStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [agencyMessage, setAgencyMessage] = useState("");
 
   const opportunityScore = useMemo(() => {
     const trafficScore = Math.min(monthlyVisitors / 150, 30);
@@ -330,6 +336,60 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
     } catch (nextError) {
       setCaptureStatus("error");
       setCaptureMessage(
+        nextError instanceof Error
+          ? nextError.message
+          : isEn
+            ? "Connection error. Please try again."
+            : "Verbindungsfehler. Bitte erneut versuchen."
+      );
+    }
+  }
+
+  async function submitAgencyOnboarding() {
+    if (!agencyEmail.trim()) {
+      setAgencyStatus("error");
+      setAgencyMessage(isEn ? "Please enter your business email first." : "Bitte trage zuerst deine Business-E-Mail ein.");
+      return;
+    }
+
+    setAgencyStatus("loading");
+    setAgencyMessage("");
+
+    const normalizedEmail = agencyEmail.trim().toLowerCase();
+    const normalizedName = agencyName.trim();
+    const normalizedCompany = agencyCompany.trim();
+
+    try {
+      const response = await fetch("/api/contact-lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: normalizedCompany ? `${normalizedName || "Team"} (${normalizedCompany})` : normalizedName || undefined,
+          email: normalizedEmail,
+          plan: "agency",
+          source: `revenue-navigator:${focus}:agency:score-${opportunityScore}`,
+          intent: "upgrade",
+          reason: `agency_onboarding_team_${agencyTeam}`,
+        }),
+      });
+
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.error || (isEn ? "Agency onboarding request failed." : "Agency-Onboarding-Anfrage fehlgeschlagen."));
+      }
+
+      setAgencyStatus("success");
+      setAgencyMessage(
+        isEn
+          ? "Done. Your Agency request is saved and we will contact you with setup steps."
+          : "Perfekt. Deine Agency-Anfrage ist gespeichert und wir melden uns mit den Setup-Schritten."
+      );
+      setAgencyName("");
+      setAgencyEmail("");
+      setAgencyCompany("");
+    } catch (nextError) {
+      setAgencyStatus("error");
+      setAgencyMessage(
         nextError instanceof Error
           ? nextError.message
           : isEn
@@ -804,6 +864,71 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
                       <p className="mt-1 text-sm font-semibold text-white">{isEn ? "Faster execution" : "Schnellere Umsetzung"}</p>
                     </div>
                   </div>
+                </div>
+
+                <div className="mt-5 rounded-2xl border border-white/10 bg-slate-950/35 p-4 sm:p-5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-200/70">
+                    {isEn ? "Agency onboarding" : "Agency Onboarding"}
+                  </p>
+                  <p className="mt-2 text-sm leading-7 text-slate-300">
+                    {isEn
+                      ? "If you want team setup support, send your details here and we will follow up with your next steps."
+                      : "Wenn du Team-Setup-Unterstuetzung willst, sende hier deine Daten und wir melden uns mit den naechsten Schritten."}
+                  </p>
+
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    <input
+                      type="text"
+                      value={agencyName}
+                      onChange={(event) => setAgencyName(event.target.value)}
+                      placeholder={isEn ? "Your name" : "Dein Name"}
+                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-400 focus:border-amber-400 focus:outline-none"
+                    />
+                    <input
+                      type="text"
+                      value={agencyCompany}
+                      onChange={(event) => setAgencyCompany(event.target.value)}
+                      placeholder={isEn ? "Company" : "Firma"}
+                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-400 focus:border-amber-400 focus:outline-none"
+                    />
+                    <input
+                      type="email"
+                      value={agencyEmail}
+                      onChange={(event) => setAgencyEmail(event.target.value)}
+                      placeholder={isEn ? "business@email.com" : "business@email.de"}
+                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-400 focus:border-amber-400 focus:outline-none"
+                    />
+                    <select
+                      value={agencyTeam}
+                      onChange={(event) => setAgencyTeam(event.target.value)}
+                      className="w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-slate-100 outline-none"
+                    >
+                      <option value="2-5">2-5</option>
+                      <option value="6-10">6-10</option>
+                      <option value="11-20">11-20</option>
+                      <option value="20+">20+</option>
+                    </select>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => void submitAgencyOnboarding()}
+                    disabled={agencyStatus === "loading"}
+                    className="mt-3 w-full rounded-xl border border-amber-300/30 bg-amber-500/15 px-4 py-3 text-sm font-bold text-amber-100 transition hover:bg-amber-500/25 disabled:opacity-60"
+                  >
+                    {agencyStatus === "loading"
+                      ? (isEn ? "Saving..." : "Speichert...")
+                      : (isEn ? "Request Agency onboarding" : "Agency-Onboarding anfragen")}
+                  </button>
+
+                  {agencyMessage && (
+                    <p className={[
+                      "mt-2 text-sm",
+                      agencyStatus === "success" ? "text-emerald-300" : "text-rose-300",
+                    ].join(" ")}>
+                      {agencyMessage}
+                    </p>
+                  )}
                 </div>
               </div>
 
