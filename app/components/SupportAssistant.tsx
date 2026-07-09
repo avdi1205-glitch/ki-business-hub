@@ -2,7 +2,19 @@
 
 import { useState } from "react";
 
-type AssistantMode = "menu" | "support" | "offer" | "lead";
+type AssistantMode = "menu" | "support" | "offer" | "lead" | "done";
+
+function BackButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="mt-1 flex items-center gap-1 text-xs text-slate-500 transition hover:text-slate-300"
+    >
+      ← Zurück
+    </button>
+  );
+}
 
 export default function SupportAssistant() {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,12 +22,18 @@ export default function SupportAssistant() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [sending, setSending] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  function closeWidget() {
+    setIsOpen(false);
+    setMode("menu");
+    setErrorMsg(null);
+  }
 
   async function submitLead(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSending(true);
-    setMessage(null);
+    setErrorMsg(null);
 
     try {
       const response = await fetch("/api/contact-lead", {
@@ -23,7 +41,7 @@ export default function SupportAssistant() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
-          name,
+          name: name.trim() || undefined,
           plan: "unknown",
           source: "chat-widget",
           intent: "lead",
@@ -34,159 +52,198 @@ export default function SupportAssistant() {
       const data = await response.json().catch(() => null);
 
       if (!response.ok) {
-        setMessage(typeof data?.error === "string" ? data.error : "Speichern fehlgeschlagen.");
+        setErrorMsg(typeof data?.error === "string" ? data.error : "Speichern fehlgeschlagen.");
         return;
       }
 
-      setMessage("Danke! Wir haben deine Anfrage gespeichert und melden uns per E-Mail.");
       setEmail("");
       setName("");
+      setMode("done");
     } catch {
-      setMessage("Netzwerkfehler. Bitte spaeter erneut versuchen.");
+      setErrorMsg("Netzwerkfehler. Bitte erneut versuchen.");
     } finally {
       setSending(false);
     }
   }
 
   return (
-    <div className="fixed bottom-5 right-5 z-[60]">
+    <div className="fixed bottom-5 right-5 z-[60] flex flex-col items-end">
       {isOpen && (
-        <section className="mb-3 w-[min(92vw,380px)] overflow-hidden rounded-2xl border border-white/15 bg-slate-950/95 shadow-2xl backdrop-blur-xl">
-          <header className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">Nexmoneta Assist</p>
-              <h3 className="text-sm font-bold text-white">Support, Leads, Angebote</h3>
+        <div className="mb-3 w-[min(92vw,360px)] overflow-hidden rounded-2xl border border-white/10 bg-[#0b1120]/98 shadow-[0_24px_60px_rgba(0,0,0,0.6)] backdrop-blur-2xl">
+          {/* Header */}
+          <div className="flex items-center justify-between border-b border-white/10 bg-gradient-to-r from-cyan-500/10 to-emerald-500/10 px-4 py-3">
+            <div className="flex items-center gap-2">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-cyan-400 to-emerald-500 text-xs font-black text-slate-950">N</span>
+              <div>
+                <p className="text-xs font-black tracking-widest text-cyan-300 uppercase">Nexmoneta</p>
+                <p className="text-[11px] text-slate-400">Assistent · Immer online</p>
+              </div>
             </div>
             <button
               type="button"
-              onClick={() => {
-                setIsOpen(false);
-                setMode("menu");
-              }}
-              className="rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-sm text-slate-200"
-              aria-label="Assistant schliessen"
+              onClick={closeWidget}
+              aria-label="Chat schließen"
+              className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition hover:bg-white/15 hover:text-white"
             >
-              x
+              ✕
             </button>
-          </header>
+          </div>
 
-          <div className="space-y-3 px-4 py-4 text-sm text-slate-200">
+          {/* Body */}
+          <div className="px-4 py-4 text-sm text-slate-200">
             {mode === "menu" && (
-              <>
-                <p className="leading-6 text-slate-300">Waehle einen Bereich. Ich leite dich direkt zum naechsten sinnvollen Schritt.</p>
+              <div className="space-y-3">
+                <p className="text-sm leading-6 text-slate-400">
+                  Wie kann ich dir weiterhelfen?
+                </p>
                 <div className="grid gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setMode("support")}
-                    className="rounded-xl border border-cyan-400/30 bg-cyan-500/10 px-3 py-2 text-left font-semibold text-cyan-100"
-                  >
-                    1) Support-Frage stellen
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setMode("offer")}
-                    className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-left font-semibold text-emerald-100"
-                  >
-                    2) Passendes Angebot finden
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setMode("lead")}
-                    className="rounded-xl border border-violet-400/30 bg-violet-500/10 px-3 py-2 text-left font-semibold text-violet-100"
-                  >
-                    3) Rueckmeldung per E-Mail anfordern
-                  </button>
+                  {[
+                    { label: "💬  Support-Frage stellen", sub: "Direktlink zur Kontaktseite", mode: "support" as const, color: "border-cyan-400/30 bg-cyan-500/8 hover:bg-cyan-500/15 text-cyan-100" },
+                    { label: "⚡  Passendes Angebot finden", sub: "Free, Pro oder Agency", mode: "offer" as const, color: "border-emerald-400/30 bg-emerald-500/8 hover:bg-emerald-500/15 text-emerald-100" },
+                    { label: "📬  Rückmeldung anfordern", sub: "Wir melden uns per E-Mail", mode: "lead" as const, color: "border-violet-400/30 bg-violet-500/8 hover:bg-violet-500/15 text-violet-100" },
+                  ].map((item) => (
+                    <button
+                      key={item.mode}
+                      type="button"
+                      onClick={() => setMode(item.mode)}
+                      className={`rounded-xl border px-3 py-3 text-left transition ${item.color}`}
+                    >
+                      <span className="block font-bold">{item.label}</span>
+                      <span className="block text-[11px] text-slate-400">{item.sub}</span>
+                    </button>
+                  ))}
                 </div>
-              </>
+              </div>
             )}
 
             {mode === "support" && (
-              <>
-                <p className="leading-6 text-slate-300">Fuer Support und konkrete Fragen nutze die Kontaktseite mit vorbefuelltem Intent:</p>
+              <div className="space-y-3">
+                <p className="leading-6 text-slate-300">
+                  Ich leite dich zur Kontaktseite weiter. Deine Anfrage wird direkt als Support-Anfrage vorausgefüllt.
+                </p>
                 <a
                   href="/kontakt?intent=support&source=chat-support"
-                  className="block rounded-xl border border-cyan-400/30 bg-cyan-500/10 px-3 py-2 text-center font-semibold text-cyan-100"
+                  className="flex items-center justify-center gap-2 rounded-xl border border-cyan-400/30 bg-cyan-500/10 px-4 py-3 font-bold text-cyan-100 transition hover:bg-cyan-500/20"
                 >
-                  Zu Kontakt & Support
+                  Zu Kontakt & Support →
                 </a>
-                <button type="button" onClick={() => setMode("menu")} className="text-xs text-slate-400">
-                  Zurueck
-                </button>
-              </>
+                <BackButton onClick={() => setMode("menu")} />
+              </div>
             )}
 
             {mode === "offer" && (
-              <>
-                <p className="leading-6 text-slate-300">Waehle den schnellsten Pfad fuer dein aktuelles Ziel:</p>
+              <div className="space-y-3">
+                <p className="leading-6 text-slate-300">
+                  Wähle den passenden Plan für dein Ziel:
+                </p>
                 <div className="grid gap-2">
                   <a
                     href="/content-factory?source=chat-offer-free"
-                    className="rounded-xl border border-slate-400/30 bg-white/5 px-3 py-2 text-center font-semibold"
+                    className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-semibold text-slate-200 transition hover:bg-white/10"
                   >
-                    Kostenlos starten
+                    <span>🚀 Kostenlos starten</span>
+                    <span className="text-xs text-slate-500">Gratis</span>
                   </a>
                   <a
                     href="/api/checkout?plan=pro&source=chat-offer-pro"
-                    className="rounded-xl border border-cyan-400/30 bg-cyan-500/10 px-3 py-2 text-center font-semibold text-cyan-100"
+                    className="flex items-center justify-between rounded-xl border border-cyan-400/30 bg-cyan-500/10 px-4 py-3 font-bold text-cyan-100 transition hover:bg-cyan-500/20"
                   >
-                    Pro aktivieren
+                    <span>⚡ Pro aktivieren</span>
+                    <span className="text-xs text-cyan-300">39 €/Monat</span>
                   </a>
                   <a
                     href="/api/checkout?plan=agency&source=chat-offer-agency"
-                    className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-center font-semibold text-emerald-100"
+                    className="flex items-center justify-between rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 font-bold text-emerald-100 transition hover:bg-emerald-500/20"
                   >
-                    Agency aktivieren
+                    <span>🏢 Agency aktivieren</span>
+                    <span className="text-xs text-emerald-300">99 €/Monat</span>
                   </a>
                 </div>
-                <button type="button" onClick={() => setMode("menu")} className="text-xs text-slate-400">
-                  Zurueck
-                </button>
-              </>
+                <BackButton onClick={() => setMode("menu")} />
+              </div>
             )}
 
             {mode === "lead" && (
-              <>
-                <p className="leading-6 text-slate-300">Trage deine E-Mail ein. Wir speichern deinen Lead mit Chat-Quelle.</p>
+              <div className="space-y-3">
+                <p className="leading-6 text-slate-300">
+                  Trag deine E-Mail ein. Wir melden uns direkt bei dir.
+                </p>
                 <form className="space-y-2" onSubmit={submitLead}>
                   <input
                     type="text"
                     value={name}
-                    onChange={(event) => setName(event.target.value)}
+                    onChange={(e) => setName(e.target.value)}
                     placeholder="Name (optional)"
-                    className="w-full rounded-lg border border-white/15 bg-slate-900/80 px-3 py-2 text-sm text-slate-100"
+                    className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2.5 text-sm text-slate-100 placeholder-slate-500 outline-none focus:border-violet-400/60"
                   />
                   <input
                     type="email"
                     value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                    placeholder="deine@email.de"
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="deine@email.de *"
                     required
-                    className="w-full rounded-lg border border-white/15 bg-slate-900/80 px-3 py-2 text-sm text-slate-100"
+                    className="w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2.5 text-sm text-slate-100 placeholder-slate-500 outline-none focus:border-violet-400/60"
                   />
+                  {errorMsg && (
+                    <p className="rounded-lg border border-rose-400/25 bg-rose-500/10 px-3 py-2 text-xs text-rose-200">
+                      {errorMsg}
+                    </p>
+                  )}
                   <button
                     type="submit"
                     disabled={sending}
-                    className="w-full rounded-xl border border-violet-400/30 bg-violet-500/10 px-3 py-2 font-semibold text-violet-100 disabled:opacity-60"
+                    className="w-full rounded-xl bg-gradient-to-r from-violet-500 to-cyan-500 px-4 py-2.5 font-bold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    {sending ? "Speichere..." : "Lead speichern"}
+                    {sending ? "Wird gespeichert…" : "Rückmeldung anfordern"}
                   </button>
                 </form>
-                {message && <p className="text-xs text-slate-300">{message}</p>}
-                <button type="button" onClick={() => setMode("menu")} className="text-xs text-slate-400">
-                  Zurueck
+                <BackButton onClick={() => setMode("menu")} />
+              </div>
+            )}
+
+            {mode === "done" && (
+              <div className="space-y-4 py-2 text-center">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/20 text-2xl">
+                  ✅
+                </div>
+                <p className="font-bold text-white">Anfrage gespeichert!</p>
+                <p className="text-sm leading-6 text-slate-400">
+                  Wir haben deine Kontaktanfrage erhalten und melden uns so schnell wie möglich per E-Mail.
+                </p>
+                <button
+                  type="button"
+                  onClick={closeWidget}
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:bg-white/10"
+                >
+                  Schließen
                 </button>
-              </>
+              </div>
             )}
           </div>
-        </section>
+
+          {/* Footer */}
+          {mode !== "done" && (
+            <div className="border-t border-white/5 px-4 py-2 text-center text-[11px] text-slate-600">
+              Nexmoneta · kontakt@nexmoneta.com
+            </div>
+          )}
+        </div>
       )}
 
+      {/* Toggle button */}
       <button
         type="button"
-        onClick={() => setIsOpen((current) => !current)}
-        className="rounded-full border border-cyan-300/30 bg-gradient-to-r from-cyan-500 to-emerald-500 px-5 py-3 text-sm font-black text-slate-950 shadow-lg shadow-cyan-500/25"
+        onClick={() => {
+          setIsOpen((prev) => !prev);
+          if (!isOpen) setMode("menu");
+        }}
+        className="flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 to-emerald-500 px-5 py-3 text-sm font-black text-slate-950 shadow-[0_8px_30px_rgba(6,182,212,0.4)] transition hover:shadow-[0_8px_40px_rgba(6,182,212,0.55)] active:scale-95"
       >
-        {isOpen ? "Assistant schliessen" : "Chat starten"}
+        {isOpen ? (
+          <>✕ Schließen</>
+        ) : (
+          <>💬 Hilfe &amp; Angebote</>
+        )}
       </button>
     </div>
   );
