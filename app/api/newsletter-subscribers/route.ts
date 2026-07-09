@@ -14,7 +14,6 @@ export async function GET() {
         source: true,
         status: true,
         createdAt: true,
-        confirmedAt: true,
       },
     });
 
@@ -23,7 +22,13 @@ export async function GET() {
       return accumulator;
     }, { total: subscribers.length });
 
-    return NextResponse.json({ subscribers, counts });
+    return NextResponse.json({
+      subscribers: subscribers.map((subscriber) => ({
+        ...subscriber,
+        confirmedAt: null,
+      })),
+      counts,
+    });
   } catch (error) {
     console.error("[NEWSLETTER-SUBSCRIBERS]", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -60,17 +65,6 @@ export async function PATCH(request: NextRequest) {
       ...(source ? { source } : {}),
     };
 
-    if (status === "subscribed") {
-      updates.confirmedAt = current.confirmedAt || new Date();
-      updates.confirmTokenHash = null;
-      updates.confirmTokenExpiresAt = null;
-    }
-
-    if (status === "pending") {
-      updates.confirmTokenHash = current.confirmTokenHash;
-      updates.confirmTokenExpiresAt = current.confirmTokenExpiresAt;
-    }
-
     const subscriber = await prisma.newsletterSubscriber.update({
       where: { email },
       data: updates,
@@ -81,11 +75,16 @@ export async function PATCH(request: NextRequest) {
         source: true,
         status: true,
         createdAt: true,
-        confirmedAt: true,
       },
     });
 
-    return NextResponse.json({ success: true, subscriber });
+    return NextResponse.json({
+      success: true,
+      subscriber: {
+        ...subscriber,
+        confirmedAt: null,
+      },
+    });
   } catch (error) {
     console.error("[NEWSLETTER-SUBSCRIBERS]", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
