@@ -7,6 +7,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import { ExitIntentPopup } from "./components/ExitIntentPopup";
 import { SocialProof } from "./components/SocialProof";
+import SupportAssistant from "./components/SupportAssistant";
 import { getSiteUrl } from "../lib/site-url";
 import { toAdClientId } from "../lib/adsense";
 import { isAdminSessionAuthenticated } from "@/lib/admin-auth";
@@ -185,6 +186,7 @@ gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
               </nav>
             </div>
           </footer>
+          <SupportAssistant />
           <ExitIntentPopup />
           <SocialProof />
         </NextIntlClientProvider>
