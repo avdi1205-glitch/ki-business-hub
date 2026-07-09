@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import Link from "next/link";
@@ -8,151 +8,113 @@ import { useLocale, useTranslations } from "next-intl";
 export default function ConversionHero() {
   const t = useTranslations("home");
   const locale = useLocale();
+  const isEn = locale === "en";
+
+  const features = [
+    { label: isEn ? "Content Factory" : "Content Factory", value: isEn ? "Active" : "Aktiv", color: "text-emerald-400" },
+    { label: "Affiliate Links", value: isEn ? "Tracked" : "Getrackt", color: "text-cyan-400" },
+    { label: isEn ? "Revenue" : "Einnahmen", value: isEn ? "Growing" : "Wachsend", color: "text-violet-400" },
+    { label: isEn ? "AI Articles" : "KI-Artikel", value: isEn ? "Automated" : "Automatisch", color: "text-amber-400" },
+  ];
 
   return (
-    <section className="relative overflow-hidden border-b border-white/5 bg-slate-950">
-      <div className="absolute inset-0">
-        <div className="absolute -left-24 top-24 h-72 w-72 rounded-full bg-cyan-500/15 blur-3xl animate-pulse-slow" />
-        <div className="absolute right-0 top-28 h-96 w-96 rounded-full bg-violet-500/10 blur-3xl animate-pulse-slow" />
-        <div className="absolute bottom-0 left-1/3 h-80 w-80 rounded-full bg-emerald-500/10 blur-3xl animate-pulse-slow" />
-        <div className="absolute inset-0 opacity-[0.15] [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:36px_36px]" />
+    <section className="relative min-h-[90svh] overflow-hidden" style={{ background: "#080e1a" }}>
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-0 top-0 h-96 w-96 -translate-x-1/3 -translate-y-1/4 rounded-full blur-[120px]" style={{ background: "rgba(8,145,178,0.08)" }} />
+        <div className="absolute bottom-0 right-0 h-80 w-80 translate-x-1/4 translate-y-1/4 rounded-full blur-[120px]" style={{ background: "rgba(139,92,246,0.06)" }} />
       </div>
 
-      <div className="relative mx-auto grid min-h-[92svh] max-w-7xl gap-8 px-4 py-16 sm:px-6 lg:grid-cols-[1.25fr_0.75fr] lg:px-8 lg:py-24">
+      <div className="relative mx-auto grid max-w-6xl gap-16 px-6 pb-20 pt-28 sm:px-8 lg:grid-cols-2 lg:px-10 lg:pt-36">
         <div className="flex flex-col justify-center">
-          <p className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-500/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.28em] text-cyan-200 animate-fadeInUp">
-            <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_20px_rgba(103,232,249,0.7)]" />
-            {locale === "en" ? "Affiliate intelligence" : "Affiliate-Intelligenz"}
-          </p>
-
-          <h1 className="display-heading max-w-4xl text-4xl font-black text-white sm:text-6xl lg:text-8xl animate-fadeInUp">
-            <span className="block bg-gradient-to-r from-cyan-200 via-sky-200 to-emerald-200 bg-clip-text text-transparent">
-              {t("heroTitle1")}
-            </span>
-            <span className="block text-slate-50">{t("heroTitle2")}</span>
-          </h1>
-
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl animate-fadeInUp">
-            {t("heroSubtitle")}
-            <span className="font-semibold text-emerald-300"> {t("heroHighlight")}</span>
-            {locale === "en"
-              ? " and switch up only when it pays off."
-              : " und wechsle erst hoch, wenn es sich lohnt."}
-          </p>
-
-          <div className="mt-10 grid gap-4 sm:grid-cols-3">
-            <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-4 backdrop-blur-xl animate-fadeInUp">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">{locale === "en" ? "Focus" : "Fokus"}</p>
-              <p className="mt-2 text-sm leading-6 text-slate-200">Weniger Lärm, mehr klare Pfade.</p>
-            </div>
-            <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-4 backdrop-blur-xl animate-fadeInUp sm:translate-y-4">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Tempo</p>
-              <p className="mt-2 text-sm leading-6 text-slate-200">Schneller von der Idee zum Klick.</p>
-            </div>
-            <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-4 backdrop-blur-xl animate-fadeInUp lg:translate-y-8">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">{locale === "en" ? "Signal" : "Leitbild"}</p>
-              <p className="mt-2 text-sm leading-6 text-slate-200">Design mit stärkerer visuelle Hierarchie.</p>
-            </div>
+          <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-400">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            {isEn ? "Now live" : "Jetzt live"}
           </div>
 
-          <div className="mt-10 grid gap-4 sm:grid-cols-3">
+          <h1 className="text-5xl font-black leading-tight tracking-tight text-white sm:text-6xl lg:text-7xl">
+            {t("heroTitle1")}
+            <br />
+            <span className="bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+              {t("heroTitle2")}
+            </span>
+          </h1>
+
+          <p className="mt-6 max-w-lg text-lg leading-8 text-slate-400">
+            {t("heroSubtitle")}
+          </p>
+
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <CheckoutCtaButton
               href="/content-factory"
               ctaKey="hero-start"
               variantA={{
-                label: `🚀 ${t("heroPrimaryCta")}`,
+                label: isEn ? "Start free" : "Kostenlos starten",
                 sourceSuffix: "free-start",
-                className: "w-full rounded-2xl border border-emerald-300/20 bg-gradient-to-r from-emerald-500 to-cyan-500 px-6 py-4 text-base font-black leading-tight text-white shadow-[0_18px_50px_rgba(16,185,129,0.28)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(16,185,129,0.38)] active:scale-95 sm:text-lg",
+                className: "rounded-xl bg-white px-6 py-3 text-sm font-bold text-slate-900 transition hover:bg-slate-100 active:scale-95",
               }}
               variantB={{
-                label: `⚡ ${t("heroPrimaryAltCta")}`,
+                label: isEn ? "Start free" : "Kostenlos starten",
                 sourceSuffix: "direct-start",
-                className: "w-full rounded-2xl border border-cyan-300/20 bg-white/5 px-6 py-4 text-base font-black leading-tight text-slate-100 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-white/10 active:scale-95 sm:text-lg",
+                className: "rounded-xl bg-white px-6 py-3 text-sm font-bold text-slate-900 transition hover:bg-slate-100 active:scale-95",
               }}
             />
-
             <CheckoutCtaButton
               href="/api/checkout?plan=pro"
               ctaKey="hero-pro"
               variantA={{
-                label: `💎 Pro 39 €/Monat`,
+                label: isEn ? "Pro — 39 EUR/month" : "Pro — 39 EUR/Monat",
                 sourceSuffix: "price-view",
-                className: "w-full rounded-2xl border border-sky-300/20 bg-sky-500/10 px-6 py-4 text-base font-bold leading-tight text-sky-100 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-sky-500/20 active:scale-95 sm:text-lg",
+                className: "rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-200 transition hover:bg-white/10 active:scale-95",
               }}
               variantB={{
-                label: `✨ Pro 39 €/Monat`,
+                label: isEn ? "Pro — 39 EUR/month" : "Pro — 39 EUR/Monat",
                 sourceSuffix: "direct-pro",
-                className: "w-full rounded-2xl border border-sky-300/20 bg-sky-500/10 px-6 py-4 text-base font-bold leading-tight text-sky-100 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-sky-500/20 active:scale-95 sm:text-lg",
-              }}
-            />
-
-            <CheckoutCtaButton
-              href="/api/checkout?plan=agency"
-              ctaKey="hero-agency"
-              variantA={{
-                label: `👑 Agency 149 €/Monat`,
-                sourceSuffix: "price-view",
-                className: "w-full rounded-2xl border border-violet-300/20 bg-violet-500/10 px-6 py-4 text-base font-bold leading-tight text-violet-100 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-violet-500/20 active:scale-95 sm:text-lg",
-              }}
-              variantB={{
-                label: `🔥 Agency 149 €/Monat`,
-                sourceSuffix: "direct-agency",
-                className: "w-full rounded-2xl border border-violet-300/20 bg-violet-500/10 px-6 py-4 text-base font-bold leading-tight text-violet-100 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:bg-violet-500/20 active:scale-95 sm:text-lg",
+                className: "rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-200 transition hover:bg-white/10 active:scale-95",
               }}
             />
           </div>
+
+          <div className="mt-10 flex flex-wrap items-center gap-4 text-xs text-slate-600">
+            <span>{isEn ? "No credit card required" : "Keine Kreditkarte notig"}</span>
+            <span className="h-px w-4 bg-slate-800" />
+            <span>{isEn ? "Cancel anytime" : "Jederzeit kundbar"}</span>
+            <span className="h-px w-4 bg-slate-800" />
+            <span>{isEn ? "GDPR compliant" : "DSGVO-konform"}</span>
+          </div>
         </div>
 
-        <div className="relative flex items-end lg:items-center">
-          <div className="w-full rounded-[2.25rem] border border-white/10 bg-white/5 p-5 shadow-2xl shadow-slate-950/30 backdrop-blur-2xl lg:translate-y-8">
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-              <Link href="/content-factory" className="group rounded-[1.75rem] border border-emerald-400/20 bg-gradient-to-br from-emerald-500/10 to-cyan-500/5 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-300/40 hover:bg-emerald-500/15">
-                <p className="text-2xl">🎯</p>
-                <p className="mt-3 text-lg font-black text-emerald-200">{locale === "en" ? "Free start" : "Kostenlos starten"}</p>
-                <p className="mt-2 text-sm leading-6 text-slate-300">
-                  {locale === "en"
-                    ? "Create your first workflow with a cleaner path."
-                    : "Starte mit einem klareren Pfad in deinen ersten Workflow."}
-                </p>
-              </Link>
+        <div className="flex items-center">
+          <div className="w-full overflow-hidden rounded-2xl border border-white/10" style={{ background: "rgba(255,255,255,0.02)" }}>
+            <div className="flex items-center gap-2 border-b border-white/8 px-4 py-3">
+              <span className="h-2.5 w-2.5 rounded-full" style={{ background: "rgba(239,68,68,0.5)" }} />
+              <span className="h-2.5 w-2.5 rounded-full" style={{ background: "rgba(245,158,11,0.5)" }} />
+              <span className="h-2.5 w-2.5 rounded-full" style={{ background: "rgba(16,185,129,0.5)" }} />
+              <span className="ml-3 text-xs text-slate-600">nexmoneta.com</span>
+            </div>
 
-              <div className="rounded-[1.75rem] border border-slate-700/80 bg-slate-950/60 p-5">
-                <p className="text-xs font-bold uppercase tracking-[0.24em] text-slate-400">{locale === "en" ? "Momentum" : "Dynamik"}</p>
-                <div className="mt-4 space-y-3">
-                  <div className="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3">
-                    <span className="text-sm font-semibold text-slate-200">{locale === "en" ? "Content" : "Inhalte"}</span>
-                    <span className="text-sm text-cyan-300">{locale === "en" ? "Fast" : "Schnell"}</span>
-                  </div>
-                  <div className="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3 sm:translate-x-4">
-                    <span className="text-sm font-semibold text-slate-200">Affiliate</span>
-                    <span className="text-sm text-emerald-300">{locale === "en" ? "Clear" : "Klar"}</span>
-                  </div>
-                  <div className="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3 sm:translate-x-8">
-                    <span className="text-sm font-semibold text-slate-200">Upgrade</span>
-                    <span className="text-sm text-violet-300">{locale === "en" ? "Visible" : "Sichtbar"}</span>
-                  </div>
+            <div className="space-y-3 p-5">
+              {features.map((item) => (
+                <div key={item.label} className="flex items-center justify-between rounded-xl border border-white/5 px-4 py-3" style={{ background: "rgba(255,255,255,0.025)" }}>
+                  <span className="text-sm text-slate-300">{item.label}</span>
+                  <span className={"text-xs font-semibold " + item.color}>{item.value}</span>
+                </div>
+              ))}
+
+              <div className="rounded-xl border border-white/5 px-4 py-4" style={{ background: "rgba(255,255,255,0.025)" }}>
+                <p className="mb-2 text-xs text-slate-600">{isEn ? "Quick access" : "Schnellzugriff"}</p>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { href: "/tools", label: "Tools" },
+                    { href: "/blog", label: "Blog" },
+                    { href: "/affiliate", label: "Affiliate" },
+                    { href: "/content-factory", label: "Factory" },
+                  ].map((link) => (
+                    <Link key={link.href} href={link.href} className="rounded-lg px-3 py-1.5 text-xs text-slate-400 transition hover:text-white" style={{ background: "rgba(255,255,255,0.05)" }}>
+                      {link.label}
+                    </Link>
+                  ))}
                 </div>
               </div>
-
-              <Link href="/affiliate" className="group rounded-[1.75rem] border border-sky-400/20 bg-gradient-to-br from-sky-500/10 to-blue-600/5 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-sky-300/40 hover:bg-sky-500/15 lg:translate-x-6">
-                <p className="text-2xl">⭐</p>
-                <p className="mt-3 text-lg font-black text-sky-200">{locale === "en" ? "Best recommendations" : "Beste Empfehlungen"}</p>
-                <p className="mt-2 text-sm leading-6 text-slate-300">
-                  {locale === "en"
-                    ? "Go directly to the strongest affiliate picks."
-                    : "Direkt zu den stärksten Affiliate-Empfehlungen."}
-                </p>
-              </Link>
-
-              <Link href="/tools" className="group rounded-[1.75rem] border border-violet-400/20 bg-gradient-to-br from-violet-500/10 to-fuchsia-500/5 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-violet-300/40 hover:bg-violet-500/15 lg:-translate-x-4">
-                <p className="text-2xl">🔍</p>
-                <p className="mt-3 text-lg font-black text-violet-200">{locale === "en" ? "Compare tools" : "Tools vergleichen"}</p>
-                <p className="mt-2 text-sm leading-6 text-slate-300">
-                  {locale === "en"
-                    ? "Check ratings, pricing, and fit in one place."
-                    : "Bewertungen, Preise und Passung an einem Ort."}
-                </p>
-              </Link>
             </div>
           </div>
         </div>
