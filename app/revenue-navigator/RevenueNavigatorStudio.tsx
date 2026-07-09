@@ -122,6 +122,10 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<PlaybookResponse | null>(null);
+  const [captureName, setCaptureName] = useState("");
+  const [captureEmail, setCaptureEmail] = useState("");
+  const [captureStatus, setCaptureStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [captureMessage, setCaptureMessage] = useState("");
 
   const opportunityScore = useMemo(() => {
     const trafficScore = Math.min(monthlyVisitors / 150, 30);
@@ -256,6 +260,82 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
       setError(nextError instanceof Error ? nextError.message : isEn ? "Could not load playbook." : "Playbook konnte nicht geladen werden.");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function submitCapture(mode: "newsletter" | "lead") {
+    if (!captureEmail.trim()) {
+      setCaptureStatus("error");
+      setCaptureMessage(isEn ? "Please enter your email first." : "Bitte trage zuerst deine E-Mail ein.");
+      return;
+    }
+
+    setCaptureStatus("loading");
+    setCaptureMessage("");
+
+    const normalizedEmail = captureEmail.trim().toLowerCase();
+    const normalizedName = captureName.trim();
+    const sourceToken = `revenue-navigator:${focus}:${plan}:score-${opportunityScore}`;
+
+    try {
+      if (mode === "newsletter") {
+        const response = await fetch("/api/subscribe-newsletter", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: normalizedEmail,
+            name: normalizedName || undefined,
+            source: sourceToken,
+          }),
+        });
+
+        const payload = await response.json();
+        if (!response.ok) {
+          throw new Error(payload.error || (isEn ? "Newsletter signup failed." : "Newsletter-Anmeldung fehlgeschlagen."));
+        }
+
+        setCaptureStatus("success");
+        setCaptureMessage(
+          isEn
+            ? "Check your inbox and confirm your newsletter subscription."
+            : "Bitte pruefe dein Postfach und bestaetige deine Newsletter-Anmeldung."
+        );
+        return;
+      }
+
+      const response = await fetch("/api/contact-lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: normalizedName || undefined,
+          email: normalizedEmail,
+          plan,
+          source: sourceToken,
+          intent: "upgrade",
+          reason: "revenue_navigator_followup",
+        }),
+      });
+
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.error || (isEn ? "Lead request failed." : "Lead-Anfrage fehlgeschlagen."));
+      }
+
+      setCaptureStatus("success");
+      setCaptureMessage(
+        isEn
+          ? "Great. We saved your request and will reach out with next steps."
+          : "Perfekt. Deine Anfrage ist gespeichert und wir melden uns mit den naechsten Schritten."
+      );
+    } catch (nextError) {
+      setCaptureStatus("error");
+      setCaptureMessage(
+        nextError instanceof Error
+          ? nextError.message
+          : isEn
+            ? "Connection error. Please try again."
+            : "Verbindungsfehler. Bitte erneut versuchen."
+      );
     }
   }
 
@@ -534,6 +614,77 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
 
       <section id="pricing" className="px-5 pb-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
+          <div className="mb-8 rounded-[2rem] border border-emerald-400/20 bg-gradient-to-br from-emerald-500/12 via-slate-950/40 to-cyan-500/10 p-6 shadow-2xl shadow-emerald-950/20">
+            <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-emerald-200/70">
+                  {isEn ? "Step 5: capture demand" : "Schritt 5: Nachfrage erfassen"}
+                </p>
+                <h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">
+                  {isEn ? "Keep every scan as a real contact" : "Jeden Scan als echten Kontakt behalten"}
+                </h2>
+                <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300 sm:text-base">
+                  {isEn
+                    ? "Use one form for both actions: newsletter for long-term nurture, lead request for direct upgrade conversations."
+                    : "Nutze ein gemeinsames Formular fuer beide Aktionen: Newsletter fuer langfristiges Nurturing, Lead-Anfrage fuer direkte Upgrade-Gespraeche."}
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-slate-950/35 p-4 sm:p-5">
+                <div className="grid gap-3">
+                  <input
+                    type="text"
+                    value={captureName}
+                    onChange={(event) => setCaptureName(event.target.value)}
+                    placeholder={isEn ? "Your name" : "Dein Name"}
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-400 focus:border-emerald-400 focus:outline-none"
+                  />
+                  <input
+                    type="email"
+                    value={captureEmail}
+                    onChange={(event) => setCaptureEmail(event.target.value)}
+                    placeholder={isEn ? "your@email.com" : "deine@email.de"}
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-400 focus:border-emerald-400 focus:outline-none"
+                  />
+
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    <button
+                      type="button"
+                      onClick={() => void submitCapture("newsletter")}
+                      disabled={captureStatus === "loading"}
+                      className="rounded-xl border border-cyan-300/20 bg-cyan-500/15 px-4 py-3 text-sm font-bold text-cyan-100 transition hover:bg-cyan-500/25 disabled:opacity-60"
+                    >
+                      {captureStatus === "loading" ? (isEn ? "Saving..." : "Speichert...") : (isEn ? "Join newsletter" : "Newsletter sichern")}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => void submitCapture("lead")}
+                      disabled={captureStatus === "loading"}
+                      className="rounded-xl border border-emerald-300/20 bg-emerald-500/15 px-4 py-3 text-sm font-bold text-emerald-100 transition hover:bg-emerald-500/25 disabled:opacity-60"
+                    >
+                      {captureStatus === "loading" ? (isEn ? "Saving..." : "Speichert...") : (isEn ? "Request upgrade help" : "Upgrade-Hilfe anfragen")}
+                    </button>
+                  </div>
+
+                  <p className="text-xs text-slate-400">
+                    {isEn
+                      ? "Newsletter uses double opt-in. Lead request goes to your admin pipeline."
+                      : "Newsletter nutzt Double-Opt-in. Lead-Anfrage geht direkt in deine Admin-Pipeline."}
+                  </p>
+
+                  {captureMessage && (
+                    <p className={[
+                      "text-sm",
+                      captureStatus === "success" ? "text-emerald-300" : "text-rose-300",
+                    ].join(" ")}>
+                      {captureMessage}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="mb-8 max-w-3xl">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">{isEn ? "Subscription models" : "Abo-Modelle"}</p>
             <h2 className="mt-2 text-3xl font-black sm:text-5xl">{isEn ? "Start free, then unlock the real leverage" : "Kostenlos starten, dann den echten Hebel freischalten"}</h2>
