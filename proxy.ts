@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getExpectedAdminCredentials, hasValidAdminSession, hasValidBasicAuth } from "./lib/admin-auth";
+import { getExpectedAdminCredentials, hasValidAdminSession } from "./lib/admin-auth";
 
 const PROTECTED_PREFIXES = ["/admin", "/api/internal-bots", "/api/contact-lead/status", "/api/newsletter-subscribers", "/api/agency-leads", "/create-article", "/editor"];
 const ADMIN_LOGIN_PATH = "/admin-login";
@@ -22,7 +22,7 @@ export function proxy(request: NextRequest) {
     return new NextResponse("Admin guard is not configured.", { status: 503 });
   }
 
-  if (hasValidAdminSession(request) || hasValidBasicAuth(request)) {
+  if (hasValidAdminSession(request)) {
     return NextResponse.next();
   }
 

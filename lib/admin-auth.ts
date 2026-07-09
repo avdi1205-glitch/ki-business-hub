@@ -63,28 +63,3 @@ export async function isAdminSessionAuthenticated() {
 
   return sessionCookie === createAdminSessionToken(credentials.user, credentials.password);
 }
-
-export function hasValidBasicAuth(request: NextRequest) {
-  const credentials = getExpectedAdminCredentials();
-  if (!credentials) return false;
-
-  const authHeader = request.headers.get("authorization");
-  if (!authHeader || !authHeader.startsWith("Basic ")) return false;
-
-  const encoded = authHeader.slice(6);
-  let decoded = "";
-
-  try {
-    decoded = Buffer.from(encoded, "base64").toString("utf8");
-  } catch {
-    return false;
-  }
-
-  const separatorIndex = decoded.indexOf(":");
-  if (separatorIndex < 0) return false;
-
-  const user = decoded.slice(0, separatorIndex);
-  const password = decoded.slice(separatorIndex + 1);
-
-  return user === credentials.user && password === credentials.password;
-}
