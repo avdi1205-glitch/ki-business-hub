@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { isAdSenseEnabled, toAdClientId } from "../../lib/adsense";
+import { hasConsent } from "../../lib/cookie-consent";
 
 type AdSize = "responsive" | "728x90" | "300x250" | "160x600" | "300x600";
 
@@ -18,9 +19,14 @@ export default function GoogleAd({
 }: GoogleAdProps) {
   const adClientId = toAdClientId(process.env.NEXT_PUBLIC_ADSENSE_ID);
   const adsEnabled = isAdSenseEnabled(process.env.NEXT_PUBLIC_ADSENSE_ENABLED);
+  const [advertisingConsent, setAdvertisingConsent] = useState(false);
 
   useEffect(() => {
-    if (!adsEnabled || !adClientId) return;
+    setAdvertisingConsent(hasConsent("advertising"));
+  }, []);
+
+  useEffect(() => {
+    if (!adsEnabled || !adClientId || !advertisingConsent) return;
 
     try {
       const googleAds = window as Window & {
@@ -42,9 +48,9 @@ export default function GoogleAd({
     } catch (error) {
       console.error("AdSense error:", error);
     }
-  }, [adsEnabled, adClientId, slot]);
+  }, [adsEnabled, adClientId, slot, advertisingConsent]);
 
-  if (!adsEnabled || !adClientId) {
+  if (!adsEnabled || !adClientId || !advertisingConsent) {
     return null;
   }
 

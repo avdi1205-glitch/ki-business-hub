@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import "./globals.css";
@@ -8,6 +7,8 @@ import Navbar from "./components/Navbar";
 import { ExitIntentPopup } from "./components/ExitIntentPopup";
 import { SocialProof } from "./components/SocialProof";
 import SupportAssistant from "./components/SupportAssistant";
+import CookieConsent from "./components/CookieConsent";
+import AnalyticsScripts from "./components/AnalyticsScripts";
 import { getSiteUrl } from "../lib/site-url";
 import { toAdClientId } from "../lib/adsense";
 import { isAdminSessionAuthenticated } from "@/lib/admin-auth";
@@ -146,29 +147,9 @@ export default async function RootLayout({
           }}
         />
 
-        {/* Google AdSense */}
+        {/* Google AdSense meta tag – always present for site verification */}
         {adClient && (
           <meta name="google-adsense-account" content={adClient} />
-        )}
-
-        {/* Google Analytics */}
-        {process.env.NEXT_PUBLIC_GA_ID && (
-          <>
-            <Script
-              async
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-              strategy="afterInteractive"
-            />
-            <Script id="google-analytics" strategy="afterInteractive">
-              {`window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
-  'anonymize_ip': true,
-  'cookie_flags': 'SameSite=None;Secure'
-});`}
-            </Script>
-          </>
         )}
 
       </head>
@@ -186,6 +167,8 @@ gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
               </nav>
             </div>
           </footer>
+          <CookieConsent />
+          {process.env.NEXT_PUBLIC_GA_ID && <AnalyticsScripts gaId={process.env.NEXT_PUBLIC_GA_ID} />}
           <SupportAssistant />
           <ExitIntentPopup />
           <SocialProof />
