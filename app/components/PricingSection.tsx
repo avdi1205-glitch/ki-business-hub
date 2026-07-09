@@ -9,7 +9,7 @@ const pricingPlans = [
   {
     name: "Starter",
     price: "Kostenlos",
-    period: "Fur immer",
+    period: "Für immer",
     descriptionKey: "pricingStarterDescription",
     features: [
       "pricingStarterFeature1",
@@ -84,7 +84,7 @@ export function PricingSection() {
     return {
       ...plan,
       price: isEn ? "Free" : "Kostenlos",
-      period: isEn ? "Forever" : "Fur immer",
+      period: isEn ? "Forever" : "Für immer",
     };
   });
 

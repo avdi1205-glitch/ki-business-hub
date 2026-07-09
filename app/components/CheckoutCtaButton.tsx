@@ -58,7 +58,7 @@ export default function CheckoutCtaButton({
         {variant ? current.label : defaultLabel}
       </Link>
       <p className="text-xs leading-5 text-slate-400">
-        Bitte verwende beim Kauf dieselbe E-Mail wie später fuer deinen Zugang.
+        Bitte verwende beim Kauf dieselbe E-Mail wie später für deinen Zugang.
       </p>
     </div>
   );

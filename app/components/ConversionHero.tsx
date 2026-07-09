@@ -62,12 +62,12 @@ export default function ConversionHero() {
               href="/api/checkout?plan=pro"
               ctaKey="hero-pro"
               variantA={{
-                label: isEn ? "Pro — 39 EUR/month" : "Pro — 39 EUR/Monat",
+                label: isEn ? "Pro — €39/month" : "Pro — 39 €/Monat",
                 sourceSuffix: "price-view",
                 className: "rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-200 transition hover:bg-white/10 active:scale-95",
               }}
               variantB={{
-                label: isEn ? "Pro — 39 EUR/month" : "Pro — 39 EUR/Monat",
+                label: isEn ? "Pro — €39/month" : "Pro — 39 €/Monat",
                 sourceSuffix: "direct-pro",
                 className: "rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-200 transition hover:bg-white/10 active:scale-95",
               }}
