@@ -112,7 +112,7 @@ function starterRecommendations(focus: Focus, monthlyVisitors: number, newslette
 
 export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
   const isEn = locale === "en";
-  const [plan, setPlan] = useState<Plan>("pro");
+  const [plan, setPlan] = useState<Plan>("starter");
   const [focus, setFocus] = useState<Focus>("affiliate");
   const [monthlyVisitors, setMonthlyVisitors] = useState(8000);
   const [affiliateClicks, setAffiliateClicks] = useState(120);
@@ -271,7 +271,7 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
           <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
             <div>
               <p className="mb-4 inline-flex rounded-full border border-cyan-400/30 bg-cyan-500/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.24em] text-cyan-200">
-                {isEn ? "Revenue product" : "Umsatz-Produkt"}
+                {isEn ? "Free scan first" : "Erst kostenlos scannen"}
               </p>
               <h1 className="max-w-4xl text-4xl font-black leading-[1.02] sm:text-5xl lg:text-7xl">
                 {isEn
@@ -280,8 +280,8 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
               </h1>
               <p className="mt-5 max-w-3xl text-base leading-8 text-slate-300 sm:text-lg">
                 {isEn
-                  ? "Run a quick scan, see the strongest revenue lever, and upgrade to a weekly playbook when you want the next step automated."
-                  : "Starte mit einem schnellen Scan, sieh den staerksten Umsatzhebel und upgrade auf einen Wochenplan, wenn du den naechsten Schritt automatisieren willst."}
+                  ? "Start with a free scan, see the strongest revenue lever, and upgrade to a weekly playbook when you want the next step automated."
+                  : "Starte mit einem kostenlosen Scan, sieh den staerksten Umsatzhebel und upgrade auf einen Wochenplan, wenn du den naechsten Schritt automatisieren willst."}
               </p>
 
               <div className="mt-6 flex flex-wrap gap-3 text-sm text-slate-200">
@@ -335,7 +335,7 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
                 disabled={loading}
                 className="rounded-2xl border border-cyan-400/20 bg-cyan-500 px-4 py-3 text-sm font-bold text-slate-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {loading ? (isEn ? "Generating..." : "Generiere...") : isEn ? "Generate" : "Generieren"}
+                {loading ? (isEn ? "Scanning..." : "Scanne...") : plan === "starter" ? (isEn ? "Run free scan" : "Kostenlosen Scan starten") : (isEn ? "Generate" : "Generieren")}
               </button>
             </div>
 
@@ -361,7 +361,7 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
                   onChange={(event) => setPlan(event.target.value as Plan)}
                   className="w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-slate-100 outline-none"
                 >
-                  <option value="starter">Starter</option>
+                  <option value="starter">Starter (free)</option>
                   <option value="pro">Pro</option>
                   <option value="agency">Agency</option>
                 </select>
@@ -469,6 +469,12 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
               </div>
 
               <p className="mt-4 text-sm leading-7 text-slate-200">{currentSummary}</p>
+
+              <div className="mt-4 rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3 text-sm text-slate-300">
+                {isEn
+                  ? "This free scan is enough to understand your first lever. Upgrade later only if you want weekly direction and deeper tracking."
+                  : "Dieser kostenlose Scan reicht, um deinen ersten Hebel zu verstehen. Upgrade spaeter nur, wenn du woechentliche Richtung und tieferes Tracking willst."}
+              </div>
 
               <div className="mt-6 space-y-3">
                 {renderedRecommendations.slice(0, 3).map((rec, index) => (
