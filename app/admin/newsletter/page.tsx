@@ -192,7 +192,11 @@ export default function NewsletterAutomationPage() {
                     <td className="px-6 py-4 text-sm" style={{ color: "var(--text-light)" }}>
                       <div>{new Date(subscriber.createdAt).toLocaleDateString("de-DE")}</div>
                       <div className="text-xs text-slate-500">
-                        {subscriber.confirmedAt ? `Bestätigt: ${new Date(subscriber.confirmedAt).toLocaleDateString("de-DE")}` : "Noch nicht bestätigt"}
+                        {subscriber.confirmedAt
+                          ? `Bestätigt: ${new Date(subscriber.confirmedAt).toLocaleDateString("de-DE")}`
+                          : subscriber.status === "subscribed"
+                            ? "Bestätigt"
+                            : "Noch nicht bestätigt"}
                       </div>
                     </td>
                     <td className="px-6 py-4">
