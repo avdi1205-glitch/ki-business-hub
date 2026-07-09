@@ -36,6 +36,40 @@ function parseRevenueNavigatorSource(source: string | null) {
   };
 }
 
+function parseCheckoutRescueSource(source: string | null) {
+  if (!source || !source.startsWith("checkout-rescue:")) return null;
+
+  const [, plan, intent, reason, ...rest] = source.split(":");
+  return {
+    plan: plan || "unknown",
+    intent: intent || "unknown",
+    reason: reason || "unknown",
+    source: rest.join(":"),
+  };
+}
+
+function teamSizeFromReason(reason: string | null) {
+  if (!reason || !reason.startsWith("agency_onboarding_team_")) return null;
+  return reason.replace("agency_onboarding_team_", "");
+}
+
+function teamPriority(teamSize: string | null) {
+  if (teamSize === "20+") return 4;
+  if (teamSize === "11-20") return 3;
+  if (teamSize === "6-10") return 2;
+  if (teamSize === "2-5") return 1;
+  return 0;
+}
+
+function priorityLabel(teamSize: string | null, isAgency: boolean) {
+  if (!isAgency) return "Normal";
+  const rank = teamPriority(teamSize);
+  if (rank >= 4) return "Hot";
+  if (rank >= 3) return "High";
+  if (rank >= 2) return "Medium";
+  return "Agency";
+}
+
 function focusLabel(focus: string) {
   if (focus === "affiliate") return "Affiliate";
   if (focus === "leadgen") return "Leadgen";
@@ -124,6 +158,29 @@ export default async function DashboardPage() {
       return accumulator;
     }, {})
   ).sort((a, b) => b[1] - a[1])[0];
+
+  const prioritizedRevenueNavigatorLeads = [...revenueNavigatorLeads]
+    .map((row) => {
+      const checkout = parseCheckoutRescueSource(row.source);
+      const parsed = parseRevenueNavigatorSource(row.source);
+      const teamSize = teamSizeFromReason(checkout?.reason || null);
+      const isAgency = (parsed?.plan === "agency") || checkout?.plan === "agency";
+
+      return {
+        ...row,
+        parsed,
+        teamSize,
+        isAgency,
+      };
+    })
+    .sort((left, right) => {
+      if (left.isAgency !== right.isAgency) return left.isAgency ? -1 : 1;
+      const teamDiff = teamPriority(right.teamSize) - teamPriority(left.teamSize);
+      if (teamDiff !== 0) return teamDiff;
+      return right.createdAt.getTime() - left.createdAt.getTime();
+    });
+
+  const agencyPriorityCount = prioritizedRevenueNavigatorLeads.filter((row) => row.isAgency).length;
 
   return (
     <div style={{ background: "var(--background)", minHeight: "100vh" }} className="py-10 px-6">
@@ -248,7 +305,7 @@ export default async function DashboardPage() {
           </Link>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-5">
           <div className="rounded-xl border p-4" style={{ borderColor: "rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)" }}>
             <p className="text-xs uppercase tracking-[0.18em]" style={{ color: "var(--text-light)" }}>Gesamt</p>
             <p className="mt-2 text-3xl font-bold" style={{ color: "var(--text-dark)" }}>{revenueNavigatorLeads.length}</p>
@@ -266,6 +323,10 @@ export default async function DashboardPage() {
             <p className="mt-2 text-xl font-bold" style={{ color: "var(--text-dark)" }}>
               {revenueNavigatorTopFocus ? `${focusLabel(revenueNavigatorTopFocus[0])} (${revenueNavigatorTopFocus[1]})` : "-"}
             </p>
+          </div>
+          <div className="rounded-xl border p-4" style={{ borderColor: "rgba(251,191,36,0.35)", background: "rgba(251,191,36,0.08)" }}>
+            <p className="text-xs uppercase tracking-[0.18em]" style={{ color: "var(--text-light)" }}>Agency Prioritaet</p>
+            <p className="mt-2 text-3xl font-bold" style={{ color: "var(--text-dark)" }}>{agencyPriorityCount}</p>
           </div>
         </div>
 
@@ -291,26 +352,61 @@ export default async function DashboardPage() {
                 <th className="px-3 py-2 font-semibold">E-Mail</th>
                 <th className="px-3 py-2 font-semibold">Fokus</th>
                 <th className="px-3 py-2 font-semibold">Plan</th>
+                <th className="px-3 py-2 font-semibold">Team</th>
+                <th className="px-3 py-2 font-semibold">Prioritaet</th>
                 <th className="px-3 py-2 font-semibold">Status</th>
                 <th className="px-3 py-2 font-semibold">Datum</th>
               </tr>
             </thead>
             <tbody>
-              {revenueNavigatorLeads.map((row) => {
-                const parsed = parseRevenueNavigatorSource(row.source);
+              {prioritizedRevenueNavigatorLeads.map((row) => {
+                const parsed = row.parsed;
+                const priority = priorityLabel(row.teamSize, row.isAgency);
                 return (
                   <tr key={`${row.email}-${row.createdAt.toISOString()}`} className="border-b border-white/10">
                     <td className="px-3 py-2" style={{ color: "var(--text-dark)" }}>{row.email}</td>
                     <td className="px-3 py-2" style={{ color: "var(--text-light)" }}>{parsed ? focusLabel(parsed.focus) : "-"}</td>
                     <td className="px-3 py-2" style={{ color: "var(--text-light)" }}>{parsed ? parsed.plan.toUpperCase() : "-"}</td>
+                    <td className="px-3 py-2" style={{ color: "var(--text-light)" }}>
+                      {row.teamSize ? (
+                        <span className="rounded-full border border-amber-400/35 bg-amber-500/12 px-2 py-1 text-xs font-semibold text-amber-200">
+                          {row.teamSize}
+                        </span>
+                      ) : "-"}
+                    </td>
+                    <td className="px-3 py-2" style={{ color: "var(--text-light)" }}>
+                      <span
+                        className="rounded-full px-2 py-1 text-xs font-semibold"
+                        style={{
+                          background:
+                            priority === "Hot"
+                              ? "rgba(239, 68, 68, 0.2)"
+                              : priority === "High"
+                                ? "rgba(245, 158, 11, 0.2)"
+                                : priority === "Medium"
+                                  ? "rgba(16, 185, 129, 0.2)"
+                                  : "rgba(148, 163, 184, 0.2)",
+                          color:
+                            priority === "Hot"
+                              ? "#fecaca"
+                              : priority === "High"
+                                ? "#fde68a"
+                                : priority === "Medium"
+                                  ? "#bbf7d0"
+                                  : "#e2e8f0",
+                        }}
+                      >
+                        {priority}
+                      </span>
+                    </td>
                     <td className="px-3 py-2" style={{ color: "var(--text-light)" }}>{row.status}</td>
                     <td className="px-3 py-2" style={{ color: "var(--text-light)" }}>{new Date(row.createdAt).toLocaleDateString("de-DE")}</td>
                   </tr>
                 );
               })}
-              {!revenueNavigatorLeads.length && (
+              {!prioritizedRevenueNavigatorLeads.length && (
                 <tr>
-                  <td colSpan={5} className="px-3 py-6 text-center" style={{ color: "var(--text-light)" }}>
+                  <td colSpan={7} className="px-3 py-6 text-center" style={{ color: "var(--text-light)" }}>
                     Noch keine Revenue-Navigator-Leads vorhanden.
                   </td>
                 </tr>
