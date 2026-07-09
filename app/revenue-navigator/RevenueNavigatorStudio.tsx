@@ -171,11 +171,11 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
       tone: "border-cyan-400/35 bg-cyan-500/10",
       badge: isEn ? "Recommended" : "Empfohlen",
       summary: isEn
-        ? "Weekly playbooks, priority actions and better growth visibility."
-        : "Woechentliche Playbooks, priorisierte Hebel und bessere Sicht auf Wachstum.",
+        ? "Weekly playbooks, one clear priority per week, and a system that keeps monetization moving."
+        : "Woechentliche Playbooks, ein klarer Haupthebel pro Woche und ein System, das Monetarisierung voranbringt.",
       features: isEn
-        ? ["Weekly playbook", "Priority actions", "Revenue lift estimate", "Affiliate + lead focus"]
-        : ["Woechentlicher Plan", "Priorisierte Aktionen", "Umsatz-Prognose", "Affiliate- und Lead-Fokus"],
+        ? ["Weekly playbook", "One priority per week", "Revenue lift estimate", "Affiliate, lead and ad focus", "Better CTA direction", "Growth tracking"]
+        : ["Woechentlicher Plan", "Ein Schwerpunkt pro Woche", "Umsatz-Prognose", "Affiliate-, Lead- und Ads-Fokus", "Bessere CTA-Richtung", "Wachstums-Tracking"],
       action: (
         <CheckoutCtaButton
           href="/api/checkout?plan=pro"
@@ -581,6 +581,43 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
               </article>
             ))}
           </div>
+
+              <div className="mt-6 rounded-[2rem] border border-cyan-400/20 bg-gradient-to-br from-cyan-500/12 via-slate-950/40 to-emerald-500/10 p-6 shadow-2xl shadow-cyan-950/20">
+                <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-200/70">{isEn ? "Why Pro" : "Warum Pro"}</p>
+                    <h3 className="mt-2 text-2xl font-black text-white sm:text-3xl">
+                      {isEn
+                        ? "Pro turns the scan into a weekly operating system."
+                        : "Pro macht aus dem Scan ein woechentliches Betriebssystem."}
+                    </h3>
+                    <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300 sm:text-base">
+                      {isEn
+                        ? "Free shows you the first lever. Pro keeps telling you what to do next, so you do not lose momentum after the first idea."
+                        : "Free zeigt dir den ersten Hebel. Pro sagt dir weiter, was als naechstes zu tun ist, damit du nach der ersten Idee nicht stehen bleibst."}
+                    </p>
+                  </div>
+
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3">
+                      <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{isEn ? "Output" : "Output"}</p>
+                      <p className="mt-1 text-sm font-semibold text-white">{isEn ? "1 weekly priority" : "1 Wochenprioritaet"}</p>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3">
+                      <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{isEn ? "Focus" : "Fokus"}</p>
+                      <p className="mt-1 text-sm font-semibold text-white">Affiliate + Leads + Ads</p>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3">
+                      <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{isEn ? "Value" : "Wert"}</p>
+                      <p className="mt-1 text-sm font-semibold text-white">+{formatCurrency(Math.max(39, currentLift + 20))}</p>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3">
+                      <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{isEn ? "Cadence" : "Takt"}</p>
+                      <p className="mt-1 text-sm font-semibold text-white">{isEn ? "Every 7 days" : "Alle 7 Tage"}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
           <div className="mt-6 flex flex-wrap gap-3 text-sm text-slate-400">
             <Link href="/kontakt?plan=pro&intent=upgrade" className="rounded-full border border-white/10 bg-white/5 px-4 py-2 transition hover:bg-white/10">
