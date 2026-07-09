@@ -83,12 +83,15 @@ model AffiliateClick {
 }
 
 model NewsletterSubscriber {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String?
-  source    String?
-  status    String   @default("subscribed")
-  createdAt DateTime @default(now())
+  id                     Int       @id @default(autoincrement())
+  email                  String    @unique
+  name                   String?
+  source                 String?
+  status                 String    @default("pending")
+  confirmTokenHash       String?   @unique
+  confirmTokenExpiresAt  DateTime?
+  confirmedAt            DateTime?
+  createdAt              DateTime  @default(now())
 }
 
 model AdImpression {

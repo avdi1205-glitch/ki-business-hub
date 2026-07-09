@@ -170,13 +170,13 @@ export default async function DatenschutzPage() {
             <div className="space-y-3 text-sm leading-6">
               <p>
                 {isEn
-                  ? "If you subscribe to our newsletter, we store your email address to send you updates."
-                  : "Wenn du unseren Newsletter abonnierst, speichern wir deine E-Mail, um dir Updates zu senden."}
+                  ? "If you subscribe to our newsletter, we store your email address to send you updates. We use double opt-in, meaning you must confirm your subscription by email first."
+                  : "Wenn du unseren Newsletter abonnierst, speichern wir deine E-Mail, um dir Updates zu senden. Wir nutzen Double Opt-In, das heißt, du musst dein Abo zuerst per E-Mail bestätigen."}
               </p>
               <p>
                 {isEn
-                  ? "Legal basis: Consent (GDPR Art. 6 Para. 1 lit. a). You can unsubscribe anytime via link in each email."
-                  : "Rechtsgrundlage: Einwilligung (DSGVO Art. 6 Abs. 1 lit. a). Du kannst dich jederzeit via Link in jeder E-Mail abmelden."}
+                  ? "Legal basis: Consent (GDPR Art. 6 Para. 1 lit. a). We store confirmation status and confirmation timestamps for proof of consent. You can unsubscribe anytime via link in each email."
+                  : "Rechtsgrundlage: Einwilligung (DSGVO Art. 6 Abs. 1 lit. a). Wir speichern Bestätigungsstatus und Zeitstempel als Nachweis der Einwilligung. Du kannst dich jederzeit via Link in jeder E-Mail abmelden."}
               </p>
             </div>
           </section>
