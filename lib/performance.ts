@@ -74,7 +74,7 @@ export const generateSchema = (type: SchemaType, data: ArticleSchemaData) => {
       contactPoint: {
         "@type": "ContactPoint",
         contactType: "Support",
-        email: "kontakt@nexmoneta.com",
+        email: "nexmoneta@gmail.com",
       },
     };
   }
