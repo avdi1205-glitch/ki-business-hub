@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import React from "react";
@@ -6,50 +6,40 @@ import { useTranslations } from "next-intl";
 
 const features = [
   {
-    icon: "🤖",
+    accentColor: "#06b6d4",
     titleKey: "feature1Title",
     descriptionKey: "feature1Description",
     benefitsKeys: ["feature1Benefit1", "feature1Benefit2", "feature1Benefit3"],
-    color: "#3b82f6",
-    badgeKey: "feature1Badge",
     href: "/content-factory",
     ctaKey: "feature1Cta",
+    tag: "Content",
   },
   {
-    icon: "💰",
+    accentColor: "#10b981",
     titleKey: "feature2Title",
     descriptionKey: "feature2Description",
     benefitsKeys: ["feature2Benefit1", "feature2Benefit2", "feature2Benefit3"],
-    color: "#10b981",
-    badgeKey: "feature2Badge",
     href: "/affiliate",
     ctaKey: "feature2Cta",
+    tag: "Affiliate",
   },
   {
-    icon: "📧",
+    accentColor: "#8b5cf6",
     titleKey: "feature3Title",
     descriptionKey: "feature3Description",
     benefitsKeys: ["feature3Benefit1", "feature3Benefit2", "feature3Benefit3"],
-    color: "#8b5cf6",
-    badgeKey: "feature3Badge",
     href: "/content-factory",
     ctaKey: "feature3Cta",
-    titleColor: "#c4b5fd",
-    badgeTextColor: "#0f172a",
-    ctaTextColor: "#0f172a",
+    tag: "Automation",
   },
   {
-    icon: "🔍",
+    accentColor: "#f59e0b",
     titleKey: "feature4Title",
     descriptionKey: "feature4Description",
     benefitsKeys: ["feature4Benefit1", "feature4Benefit2", "feature4Benefit3"],
-    color: "#f59e0b",
-    badgeKey: "feature4Badge",
     href: "/stats",
     ctaKey: "feature4Cta",
-    titleColor: "#facc15",
-    badgeTextColor: "#0f172a",
-    ctaTextColor: "#0f172a",
+    tag: "Analytics",
   },
 ];
 
@@ -57,144 +47,62 @@ export function FeaturesSection() {
   const t = useTranslations("home");
 
   return (
-    <section className="relative overflow-hidden py-24">
-      <div className="absolute inset-0 opacity-70 [background:radial-gradient(circle_at_15%_10%,rgba(14,165,233,0.10),transparent_28%),radial-gradient(circle_at_85%_20%,rgba(168,85,247,0.08),transparent_24%),linear-gradient(180deg,rgba(15,23,42,0.0),rgba(15,23,42,0.35))]" />
+    <section className="py-28" style={{ background: "#080e1a" }}>
+      <div className="mx-auto max-w-6xl px-6 sm:px-8 lg:px-10">
 
-      <div className="relative mx-auto max-w-6xl px-4">
-        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
-          <div>
-            <p className="mb-4 text-xs font-bold uppercase tracking-[0.28em] text-cyan-300/80">Feature Layer</p>
-            <h2 className="display-heading max-w-xl text-4xl font-black text-white sm:text-5xl md:text-6xl">
-              {t("featuresTitle")}
-            </h2>
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-              {t("featuresSubtitle")}
-            </p>
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-xl">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-slate-500">Features</p>
+            <h2 className="text-4xl font-black text-white sm:text-5xl lg:text-6xl">{t("featuresTitle")}</h2>
           </div>
-
-          <div className="grid gap-4 sm:grid-cols-3 lg:translate-y-6">
-            <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-300/80">Schneller Output</p>
-              <p className="mt-2 text-sm leading-6 text-slate-300">
-                Inhalte, Empfehlungen und Workflows schneller in einen verwertbaren Zustand bringen.
-              </p>
-            </div>
-            <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-5 backdrop-blur-xl sm:translate-y-4">
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300/80">Mehr Monetarisierung</p>
-              <p className="mt-2 text-sm leading-6 text-slate-300">
-                Features sind direkt mit Affiliate-, Upgrade- und Funnel-Zielen verbunden.
-              </p>
-            </div>
-            <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-5 backdrop-blur-xl sm:-translate-y-4">
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-violet-300/80">Weniger Reibung</p>
-              <p className="mt-2 text-sm leading-6 text-slate-300">
-                Du findest schneller den nächsten sinnvollen Schritt, ohne lange zu suchen.
-              </p>
-            </div>
-          </div>
+          <p className="max-w-sm text-base leading-7 text-slate-400 lg:pb-2 lg:text-right">{t("featuresSubtitle")}</p>
         </div>
 
-        {/* Features Grid */}
-        <div className="mt-14 grid gap-8 md:grid-cols-2">
+        <div className="mt-16 space-y-3">
           {features.map((feature, idx) => (
             <div
-              key={idx}
-              className={`relative group overflow-hidden rounded-[2rem] transition-all duration-300 hover:-translate-y-2 ${
-                idx % 2 === 0 ? "md:translate-y-8" : "md:-translate-y-6"
-              }`}
-              style={{
-                background:
-                  "linear-gradient(180deg, rgba(15,23,42,0.85) 0%, rgba(15,23,42,0.55) 100%)",
-                border: `1px solid ${feature.color}4d`,
-                boxShadow: `0 25px 60px rgba(2, 6, 23, 0.35), inset 0 1px 0 rgba(255,255,255,0.05)`,
-              }}
+              key={feature.tag}
+              className="grid gap-6 rounded-2xl border border-white/[0.07] p-7 transition-all duration-200 hover:border-white/15 lg:grid-cols-[2fr_1.2fr_auto]"
+              style={{ background: "rgba(255,255,255,0.02)" }}
             >
-              <div className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: `radial-gradient(circle at top left, ${feature.color}20, transparent 42%)` }} />
-
-              {/* Gradient Header */}
-              <div className="h-1" style={{ background: feature.color }} />
-
-              {/* Badge */}
-              <div className="absolute top-4 right-4">
-                <span
-                  className="px-3 py-1 rounded-full text-xs font-semibold"
-                  style={{ background: feature.color, color: (feature as { badgeTextColor?: string }).badgeTextColor || "#ffffff" }}
-                >
-                  {t(feature.badgeKey)}
+              <div>
+                <span className="mb-3 inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold" style={{ background: feature.accentColor + "18", color: feature.accentColor }}>
+                  {feature.tag}
                 </span>
+                <h3 className="text-xl font-bold text-white">{t(feature.titleKey)}</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-400">{t(feature.descriptionKey)}</p>
               </div>
 
-              {/* Content */}
-              <div className="p-8">
-                {/* Icon */}
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl text-5xl transition-transform duration-300 group-hover:scale-105" style={{ background: `${feature.color}20` }}>
-                  {feature.icon}
-                </div>
+              <ul className="flex flex-col justify-center space-y-2">
+                {feature.benefitsKeys.map((key) => (
+                  <li key={key} className="flex items-start gap-2 text-sm text-slate-300">
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: feature.accentColor }} />
+                    {t(key)}
+                  </li>
+                ))}
+              </ul>
 
-                {/* Title */}
-                <h3 className="mb-2 text-2xl font-black" style={{ color: (feature as { titleColor?: string }).titleColor || feature.color }}>
-                  {t(feature.titleKey)}
-                </h3>
-
-                {/* Description */}
-                <p className="mb-6 leading-7" style={{ color: "var(--text-light)" }}>
-                  {t(feature.descriptionKey)}
-                </p>
-
-                <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm leading-6 text-slate-300">
-                  {idx === 0
-                    ? "Gut fuer den schnellen Start mit Content- und Workflow-Aufbau."
-                    : idx === 1
-                      ? "Gut fuer Empfehlungen, Vergleiche und Affiliate-Optimierung."
-                      : idx === 2
-                        ? "Gut fuer E-Mail- und Conversion-Strecken, die Umsatz nachziehen."
-                        : "Gut fuer Analyse, Priorisierung und bessere Entscheidungen."}
-                </div>
-
-                {/* Benefits */}
-                <ul className="space-y-2 mb-6">
-                  {feature.benefitsKeys.map((benefitKey, bidx) => (
-                    <li key={bidx} className="flex items-center gap-2 text-sm" style={{ color: "var(--text-muted)" }}>
-                      <span className="w-1.5 h-1.5 rounded-full" style={{ background: feature.color }} />
-                      {t(benefitKey)}
-                    </li>
-                  ))}
-                </ul>
-
-                {/* CTA */}
+              <div className={["flex items-center", idx % 2 === 0 ? "lg:justify-end" : "lg:justify-start"].join(" ")}>
                 <Link
                   href={feature.href}
-                  className="block w-full rounded-2xl px-4 py-3 text-center font-semibold transition-all duration-300 hover:shadow-lg group-hover:scale-[1.02]"
-                  style={{ background: feature.color, color: (feature as { ctaTextColor?: string }).ctaTextColor || "#ffffff" }}
+                  className="inline-flex items-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-semibold transition hover:opacity-90"
+                  style={{ borderColor: feature.accentColor + "40", color: feature.accentColor, background: feature.accentColor + "0f" }}
                 >
-                  {t(feature.ctaKey)} →
+                  {t(feature.ctaKey)} &#8594;
                 </Link>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Bottom CTA */}
-        <div className="mt-16 flex flex-col items-start gap-6 rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur-xl lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.28em] text-slate-400">Next Step</p>
-            <p className="mt-3 text-lg text-slate-200">
-            🚀 {t("featuresBottomCopy")}
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <Link
-              href="/content-factory"
-              className="inline-block rounded-2xl px-8 py-4 text-lg font-bold text-white transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
-              style={{ background: "var(--primary)" }}
-            >
+        <div className="mt-10 flex flex-col gap-4 rounded-2xl border border-white/[0.07] px-7 py-6 sm:flex-row sm:items-center sm:justify-between" style={{ background: "rgba(255,255,255,0.02)" }}>
+          <p className="text-base text-slate-300">{t("featuresBottomCopy")}</p>
+          <div className="flex shrink-0 gap-3">
+            <Link href="/content-factory" className="rounded-xl bg-white px-5 py-2.5 text-sm font-bold text-slate-900 transition hover:bg-slate-100">
               {t("featuresBottomCta")}
             </Link>
-            <Link
-              href="/affiliate"
-              className="inline-block rounded-2xl border border-white/10 bg-white/5 px-8 py-4 text-lg font-bold text-slate-100 transition-all duration-300 hover:-translate-y-1 hover:bg-white/10"
-            >
-              Empfehlungen ansehen
+            <Link href="/affiliate" className="rounded-xl border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold text-slate-200 transition hover:bg-white/10">
+              Affiliate
             </Link>
           </div>
         </div>
