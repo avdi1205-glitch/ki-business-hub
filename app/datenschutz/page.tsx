@@ -68,12 +68,6 @@ export default async function DatenschutzPage() {
                 : `Wenn du Fragen zum Datenschutz hast, kannst du uns jederzeit unter ${supportEmail} per E-Mail kontaktieren.`}
             </p>
           </div>
-
-          <p className="text-sm text-gray-500 pt-6">
-            {isEn
-              ? "Note: Before launch, this privacy policy must be adapted to your actual services (analytics, cookies, hosting, and so on)."
-              : "Hinweis: Vor dem Launch muss diese Datenschutzerklärung an deine tatsächlichen Dienste angepasst werden (Analytics, Cookies, Hosting usw.)."}
-          </p>
         </div>
       </section>
     </main>

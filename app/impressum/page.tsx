@@ -14,35 +14,25 @@ export default async function ImpressumPage() {
           {isEn ? "Imprint" : "Impressum"}
         </h1>
 
-        <p className="text-gray-300 mb-6">
-          {isEn ? "This website is currently under construction." : "Diese Website befindet sich aktuell im Aufbau."}
-        </p>
-
         <div className="space-y-4 text-gray-300">
           <p>
-            <strong>Name:</strong><br />
+            <strong>{isEn ? "Name:" : "Name:"}</strong><br />
             {legalName}
           </p>
 
           <p>
-            <strong>Address:</strong><br />
+            <strong>{isEn ? "Address:" : "Adresse:"}</strong><br />
             {legalAddress}
           </p>
 
           <p>
-            <strong>Email:</strong><br />
+            <strong>E-Mail:</strong><br />
             {supportEmail}
           </p>
 
           <p>
-            <strong>Responsible under § 18 Abs. 2 MStV:</strong><br />
+            <strong>{isEn ? "Responsible under § 18 Abs. 2 MStV:" : "Verantwortlich nach § 18 Abs. 2 MStV:"}</strong><br />
             {legalName}
-          </p>
-
-          <p className="pt-6 text-sm text-gray-500">
-            {isEn
-              ? "Note: Before launch, replace all placeholders with your real information."
-              : "Hinweis: Ersetze vor dem Launch alle Platzhalter durch deine echten Angaben."}
           </p>
         </div>
       </section>
