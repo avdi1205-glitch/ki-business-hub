@@ -4,6 +4,8 @@ export default async function DatenschutzPage() {
   const locale = await getLocale();
   const isEn = locale === "en";
   const supportEmail = "kontakt@nexmoneta.com";
+  const legalName = "Avdi Morina";
+  const legalAddress = "Klepsauerstr. 60, 74677 Dörzbach, Deutschland";
 
   return (
     <main className="min-h-screen p-10" style={{ background: "var(--background)", color: "var(--text-dark)" }}>
@@ -25,8 +27,8 @@ export default async function DatenschutzPage() {
             </h2>
 
             <p>
-              {isEn ? "Your name" : "Dein Name"}<br />
-              {isEn ? "Your address" : "Deine Adresse"}<br />
+              {legalName}<br />
+              {legalAddress}<br />
               {supportEmail}
             </p>
           </div>

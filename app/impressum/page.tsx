@@ -4,6 +4,8 @@ export default async function ImpressumPage() {
   const locale = await getLocale();
   const isEn = locale === "en";
   const supportEmail = "kontakt@nexmoneta.com";
+  const legalName = "Avdi Morina";
+  const legalAddress = "Klepsauerstr. 60, 74677 Dörzbach, Deutschland";
 
   return (
     <main className="min-h-screen p-10" style={{ background: "var(--background)", color: "var(--text-dark)" }}>
@@ -19,12 +21,12 @@ export default async function ImpressumPage() {
         <div className="space-y-4 text-gray-300">
           <p>
             <strong>Name:</strong><br />
-            {isEn ? "Your name" : "Dein Name"}
+            {legalName}
           </p>
 
           <p>
             <strong>Address:</strong><br />
-            {isEn ? "Your address" : "Deine Adresse"}
+            {legalAddress}
           </p>
 
           <p>
@@ -34,7 +36,7 @@ export default async function ImpressumPage() {
 
           <p>
             <strong>Responsible under § 18 Abs. 2 MStV:</strong><br />
-            {isEn ? "Your name" : "Dein Name"}
+            {legalName}
           </p>
 
           <p className="pt-6 text-sm text-gray-500">
