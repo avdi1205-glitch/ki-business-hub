@@ -48,8 +48,8 @@ Fülle diese Variablen aus:
 
 ```env
 # Google AdSense
-GOOGLE_ADSENSE_ID=ca-pub-1234567890123456  # Deine AdSense-ID
-NEXT_PUBLIC_ADSENSE_ID=ca-pub-1234567890123456
+GOOGLE_ADSENSE_ID=ca-pub-929565421244191  # Nexmoneta AdSense-ID
+NEXT_PUBLIC_ADSENSE_ID=ca-pub-929565421244191
 NEXT_PUBLIC_ADSENSE_ENABLED=true
 
 # Google Analytics
@@ -63,7 +63,7 @@ RESEND_API_KEY=re_xxxxxxxxxxxxx
 NEWSLETTER_FROM_EMAIL=newsletter@yourdomain.com
 
 # Site Configuration
-NEXT_PUBLIC_SITE_URL=https://yourdomain.com
+NEXT_PUBLIC_SITE_URL=https://www.nexmoneta.com
 ```
 
 ### Step 2: Dependencies installieren

@@ -56,8 +56,8 @@ Important:
 
 ### Live Verification Checklist
 
-1. `https://nexmoneta.com/ads.txt` returns:
-	`google.com, pub-<your-id>, DIRECT, f08c47fec0942fa0`
+1. `https://www.nexmoneta.com/ads.txt` returns:
+	`google.com, pub-929565421244191, DIRECT, f08c47fec0942fa0`
 2. Production HTML contains the AdSense script URL with `client=ca-pub-...`.
 3. Blog and article pages contain ad blocks (`adsbygoogle`) with slot IDs.
 
