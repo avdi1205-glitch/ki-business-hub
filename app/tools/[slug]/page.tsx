@@ -139,7 +139,7 @@ export default async function ToolDetailPage({
 
         <div className="mb-8 rounded-[2rem] border border-emerald-400/20 bg-gradient-to-br from-emerald-500/12 to-cyan-500/8 p-6 shadow-2xl shadow-slate-950/20 backdrop-blur-xl">
           <p className="text-xs font-bold uppercase tracking-[0.24em] text-emerald-300/80">
-            {isEn ? "Next revenue step" : "Naechster Umsatzschritt"}
+            {isEn ? "Next step" : "Nächster Schritt"}
           </p>
           <div className="mt-3 grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
             <div>

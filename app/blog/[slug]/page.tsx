@@ -200,7 +200,7 @@ export default async function BlogArticlePage({
             </div>
             <div>
               <p className="text-sm font-bold text-cyan-300">2. Passendes Tool waehlen</p>
-              <p className="mt-1 text-sm leading-6 text-slate-200">Die naechste gute Entscheidung ist meist eines der Top-Tools oder ein direkter Vergleich.</p>
+              <p className="mt-1 text-sm leading-6 text-slate-200">Die nächste gute Entscheidung ist meist eines der Top-Tools oder ein direkter Vergleich.</p>
             </div>
             <div>
               <p className="text-sm font-bold text-cyan-300">3. Mit einem Klick weiter</p>
@@ -272,7 +272,7 @@ export default async function BlogArticlePage({
 
             <section className="mt-10 rounded-[2rem] border border-emerald-400/20 bg-gradient-to-br from-emerald-500/12 to-cyan-500/8 p-8 shadow-2xl shadow-slate-950/20 backdrop-blur-xl">
               <p className="text-xs font-bold uppercase tracking-[0.24em] text-emerald-300/80">
-                {locale === "en" ? "Next revenue step" : "Naechster Umsatzschritt"}
+                {locale === "en" ? "Next step" : "Nächster Schritt"}
               </p>
               <div className="mt-3 grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
                 <div>

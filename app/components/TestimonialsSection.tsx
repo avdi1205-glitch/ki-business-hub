@@ -208,19 +208,19 @@ export function TestimonialsSection() {
         {/* Stats Strip */}
         <div className="mt-16 grid gap-4 rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur-xl md:grid-cols-4">
           <div className="text-center">
-            <div className="text-4xl font-black text-white">1.247+</div>
+            <div className="text-4xl font-black text-white">50+</div>
             <p className="text-sm text-slate-400">{t("testimonialsStat1")}</p>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-black text-white">€8.2M+</div>
+            <div className="text-4xl font-black text-white">DE/EN</div>
             <p className="text-sm text-slate-400">{t("testimonialsStat2")}</p>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-black text-white">€4.850</div>
+            <div className="text-4xl font-black text-white">100%</div>
             <p className="text-sm text-slate-400">{t("testimonialsStat3")}</p>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-black text-white">4.9★</div>
+            <div className="text-4xl font-black text-white">kostenlos</div>
             <p className="text-sm text-slate-400">{t("testimonialsStat4")}</p>
           </div>
         </div>

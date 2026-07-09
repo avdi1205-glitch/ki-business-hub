@@ -88,7 +88,7 @@ export function FeaturesSection() {
             <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-5 backdrop-blur-xl sm:-translate-y-4">
               <p className="text-xs font-bold uppercase tracking-[0.22em] text-violet-300/80">Weniger Reibung</p>
               <p className="mt-2 text-sm leading-6 text-slate-300">
-                Du springst schneller zur naechsten sinnvollen Aktion statt lange zu suchen.
+                Du findest schneller den nächsten sinnvollen Schritt, ohne lange zu suchen.
               </p>
             </div>
           </div>

@@ -105,7 +105,7 @@ export default async function AffiliatePage() {
               <p className="mt-1 text-sm text-slate-200">Preis und Nutzen sind direkt sichtbar, ohne Zusatzsuche.</p>
             </div>
             <div>
-              <p className="text-sm font-bold text-emerald-300">Naechster Schritt</p>
+              <p className="text-sm font-bold text-emerald-300">Nächster Schritt</p>
               <p className="mt-1 text-sm text-slate-200">Ueber Details oder Button direkt zum passenden Angebot gehen.</p>
             </div>
           </div>

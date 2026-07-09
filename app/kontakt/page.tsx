@@ -60,24 +60,24 @@ export default async function KontaktPage({
     ? {
         name: "Agency",
         accent: "#f59e0b",
-        badge: "Skaliert fuer Team, Kunden und hoehere Publishing-Frequenz",
+        badge: "Passt für Teams, Kunden und höhere Publishing-Frequenz.",
         primaryCta: "Agency manuell anfragen",
         bullets: [
-          "Mehr Volumen fuer Content, SEO und Affiliate-Ausspielung",
-          "Schnellere Umsetzungswege fuer wiederholbare Revenue-Workflows",
-          "Priorisierte Unterstuetzung bei Blockern im Setup",
+          "Mehr Kapazität für Content, SEO und Affiliate-Empfehlungen",
+          "Schnellere Umsetzung mit weniger manuellem Aufwand",
+          "Priorität beim Support, wenn du irgendwo feststeckst",
         ],
       }
     : plan === "pro"
       ? {
           name: "Pro",
           accent: "#06b6d4",
-          badge: "Sauberer Schritt von Testbetrieb zu regelmaessigem Umsatzaufbau",
+          badge: "Sinnvoll, wenn du regelmäßig publizierst und mehr Kontrolle willst.",
           primaryCta: "Pro manuell anfragen",
           bullets: [
-            "Mehr Output fuer Content und Affiliate-Seiten ohne Bastelchaos",
-            "Klarere Monetarisierungspfade mit weniger Reibung im Alltag",
-            "Schnellerer Support fuer konkrete Umsetzungsfragen",
+            "Mehr Artikel und Affiliate-Seiten ohne manuelles Chaos",
+            "Klarerer Überblick über was funktioniert und was nicht",
+            "Schnellerer Support bei konkreten Fragen",
           ],
         }
       : null;
@@ -85,8 +85,8 @@ export default async function KontaktPage({
   const sourceLabel = describeSource(source);
   const headline = planConfig ? `${planConfig.name} anfragen` : "Kontakt";
   const intro = planConfig
-    ? `Du warst schon nah am ${planConfig.name}-Upgrade. Wenn der direkte Checkout gerade noch nicht live ist, holen wir dich ohne Umweg manuell in den naechsten Schritt.`
-    : "Fragen, Feedback oder moechtest du mit uns ueber deinen naechsten Umsatzschritt sprechen?";
+    ? `Du warst kurz davor, ${planConfig.name} zu aktivieren. Wenn der direkte Checkout gerade nicht funktioniert, können wir das manuell regeln.`
+    : "Fragen, Feedback oder möchtest du einfach wissen, was für dich am sinnvollsten ist?";
 
   const mailSubject = encodeURIComponent(
     planConfig
@@ -208,18 +208,18 @@ export default async function KontaktPage({
 
           <div className="space-y-5">
             <div className="rounded-[2rem] border border-white/10 bg-slate-950/40 p-6 text-slate-100">
-              <p className="text-xs font-bold uppercase tracking-[0.24em] text-emerald-300/80">Naechster Schritt</p>
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-emerald-300/80">Nächster Schritt</p>
               <h2 className="mt-3 text-2xl font-black text-white">
                 {planConfig ? `${planConfig.name} passt, wenn du nicht nur testen willst.` : "So holen wir dich in den passenden Flow."}
               </h2>
               <p className="mt-3 text-sm leading-7 text-slate-300">
-                {planConfig?.badge || "Wir priorisieren manuelle Rueckmeldungen fuer Upgrade-, Support- und Revenue-Fragen mit klarem Kontext aus der Quelle."}
+                {planConfig?.badge || "Wir antworten auf Upgrade-, Support- und Billing-Fragen direkt, ohne dass du dich erklären musst."}
               </p>
               <div className="mt-5 space-y-3">
                 {(planConfig?.bullets || [
-                  "Klare Einordnung, welcher Plan zu deinem aktuellen Umsatz-Ziel passt",
-                  "Schneller naechster Schritt statt allgemeinem Hin-und-her",
-                  "Konkreter manueller Rueckkanal, solange Payment Links noch fehlen",
+                  "Kurze Einschätzung, welcher Plan zu deiner Situation passt",
+                  "Direkte Antwort statt endlosem Hin-und-her",
+                  "Manueller Weg, falls der Checkout gerade nicht funktioniert",
                 ]).map((bullet) => (
                   <div key={bullet} className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200">
                     {bullet}
@@ -238,7 +238,7 @@ export default async function KontaktPage({
             </div>
 
             <div className="rounded-[2rem] border border-emerald-300/20 bg-emerald-500/10 p-6">
-              <h2 className="text-2xl font-black" style={{ color: "var(--text-dark)" }}>Schnelle Rueckmeldung</h2>
+              <h2 className="text-2xl font-black" style={{ color: "var(--text-dark)" }}>Kurze Rückmeldung</h2>
               <p className="mt-3 text-sm leading-7" style={{ color: "var(--text-light)" }}>
                 Wenn du keine Mail verfassen willst, hinterlasse hier deine Adresse. Wir speichern Quelle und Plan-Kontext automatisch,
                 damit du eine passende Antwort statt Standard-Text bekommst.

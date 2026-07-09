@@ -63,13 +63,13 @@ export function FAQSection() {
           <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-5 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 md:translate-y-4">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-300/80">Noch unsicher?</p>
             <p className="mt-2 text-sm leading-6 text-slate-300">
-              Die FAQs beantworten die haeufigsten Fragen, bevor du Zeit in den Kaufpfad investierst.
+              Die FAQs beantworten die häufigsten Fragen, die vor dem Start auftauchen.
             </p>
           </div>
           <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-5 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-violet-300/80">Erst vergleichen</p>
             <p className="mt-2 text-sm leading-6 text-slate-300">
-              Wenn du zwei Optionen gegeneinander pruefen willst, gehe direkt zu Tools oder Vergleich.
+              Wenn du zwei Optionen vergleichen möchtest, gehe direkt zu den Tools oder zum Vergleich.
             </p>
           </div>
           <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-5 backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 md:-translate-y-4">

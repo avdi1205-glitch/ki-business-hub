@@ -104,7 +104,7 @@ export default async function Home() {
               name: "Wie funktioniert die Affiliate-Bezahlung?",
               acceptedAnswer: {
                 "@type": "Answer",
-                text: "Du platzierst passende Empfehlungen und kannst Klicks tracken. Die Verguetung kommt vom jeweiligen Partnerprogramm und ist unterschiedlich.",
+                text: "Du platzierst passende Empfehlungen und kannst Klicks tracken. Die Vergütung kommt vom jeweiligen Partnerprogramm und ist unterschiedlich.",
               },
             },
             {
@@ -275,14 +275,14 @@ export default async function Home() {
           <div className="mb-8 grid gap-4 md:grid-cols-3">
             <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5 shadow-lg shadow-slate-950/20 transition-transform duration-300 hover:-translate-y-1">
               <p className="text-sm font-bold text-emerald-300">Mehr Klarheit</p>
-              <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>Schnell sehen, was sich fuer dich lohnt.</p>
+              <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>Schnell sehen, was sich für dich lohnt.</p>
             </div>
             <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5 shadow-lg shadow-slate-950/20 transition-transform duration-300 hover:-translate-y-1 md:translate-y-6">
               <p className="text-sm font-bold text-emerald-300">Weniger Recherche</p>
-              <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>Weniger Tabs, schneller zum naechsten Schritt.</p>
+              <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>Weniger Tabs, schneller zum nächsten Schritt.</p>
             </div>
             <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5 shadow-lg shadow-slate-950/20 transition-transform duration-300 hover:-translate-y-1 md:-translate-y-4">
-              <p className="text-sm font-bold text-emerald-300">Schneller Umsatzpfad</p>
+              <p className="text-sm font-bold text-emerald-300">Direkt zum Ziel</p>
               <p className="mt-2 text-sm leading-6" style={{ color: "var(--text-light)" }}>Direkt zu den stärksten Klickpfaden.</p>
             </div>
           </div>
