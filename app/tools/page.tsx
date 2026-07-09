@@ -3,6 +3,7 @@ import { prisma } from "../../lib/prisma";
 import { getTranslations } from "next-intl/server";
 import { getLocale } from "next-intl/server";
 import CheckoutCtaButton from "../components/CheckoutCtaButton";
+import AiTransparencyBadge from "../components/AiTransparencyBadge";
 
 function createSlug(name: string) {
   return name
@@ -59,6 +60,8 @@ export default async function ToolsPage() {
           <p className="mb-10 max-w-3xl text-xl leading-8 text-slate-100">
             {t("subtitle")}
           </p>
+
+          <AiTransparencyBadge locale={locale} className="mb-8" />
 
           <div className="mb-8 flex flex-wrap gap-3 text-sm text-slate-100">
             <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1">Schnelle Orientierung</span>

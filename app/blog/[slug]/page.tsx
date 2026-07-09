@@ -7,6 +7,7 @@ import GoogleAd from "../../components/GoogleAd";
 import NewsletterForm from "@/app/components/NewsletterForm";
 import OptimizedAffiliateButton from "@/app/components/OptimizedAffiliateButton";
 import CheckoutCtaButton from "@/app/components/CheckoutCtaButton";
+import AiTransparencyBadge from "@/app/components/AiTransparencyBadge";
 import { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 
@@ -177,14 +178,7 @@ export default async function BlogArticlePage({
       {/* Hero Section */}
       <section className="relative overflow-hidden px-6 py-20" style={{ background: "linear-gradient(135deg, var(--background) 0%, var(--background-alt) 100%)" }}>
         <div className="relative mx-auto max-w-4xl">
-          <p className="mb-4 inline-flex items-center rounded-full border border-cyan-400/20 bg-cyan-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-cyan-200">
-            {t("aiGenerated")}
-          </p>
-          <p className="mb-4 max-w-2xl text-xs leading-6 text-slate-300">
-            {locale === "en"
-              ? "Transparency notice: This article can include AI-supported drafting and recommendations, reviewed by humans before publication."
-              : "Transparenz-Hinweis: Dieser Artikel kann KI-unterstuetzte Entwuerfe und Empfehlungen enthalten, die vor der Veroeffentlichung menschlich geprueft werden."}
-          </p>
+          <AiTransparencyBadge locale={locale} className="mb-4" />
 
           <p className="mb-4 font-bold" style={{ color: "var(--primary)" }}>
             {article.category || "Blog"} • SEO Score: {article.seoScore || "0"}

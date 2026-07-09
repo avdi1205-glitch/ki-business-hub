@@ -4,6 +4,7 @@ import { prisma } from "../../../lib/prisma";
 import AffiliateButton from "../../blog/[slug]/AffiliateButton";
 import { getLocale } from "next-intl/server";
 import CheckoutCtaButton from "../../components/CheckoutCtaButton";
+import AiTransparencyBadge from "../../components/AiTransparencyBadge";
 
 function createSlug(name: string) {
   return name
@@ -93,6 +94,8 @@ export default async function ToolDetailPage({
           )}
 
           <p className="text-slate-300">{isEn ? "Category" : "Kategorie"}: {tool.category}</p>
+
+          <AiTransparencyBadge locale={locale} className="mt-4" />
 
           <div className="mt-8 grid gap-3 md:grid-cols-3">
             <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-100">

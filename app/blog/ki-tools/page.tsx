@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getLocale } from "next-intl/server";
+import AiTransparencyBadge from "../../components/AiTransparencyBadge";
 
 type Copy = {
   eyebrow: string;
@@ -77,6 +78,8 @@ export default async function KiToolsArtikel() {
         <p className="mb-10 text-xl text-gray-200">
           {copy.subtitle}
         </p>
+
+        <AiTransparencyBadge locale={locale} className="mb-8" />
 
         <div className="mb-8 rounded-2xl bg-white/10 p-8">
           <h2 className="mb-4 text-3xl font-bold">

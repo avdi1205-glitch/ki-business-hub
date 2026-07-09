@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import ContentStrategist from "../components/ContentStrategist";
 import CheckoutCtaButton from "../components/CheckoutCtaButton";
+import AiTransparencyBadge from "../components/AiTransparencyBadge";
 import FactoryForm from "../components/FactoryForm";
 import FactoryStats from "../components/FactoryStats";
 import FactoryLog from "../components/FactoryLog";
@@ -150,6 +151,7 @@ export default function ContentFactoryPage() {
     <main style={{ background: "#0f172a", minHeight: "100vh", color: "#f1f5f9" }}>
       <section className="mx-auto max-w-6xl px-6 py-16" style={{ background: "#0f172a" }}>
         <h1 className="mb-10 text-5xl font-bold" style={{ color: "#f1f5f9" }}>🤖 {t("title")}</h1>
+        <AiTransparencyBadge locale={locale} className="mb-8" />
 
         <ContentStrategist onApply={applyStrategy} />
 

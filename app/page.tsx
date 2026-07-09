@@ -11,6 +11,7 @@ import { FAQSection } from "./components/FAQSection";
 import { TestimonialsSection } from "./components/TestimonialsSection";
 import NewsletterForm from "./components/NewsletterForm";
 import CheckoutCtaButton from "./components/CheckoutCtaButton";
+import AiTransparencyBadge from "./components/AiTransparencyBadge";
 import { getSiteUrl } from "../lib/site-url";
 import { getLocale, getTranslations } from "next-intl/server";
 
@@ -236,6 +237,7 @@ export default async function Home() {
             <h2 className="text-4xl font-black text-white sm:text-5xl">
               {t("latestArticlesTitle")}
             </h2>
+            <AiTransparencyBadge locale={locale} className="mt-5" />
           </div>
 
           <div className="grid gap-8 md:grid-cols-3">

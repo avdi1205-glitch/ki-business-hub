@@ -2,7 +2,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { prisma } from "../../lib/prisma";
 import GoogleAd from "../components/GoogleAd";
-import { getTranslations } from "next-intl/server";
+import AiTransparencyBadge from "../components/AiTransparencyBadge";
+import { getLocale, getTranslations } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("blog");
@@ -18,6 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function BlogPage() {
   const t = await getTranslations("blog");
+  const locale = await getLocale();
   const blogTopAdSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_TOP;
   const blogGridAdSlot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_BLOG_GRID;
 
@@ -79,6 +81,8 @@ export default async function BlogPage() {
           <p className="mb-10 max-w-3xl text-xl leading-8" style={{ color: "#e2e8f0" }}>
             {t("subtitle")}
           </p>
+
+          <AiTransparencyBadge locale={locale} />
         </div>
       </section>
 

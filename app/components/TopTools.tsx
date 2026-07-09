@@ -1,5 +1,6 @@
 import Link from "next/link";
 import AffiliateButton from "../blog/[slug]/AffiliateButton";
+import AiTransparencyBadge from "./AiTransparencyBadge";
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 
@@ -44,6 +45,7 @@ export default function TopTools({ tools }: { tools: Tool[] }) {
       <div className="mb-6 max-w-2xl">
         <p className="mb-3 text-xs font-bold uppercase tracking-[0.28em] text-cyan-300/80">Top Tools</p>
         <h2 className="display-heading text-3xl font-black text-white sm:text-4xl">🏆 {t("topToolsSectionTitle")}</h2>
+        <AiTransparencyBadge locale={locale} className="mt-4" />
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
