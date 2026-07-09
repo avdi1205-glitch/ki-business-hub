@@ -207,11 +207,11 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
       tone: "border-amber-400/35 bg-amber-500/10",
       badge: isEn ? "Teams" : "Teams",
       summary: isEn
-        ? "For teams that want multiple projects, reporting and deeper workflows."
-        : "Fuer Teams mit mehreren Projekten, Reporting und tieferem Workflow.",
+        ? "For teams that need multi-project control, clearer accountability and faster scaling."
+        : "Fuer Teams mit Multi-Projekt-Steuerung, klarer Verantwortung und schnellerem Skalieren.",
       features: isEn
-        ? ["Multiple projects", "Agency playbooks", "More recommendations", "Growth ops support"]
-        : ["Mehrere Projekte", "Agency-Playbooks", "Mehr Empfehlungen", "Growth-Ops-Unterstuetzung"],
+        ? ["Multiple projects", "Agency playbooks", "More recommendations", "Team-level priorities", "Operational rhythm", "Growth ops support"]
+        : ["Mehrere Projekte", "Agency-Playbooks", "Mehr Empfehlungen", "Team-Prioritaeten", "Operativer Wochenrhythmus", "Growth-Ops-Unterstuetzung"],
       action: (
         <CheckoutCtaButton
           href="/api/checkout?plan=agency"
@@ -765,6 +765,43 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
                     <div className="rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3">
                       <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{isEn ? "Cadence" : "Takt"}</p>
                       <p className="mt-1 text-sm font-semibold text-white">{isEn ? "Every 7 days" : "Alle 7 Tage"}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4 rounded-[2rem] border border-amber-400/20 bg-gradient-to-br from-amber-500/12 via-slate-950/40 to-rose-500/10 p-6 shadow-2xl shadow-amber-950/20">
+                <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-200/70">{isEn ? "Why Agency" : "Warum Agency"}</p>
+                    <h3 className="mt-2 text-2xl font-black text-white sm:text-3xl">
+                      {isEn
+                        ? "Agency gives your team one monetization command center."
+                        : "Agency gibt deinem Team ein gemeinsames Monetarisierungs-Zentrum."}
+                    </h3>
+                    <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300 sm:text-base">
+                      {isEn
+                        ? "When multiple projects run in parallel, Agency keeps focus, ownership and execution speed aligned week by week."
+                        : "Wenn mehrere Projekte parallel laufen, haelt Agency Fokus, Verantwortlichkeit und Umsetzungstempo Woche fuer Woche auf Linie."}
+                    </p>
+                  </div>
+
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3">
+                      <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{isEn ? "Projects" : "Projekte"}</p>
+                      <p className="mt-1 text-sm font-semibold text-white">{isEn ? "Multi-project" : "Mehrere parallel"}</p>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3">
+                      <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{isEn ? "Team" : "Team"}</p>
+                      <p className="mt-1 text-sm font-semibold text-white">{isEn ? "Shared priorities" : "Gemeinsame Prioritaeten"}</p>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3">
+                      <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{isEn ? "Cadence" : "Takt"}</p>
+                      <p className="mt-1 text-sm font-semibold text-white">{isEn ? "Weekly ops rhythm" : "Woechentlicher Ops-Rhythmus"}</p>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3">
+                      <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{isEn ? "Scale" : "Skalierung"}</p>
+                      <p className="mt-1 text-sm font-semibold text-white">{isEn ? "Faster execution" : "Schnellere Umsetzung"}</p>
                     </div>
                   </div>
                 </div>

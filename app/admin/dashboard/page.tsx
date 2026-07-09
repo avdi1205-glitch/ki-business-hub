@@ -11,7 +11,37 @@ function prettifySource(source: string) {
   if (source.startsWith("blog-") && source.endsWith("-hero")) return `Blog Hero: ${source.replace("blog-", "").replace("-hero", "")}`;
   if (source.startsWith("blog-") && source.endsWith("-mid")) return `Blog Mid CTA: ${source.replace("blog-", "").replace("-mid", "")}`;
   if (source.startsWith("blog-") && source.endsWith("-grid")) return `Blog Tool Grid: ${source.replace("blog-", "").replace("-grid", "")}`;
+  if (source.startsWith("revenue-navigator:")) {
+    const parsed = parseRevenueNavigatorSource(source);
+    if (!parsed) return "Revenue Navigator";
+    return `Revenue Navigator (${focusLabel(parsed.focus)} / ${parsed.plan.toUpperCase()})`;
+  }
   return source;
+}
+
+function parseRevenueNavigatorSource(source: string | null) {
+  if (!source || !source.includes("revenue-navigator:")) return null;
+
+  const pivot = source.indexOf("revenue-navigator:");
+  const token = source.slice(pivot);
+  const [key, focus, plan, scoreRaw] = token.split(":");
+
+  if (key !== "revenue-navigator" || !focus || !plan || !scoreRaw) return null;
+  if (plan !== "starter" && plan !== "pro" && plan !== "agency") return null;
+
+  return {
+    focus,
+    plan,
+    score: scoreRaw.startsWith("score-") ? Number(scoreRaw.replace("score-", "")) || null : null,
+  };
+}
+
+function focusLabel(focus: string) {
+  if (focus === "affiliate") return "Affiliate";
+  if (focus === "leadgen") return "Leadgen";
+  if (focus === "ads") return "Ads";
+  if (focus === "membership") return "Membership";
+  return focus;
 }
 
 export default async function DashboardPage() {
@@ -44,22 +74,56 @@ export default async function DashboardPage() {
     where: { status: "subscribed" },
   });
 
-  const [leadSources, activeTests, completedTests] = await Promise.all([
+  const [subscribedSources, revenueNavigatorLeads, activeTests, completedTests] = await Promise.all([
     prisma.newsletterSubscriber.findMany({
       where: { status: "subscribed" },
       select: { source: true },
+    }),
+    prisma.newsletterSubscriber.findMany({
+      where: {
+        source: { contains: "revenue-navigator" },
+      },
+      select: {
+        email: true,
+        source: true,
+        status: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: "desc" },
+      take: 12,
     }),
     prisma.aBTest.count({ where: { status: "active" } }),
     prisma.aBTest.count({ where: { status: "complete" } }),
   ]);
 
   const topLeadSource = Object.entries(
-    leadSources.reduce<Record<string, number>>((accumulator, subscriber) => {
+    subscribedSources.reduce<Record<string, number>>((accumulator, subscriber) => {
       const key = subscriber.source || "unknown";
       accumulator[key] = (accumulator[key] || 0) + 1;
       return accumulator;
     }, {})
   ).sort((left, right) => right[1] - left[1])[0];
+
+  const revenueNavigatorByStatus = revenueNavigatorLeads.reduce<Record<string, number>>((accumulator, row) => {
+    accumulator[row.status] = (accumulator[row.status] || 0) + 1;
+    return accumulator;
+  }, {});
+
+  const revenueNavigatorByPlan = revenueNavigatorLeads.reduce<Record<string, number>>((accumulator, row) => {
+    const parsed = parseRevenueNavigatorSource(row.source);
+    const key = parsed?.plan || "unknown";
+    accumulator[key] = (accumulator[key] || 0) + 1;
+    return accumulator;
+  }, {});
+
+  const revenueNavigatorTopFocus = Object.entries(
+    revenueNavigatorLeads.reduce<Record<string, number>>((accumulator, row) => {
+      const parsed = parseRevenueNavigatorSource(row.source);
+      const key = parsed?.focus || "unknown";
+      accumulator[key] = (accumulator[key] || 0) + 1;
+      return accumulator;
+    }, {})
+  ).sort((a, b) => b[1] - a[1])[0];
 
   return (
     <div style={{ background: "var(--background)", minHeight: "100vh" }} className="py-10 px-6">
@@ -169,6 +233,91 @@ export default async function DashboardPage() {
           <p style={{ color: "var(--text-light)" }}>Sieh, welche Seiten und Quellen Umsatz, Klicks und Leads erzeugen.</p>
           <p className="mt-3" style={{ color: "var(--primary-light)" }}>Zum Revenue-Dashboard →</p>
         </Link>
+      </div>
+
+      <div className="mt-10 rounded-2xl border p-6" style={{ background: "var(--background-elevated)", borderColor: "rgba(16,185,129,0.35)" }}>
+        <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold" style={{ color: "var(--text-dark)" }}>🚀 Revenue Navigator Leads</h2>
+            <p className="mt-1 text-sm" style={{ color: "var(--text-light)" }}>
+              Eigene Tracking-Sicht fuer Scan-basierte Newsletter- und Upgrade-Kontakte.
+            </p>
+          </div>
+          <Link href="/revenue-navigator" className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm font-semibold text-emerald-300 hover:bg-emerald-500/20">
+            Zum Tool
+          </Link>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-4">
+          <div className="rounded-xl border p-4" style={{ borderColor: "rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)" }}>
+            <p className="text-xs uppercase tracking-[0.18em]" style={{ color: "var(--text-light)" }}>Gesamt</p>
+            <p className="mt-2 text-3xl font-bold" style={{ color: "var(--text-dark)" }}>{revenueNavigatorLeads.length}</p>
+          </div>
+          <div className="rounded-xl border p-4" style={{ borderColor: "rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)" }}>
+            <p className="text-xs uppercase tracking-[0.18em]" style={{ color: "var(--text-light)" }}>Lead neu</p>
+            <p className="mt-2 text-3xl font-bold" style={{ color: "var(--text-dark)" }}>{revenueNavigatorByStatus.lead_new || 0}</p>
+          </div>
+          <div className="rounded-xl border p-4" style={{ borderColor: "rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)" }}>
+            <p className="text-xs uppercase tracking-[0.18em]" style={{ color: "var(--text-light)" }}>Subscribed</p>
+            <p className="mt-2 text-3xl font-bold" style={{ color: "var(--text-dark)" }}>{revenueNavigatorByStatus.subscribed || 0}</p>
+          </div>
+          <div className="rounded-xl border p-4" style={{ borderColor: "rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)" }}>
+            <p className="text-xs uppercase tracking-[0.18em]" style={{ color: "var(--text-light)" }}>Top Fokus</p>
+            <p className="mt-2 text-xl font-bold" style={{ color: "var(--text-dark)" }}>
+              {revenueNavigatorTopFocus ? `${focusLabel(revenueNavigatorTopFocus[0])} (${revenueNavigatorTopFocus[1]})` : "-"}
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-4 grid gap-4 md:grid-cols-3">
+          <div className="rounded-xl border p-4" style={{ borderColor: "rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)" }}>
+            <p className="text-xs uppercase tracking-[0.18em]" style={{ color: "var(--text-light)" }}>Starter</p>
+            <p className="mt-2 text-2xl font-bold" style={{ color: "var(--text-dark)" }}>{revenueNavigatorByPlan.starter || 0}</p>
+          </div>
+          <div className="rounded-xl border p-4" style={{ borderColor: "rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)" }}>
+            <p className="text-xs uppercase tracking-[0.18em]" style={{ color: "var(--text-light)" }}>Pro</p>
+            <p className="mt-2 text-2xl font-bold" style={{ color: "var(--text-dark)" }}>{revenueNavigatorByPlan.pro || 0}</p>
+          </div>
+          <div className="rounded-xl border p-4" style={{ borderColor: "rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)" }}>
+            <p className="text-xs uppercase tracking-[0.18em]" style={{ color: "var(--text-light)" }}>Agency</p>
+            <p className="mt-2 text-2xl font-bold" style={{ color: "var(--text-dark)" }}>{revenueNavigatorByPlan.agency || 0}</p>
+          </div>
+        </div>
+
+        <div className="mt-5 overflow-x-auto">
+          <table className="min-w-full text-left text-sm">
+            <thead>
+              <tr className="border-b border-white/10 text-xs uppercase tracking-[0.18em]" style={{ color: "var(--text-light)" }}>
+                <th className="px-3 py-2 font-semibold">E-Mail</th>
+                <th className="px-3 py-2 font-semibold">Fokus</th>
+                <th className="px-3 py-2 font-semibold">Plan</th>
+                <th className="px-3 py-2 font-semibold">Status</th>
+                <th className="px-3 py-2 font-semibold">Datum</th>
+              </tr>
+            </thead>
+            <tbody>
+              {revenueNavigatorLeads.map((row) => {
+                const parsed = parseRevenueNavigatorSource(row.source);
+                return (
+                  <tr key={`${row.email}-${row.createdAt.toISOString()}`} className="border-b border-white/10">
+                    <td className="px-3 py-2" style={{ color: "var(--text-dark)" }}>{row.email}</td>
+                    <td className="px-3 py-2" style={{ color: "var(--text-light)" }}>{parsed ? focusLabel(parsed.focus) : "-"}</td>
+                    <td className="px-3 py-2" style={{ color: "var(--text-light)" }}>{parsed ? parsed.plan.toUpperCase() : "-"}</td>
+                    <td className="px-3 py-2" style={{ color: "var(--text-light)" }}>{row.status}</td>
+                    <td className="px-3 py-2" style={{ color: "var(--text-light)" }}>{new Date(row.createdAt).toLocaleDateString("de-DE")}</td>
+                  </tr>
+                );
+              })}
+              {!revenueNavigatorLeads.length && (
+                <tr>
+                  <td colSpan={5} className="px-3 py-6 text-center" style={{ color: "var(--text-light)" }}>
+                    Noch keine Revenue-Navigator-Leads vorhanden.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Quick Actions */}
