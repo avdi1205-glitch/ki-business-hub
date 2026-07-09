@@ -15,6 +15,7 @@ type CheckoutCtaButtonProps = {
   variantA: Variant;
   variantB: Variant;
   defaultLabel?: string;
+  showReminder?: boolean;
 };
 
 function withSource(href: string, source: string) {
@@ -29,6 +30,7 @@ export default function CheckoutCtaButton({
   variantA,
   variantB,
   defaultLabel = variantA.label,
+  showReminder = true,
 }: CheckoutCtaButtonProps) {
   const [variant, setVariant] = useState<"A" | "B" | null>(null);
 
@@ -57,9 +59,11 @@ export default function CheckoutCtaButton({
       <Link href={finalHref} className={current.className}>
         {variant ? current.label : defaultLabel}
       </Link>
-      <p className="text-xs leading-5 text-slate-400">
-        Bitte verwende beim Kauf dieselbe E-Mail wie später für deinen Zugang.
-      </p>
+      {showReminder && (
+        <p className="text-xs leading-5 text-slate-400">
+          Bitte verwende beim Kauf dieselbe E-Mail wie später für deinen Zugang.
+        </p>
+      )}
     </div>
   );
 }

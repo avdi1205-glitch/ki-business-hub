@@ -27,7 +27,6 @@ export default function Navbar({
     { href: "/tools", label: t("tools") },
     { href: "/beste-tools", label: t("bestTools") },
     { href: "/affiliate", label: t("affiliate") },
-    { href: "/konto", label: t("account") },
   ];
 
   const adminLinks = [

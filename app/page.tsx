@@ -173,55 +173,6 @@ export default async function Home() {
         {/* Conversion Hero */}
         <ConversionHero />
 
-        <section className="px-4 pb-8 pt-2 sm:px-6">
-          <div className="mx-auto grid max-w-6xl gap-4 lg:grid-cols-[1.35fr_0.85fr]">
-            <Link
-              href="/tools"
-              className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/6 p-6 shadow-2xl shadow-cyan-950/20 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/30 hover:bg-white/10 md:p-8"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/10 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              <p className="mb-4 text-xs font-bold uppercase tracking-[0.28em] text-cyan-300/80">Schneller Einstieg</p>
-              <h2 className="display-heading max-w-xl text-3xl font-black text-white sm:text-4xl lg:text-5xl">
-                Das ist kein Standard-Layout. Es ist ein schneller Weg zu Entscheidungen.
-              </h2>
-              <p className="mt-5 max-w-xl text-base leading-8 text-slate-300 sm:text-lg">
-                Tools vergleichen, Empfehlungen finden, Inhalte strukturieren: der visuelle Pfad bleibt klar, aber dynamischer und stärker auf Conversion ausgelegt.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3 text-sm font-semibold">
-                <span className="rounded-full border border-cyan-400/20 bg-cyan-500/10 px-4 py-2 text-cyan-200">Asymmetrisch</span>
-                <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-slate-200">Bewegte Tiefe</span>
-                <span className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-4 py-2 text-emerald-200">Klare Hierarchie</span>
-              </div>
-            </Link>
-
-            <div className="grid gap-4">
-              <Link
-                href="/affiliate"
-                className="group rounded-[1.75rem] border border-white/10 bg-slate-950/50 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-400/30 hover:bg-slate-900/70"
-              >
-                <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300/80">Direkter Pfad</p>
-                <p className="mt-3 text-2xl font-black text-white">Empfehlungen, die wie ein Premium-Editor wirken.</p>
-                <p className="mt-3 text-sm leading-7 text-slate-300">Mehr visuelle Spannung, weniger graue Standardboxen.</p>
-              </Link>
-
-              <Link
-                href="/blog"
-                className="group rounded-[1.75rem] border border-white/10 bg-white/5 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-violet-400/30 hover:bg-white/10"
-              >
-                <p className="text-xs font-bold uppercase tracking-[0.22em] text-violet-300/80">Explorativ</p>
-                <p className="mt-3 text-2xl font-black text-white">Lesen, bevor man klickt. Aber schöner inszeniert.</p>
-                <p className="mt-3 text-sm leading-7 text-slate-300">Ein ruhigerer Einstieg für Besucher, die erst Orientierung wollen.</p>
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        <section className="px-4 pb-3 sm:px-6">
-          <div className="mx-auto max-w-6xl rounded-[2rem] border border-cyan-400/15 bg-cyan-500/6 px-5 py-4 text-sm leading-7 text-slate-200 backdrop-blur-xl">
-            <span className="font-semibold text-cyan-300">Oder direkt entscheiden:</span> Wenn du schon weißt, was du brauchst, nimm oben die passende Strecke. Wenn du unsicher bist, helfen dir die Top-Tools beim Vergleichen.
-          </div>
-        </section>
-
       {/* Unique Value Proposition - Einzigartig */}
         <section className="py-24 animate-fadeInUp" style={{ animationDelay: "120ms" }}>
         <div className="mx-auto max-w-6xl px-4">

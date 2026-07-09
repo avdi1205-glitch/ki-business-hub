@@ -47,6 +47,7 @@ export default function ConversionHero() {
             <CheckoutCtaButton
               href="/content-factory"
               ctaKey="hero-start"
+              showReminder={false}
               variantA={{
                 label: isEn ? "Start free" : "Kostenlos starten",
                 sourceSuffix: "free-start",
@@ -75,9 +76,9 @@ export default function ConversionHero() {
           </div>
 
           <div className="mt-10 flex flex-wrap items-center gap-4 text-xs text-slate-600">
-            <span>{isEn ? "No credit card required" : "Keine Kreditkarte notig"}</span>
+            <span>{isEn ? "No credit card required" : "Keine Kreditkarte nötig"}</span>
             <span className="h-px w-4 bg-slate-800" />
-            <span>{isEn ? "Cancel anytime" : "Jederzeit kundbar"}</span>
+            <span>{isEn ? "Cancel anytime" : "Jederzeit kündbar"}</span>
             <span className="h-px w-4 bg-slate-800" />
             <span>{isEn ? "GDPR compliant" : "DSGVO-konform"}</span>
           </div>
