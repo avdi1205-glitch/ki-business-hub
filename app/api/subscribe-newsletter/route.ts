@@ -77,6 +77,7 @@ export async function POST(request: Request) {
             <p style="margin:24px 0;"><a href="${confirmUrl.toString()}" style="display:inline-block;padding:12px 18px;background:#0891b2;color:#fff;text-decoration:none;border-radius:10px;font-weight:700;">Abo bestätigen</a></p>
             <p>Der Bestätigungslink ist 24 Stunden gültig.</p>
             <p>Nach der Bestätigung erhältst du die Willkommens-Mail mit den nächsten Inhalten.</p>
+            <p style="margin-top:14px;color:#475569;font-size:12px;">Transparenz: Teile der Inhalte koennen mit KI-Unterstuetzung erstellt und redaktionell geprueft sein.</p>
           </div>
         `,
       });

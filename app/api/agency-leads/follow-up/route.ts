@@ -96,6 +96,7 @@ export async function POST() {
               <li>aktueller Bottleneck (Traffic, Leads oder Conversion)</li>
             </ul>
             <p>Dann schicken wir dir den passenden Agency-Setup-Plan.</p>
+            <p style="margin-top:10px;color:#475569;font-size:12px;">Transparenz: Teile von Analysen, Empfehlungen oder Entwuerfen koennen mit KI-Unterstuetzung erstellt sein.</p>
             <p style="margin-top:14px;color:#475569;font-size:12px;">Wenn du keine weiteren Follow-up-Mails moechtest, antworte bitte mit STOP.</p>
           </div>
         `,

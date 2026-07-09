@@ -58,6 +58,7 @@ export async function GET(request: NextRequest) {
             <p>Dein Newsletter-Abo ist jetzt bestätigt.</p>
             <p>Du bekommst jetzt konkrete Empfehlungen, neue Artikel und Tools mit echtem Monetarisierungspotenzial.</p>
             <p style="margin-top:24px;"><strong>Bonus:</strong> Halte Ausschau nach den Top AI Tools und Conversion-Tipps in den nächsten Mails.</p>
+            <p style="margin-top:14px;color:#475569;font-size:12px;">Transparenz: Teile der Inhalte koennen mit KI-Unterstuetzung erstellt und redaktionell geprueft sein.</p>
           </div>
         `,
       });
@@ -94,6 +95,7 @@ function renderHtml(success: boolean, message: string) {
           <span class="badge">Newsletter</span>
           <h1>${success ? "Bestätigt" : "Fast geschafft"}</h1>
           <p>${message}</p>
+          <p style="font-size:12px;color:#94a3b8;">Transparenz: Teile der Inhalte auf Nexmoneta koennen mit KI-Unterstuetzung erstellt und redaktionell geprueft sein.</p>
           <p><a href="/">Zur Startseite</a></p>
         </main>
       </body>

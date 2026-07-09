@@ -206,6 +206,24 @@ export default async function DatenschutzPage() {
             </div>
           </section>
 
+          <section id="ki-kennzeichnung">
+            <h2 className="text-2xl font-bold mb-3 text-white">
+              {isEn ? "7b. AI Transparency Labeling" : "7b. KI-Transparenz und Kennzeichnung"}
+            </h2>
+            <div className="space-y-3 text-sm leading-6">
+              <p>
+                {isEn
+                  ? "On this website, selected content, drafts, analyses, or recommendations may be created with AI support and then reviewed by humans before publication."
+                  : "Auf dieser Website koennen ausgewaehlte Inhalte, Entwuerfe, Analysen oder Empfehlungen mit KI-Unterstuetzung erstellt und vor der Veroeffentlichung menschlich geprueft werden."}
+              </p>
+              <p>
+                {isEn
+                  ? "We mark AI-supported content in relevant places and provide a general transparency notice in site areas where this can apply."
+                  : "Wir kennzeichnen KI-unterstuetzte Inhalte an relevanten Stellen und geben einen allgemeinen Transparenz-Hinweis in den Bereichen, in denen dies gelten kann."}
+              </p>
+            </div>
+          </section>
+
           <section>
             <h2 className="text-2xl font-bold mb-3 text-white">
               {isEn ? "8. Affiliate Links" : "8. Affiliate-Links"}

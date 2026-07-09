@@ -180,6 +180,11 @@ export default async function BlogArticlePage({
           <p className="mb-4 inline-flex items-center rounded-full border border-cyan-400/20 bg-cyan-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-cyan-200">
             {t("aiGenerated")}
           </p>
+          <p className="mb-4 max-w-2xl text-xs leading-6 text-slate-300">
+            {locale === "en"
+              ? "Transparency notice: This article can include AI-supported drafting and recommendations, reviewed by humans before publication."
+              : "Transparenz-Hinweis: Dieser Artikel kann KI-unterstuetzte Entwuerfe und Empfehlungen enthalten, die vor der Veroeffentlichung menschlich geprueft werden."}
+          </p>
 
           <p className="mb-4 font-bold" style={{ color: "var(--primary)" }}>
             {article.category || "Blog"} • SEO Score: {article.seoScore || "0"}
