@@ -53,11 +53,17 @@ export default function NewsletterAutomationPage() {
     setLoading(true);
     try {
       const response = await fetch("/api/newsletter-subscribers");
-      const data = (await response.json()) as SubscribersResponse;
-      if (!response.ok) throw new Error((data as { error?: string }).error || "Could not load subscribers");
+      const text = await response.text();
+      const data = text ? (JSON.parse(text) as SubscribersResponse) : null;
 
-      setSubscribers(data.subscribers || []);
-      setCounts(data.counts || { total: 0 });
+      if (response.status === 401) {
+        throw new Error("Bitte als Admin anmelden, damit die Newsletter-Daten geladen werden können.");
+      }
+
+      if (!response.ok) throw new Error((data as { error?: string } | null)?.error || "Could not load subscribers");
+
+      setSubscribers(data?.subscribers || []);
+      setCounts(data?.counts || { total: 0 });
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Could not load subscribers");
     } finally {
