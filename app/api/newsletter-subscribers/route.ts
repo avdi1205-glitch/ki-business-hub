@@ -23,6 +23,18 @@ export async function GET() {
   try {
     const hasConfirmedAtColumn = await supportsConfirmedAtColumn();
 
+    if (hasConfirmedAtColumn) {
+      await prisma.newsletterSubscriber.updateMany({
+        where: {
+          status: "subscribed",
+          confirmedAt: null,
+        },
+        data: {
+          confirmedAt: new Date(),
+        },
+      });
+    }
+
     const subscribers = hasConfirmedAtColumn
       ? await prisma.newsletterSubscriber.findMany({
           orderBy: { createdAt: "desc" },
