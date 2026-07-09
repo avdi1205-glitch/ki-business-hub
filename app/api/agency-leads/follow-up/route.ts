@@ -25,6 +25,10 @@ function priority(teamSize: string | null) {
   return 1;
 }
 
+function isOpenStage(stage: string | undefined) {
+  return stage === "new" || stage === "qualified" || stage === "contacted";
+}
+
 function buildSource(baseSource: string, metadata: Record<string, string>) {
   const suffix = Object.entries(metadata)
     .filter(([, value]) => Boolean(value))
@@ -57,6 +61,9 @@ export async function POST() {
       })
       .filter((row): row is NonNullable<typeof row> => Boolean(row))
       .filter((row) => priority(row.parsed.teamSize) >= 3)
+      .filter((row) => row.parsed.metadata.consent === "yes")
+      .filter((row) => isOpenStage(row.parsed.metadata.stage))
+      .filter((row) => row.parsed.metadata.lastFollowUp !== new Date().toISOString().slice(0, 10))
       .slice(0, 20);
 
     if (!targets.length) {
@@ -89,6 +96,7 @@ export async function POST() {
               <li>aktueller Bottleneck (Traffic, Leads oder Conversion)</li>
             </ul>
             <p>Dann schicken wir dir den passenden Agency-Setup-Plan.</p>
+            <p style="margin-top:14px;color:#475569;font-size:12px;">Wenn du keine weiteren Follow-up-Mails moechtest, antworte bitte mit STOP.</p>
           </div>
         `,
       });

@@ -130,6 +130,7 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
   const [agencyEmail, setAgencyEmail] = useState("");
   const [agencyCompany, setAgencyCompany] = useState("");
   const [agencyTeam, setAgencyTeam] = useState("2-5");
+  const [agencyConsent, setAgencyConsent] = useState(false);
   const [agencyStatus, setAgencyStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [agencyMessage, setAgencyMessage] = useState("");
 
@@ -352,12 +353,23 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
       return;
     }
 
+    if (!agencyConsent) {
+      setAgencyStatus("error");
+      setAgencyMessage(
+        isEn
+          ? "Please confirm data processing for Agency onboarding first."
+          : "Bitte bestaetige zuerst die Datenverarbeitung fuer das Agency-Onboarding."
+      );
+      return;
+    }
+
     setAgencyStatus("loading");
     setAgencyMessage("");
 
     const normalizedEmail = agencyEmail.trim().toLowerCase();
     const normalizedName = agencyName.trim();
     const normalizedCompany = agencyCompany.trim();
+    const consentAt = new Date().toISOString().slice(0, 10);
 
     try {
       const response = await fetch("/api/contact-lead", {
@@ -367,7 +379,7 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
           name: normalizedCompany ? `${normalizedName || "Team"} (${normalizedCompany})` : normalizedName || undefined,
           email: normalizedEmail,
           plan: "agency",
-          source: `revenue-navigator:${focus}:agency:score-${opportunityScore}`,
+          source: `revenue-navigator:${focus}:agency:score-${opportunityScore}|consent:yes|consentAt:${consentAt}`,
           intent: "upgrade",
           reason: `agency_onboarding_team_${agencyTeam}`,
         }),
@@ -387,6 +399,7 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
       setAgencyName("");
       setAgencyEmail("");
       setAgencyCompany("");
+      setAgencyConsent(false);
     } catch (nextError) {
       setAgencyStatus("error");
       setAgencyMessage(
@@ -909,6 +922,24 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
                       <option value="20+">20+</option>
                     </select>
                   </div>
+
+                  <label className="mt-3 flex items-start gap-3 rounded-xl border border-white/10 bg-slate-950/35 px-4 py-3 text-xs leading-6 text-slate-300">
+                    <input
+                      type="checkbox"
+                      checked={agencyConsent}
+                      onChange={(event) => setAgencyConsent(event.target.checked)}
+                      className="mt-1 h-4 w-4 accent-amber-400"
+                    />
+                    <span>
+                      {isEn
+                        ? "I agree that my data can be processed to contact me about Agency onboarding and setup support."
+                        : "Ich stimme zu, dass meine Daten fuer die Kontaktaufnahme zum Agency-Onboarding und Setup-Support verarbeitet werden duerfen."}
+                      {" "}
+                      <Link href="/datenschutz" className="underline text-amber-200 hover:text-amber-100">
+                        {isEn ? "Privacy Policy" : "Datenschutzerklaerung"}
+                      </Link>
+                    </span>
+                  </label>
 
                   <button
                     type="button"

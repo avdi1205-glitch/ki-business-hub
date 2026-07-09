@@ -23,7 +23,7 @@ function parseRevenueNavigatorSource(source: string | null) {
   if (!source || !source.includes("revenue-navigator:")) return null;
 
   const pivot = source.indexOf("revenue-navigator:");
-  const token = source.slice(pivot);
+  const token = source.slice(pivot).split("|")[0];
   const [key, focus, plan, scoreRaw] = token.split(":");
 
   if (key !== "revenue-navigator" || !focus || !plan || !scoreRaw) return null;

@@ -183,6 +183,31 @@ export default async function DatenschutzPage() {
 
           <section>
             <h2 className="text-2xl font-bold mb-3 text-white">
+              {isEn ? "7a. Agency Onboarding and CRM Follow-up" : "7a. Agency Onboarding und CRM-Follow-up"}
+            </h2>
+            <div className="space-y-3 text-sm leading-6">
+              <p>
+                {isEn
+                  ? "If you request Agency onboarding, we process your business contact details, selected team size, and pipeline stage to organize onboarding and sales follow-up."
+                  : "Wenn du Agency-Onboarding anfragst, verarbeiten wir deine Business-Kontaktdaten, die ausgewaehlte Teamgroesse und den Pipeline-Status, um Onboarding und Sales-Follow-up zu organisieren."}
+              </p>
+              <p>
+                {isEn
+                  ? "Follow-up emails are only sent when you explicitly consent in the onboarding form. We store consent markers and consent timestamps for proof."
+                  : "Follow-up-E-Mails werden nur versendet, wenn du im Onboarding-Formular ausdruecklich einwilligst. Wir speichern Einwilligungsmarker und Zeitstempel als Nachweis."}
+              </p>
+              <p>
+                {isEn
+                  ? "Legal basis: Consent (GDPR Art. 6 Para. 1 lit. a). You can withdraw consent at any time by emailing us at "
+                  : "Rechtsgrundlage: Einwilligung (DSGVO Art. 6 Abs. 1 lit. a). Du kannst die Einwilligung jederzeit per E-Mail widerrufen unter "}
+                <a href={`mailto:${supportEmail}`} className="underline text-cyan-400 hover:text-cyan-300">{supportEmail}</a>
+                {isEn ? "." : "."}
+              </p>
+            </div>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold mb-3 text-white">
               {isEn ? "8. Affiliate Links" : "8. Affiliate-Links"}
             </h2>
             <div className="space-y-3 text-sm leading-6">

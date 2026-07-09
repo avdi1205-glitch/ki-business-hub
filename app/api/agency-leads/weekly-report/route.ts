@@ -11,7 +11,10 @@ function parseMeta(source: string | null) {
     accumulator[key] = values.join(":");
     return accumulator;
   }, {});
-  return { stage: meta.stage || "new" };
+  return {
+    stage: meta.stage || "new",
+    consent: meta.consent || "no",
+  };
 }
 
 export async function POST() {
@@ -40,6 +43,19 @@ export async function POST() {
       return accumulator;
     }, {});
 
+    const consentStats = leads.reduce<Record<string, number>>((accumulator, row) => {
+      const consent = parseMeta(row.source).consent === "yes" ? "consent_yes" : "consent_no";
+      accumulator[consent] = (accumulator[consent] || 0) + 1;
+      return accumulator;
+    }, {});
+
+    const slaBreached = leads.filter((row) => {
+      const stage = parseMeta(row.source).stage;
+      const isOpen = stage === "new" || stage === "qualified";
+      const ageHours = (Date.now() - new Date(row.createdAt).getTime()) / (1000 * 60 * 60);
+      return isOpen && ageHours > 24;
+    }).length;
+
     const byStatus = leads.reduce<Record<string, number>>((accumulator, row) => {
       accumulator[row.status] = (accumulator[row.status] || 0) + 1;
       return accumulator;
@@ -62,10 +78,16 @@ export async function POST() {
           <h1 style="margin-bottom:12px;">Weekly Agency Lead Report</h1>
           <p>Zeitraum: letzte 7 Tage</p>
           <p><strong>Total Leads:</strong> ${leads.length}</p>
+          <p><strong>SLA kritische Leads (>24h offen):</strong> ${slaBreached}</p>
           <h2 style="margin-top:20px;">Nach Stage</h2>
           <ul>${Object.entries(byStage).map(([key, value]) => `<li>${key}: ${value}</li>`).join("")}</ul>
           <h2 style="margin-top:20px;">Nach Status</h2>
           <ul>${Object.entries(byStatus).map(([key, value]) => `<li>${key}: ${value}</li>`).join("")}</ul>
+          <h2 style="margin-top:20px;">Einwilligung</h2>
+          <ul>
+            <li>consent_yes: ${consentStats.consent_yes || 0}</li>
+            <li>consent_no: ${consentStats.consent_no || 0}</li>
+          </ul>
         </div>
       `,
     });

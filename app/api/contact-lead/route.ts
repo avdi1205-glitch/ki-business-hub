@@ -36,6 +36,13 @@ export async function POST(request: Request) {
       return Response.json({ error: "Valid email is required" }, { status: 400 });
     }
 
+    const requiresConsent = normalizedPlan === "agency" && normalizedReason.startsWith("agency_onboarding_team_");
+    const hasConsentMarker = /\|consent:yes(\||$)/i.test(normalizedSource);
+
+    if (requiresConsent && !hasConsentMarker) {
+      return Response.json({ error: "Consent is required for agency onboarding follow-up" }, { status: 400 });
+    }
+
     const leadSource = buildLeadSource(body);
 
     const existing = await prisma.newsletterSubscriber.findUnique({
@@ -84,6 +91,7 @@ export async function POST(request: Request) {
               <p><strong>Quelle:</strong> ${normalizedSource}</p>
               <p><strong>Intent:</strong> ${normalizedIntent}</p>
               <p><strong>Grund:</strong> ${normalizedReason}</p>
+              <p><strong>Einwilligung:</strong> ${hasConsentMarker ? "ja" : "nein"}</p>
               <p><strong>Lead-Status:</strong> lead_new</p>
               <p style="margin-top: 20px; color: #475569;">Die Anfrage wurde bereits in der Datenbank gespeichert.</p>
             </div>

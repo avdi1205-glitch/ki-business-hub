@@ -65,6 +65,10 @@ function priority(teamSize: string | null) {
   return 0;
 }
 
+function isSlaRelevant(stage: string) {
+  return stage === "new" || stage === "qualified";
+}
+
 export async function GET() {
   try {
     const rows = await prisma.newsletterSubscriber.findMany({
@@ -98,13 +102,28 @@ export async function GET() {
           stage: parsed.metadata.stage || "new",
           followUpCount: Number(parsed.metadata.followups || "0") || 0,
           lastFollowUpAt: parsed.metadata.lastFollowUp || null,
+          consentGiven: parsed.metadata.consent === "yes",
+          consentAt: parsed.metadata.consentAt || null,
           source: parsed.flowSource,
           score: parsed.flowSource.split(":").find((part) => part.startsWith("score-"))?.replace("score-", "") || null,
           priority: priority(parsed.teamSize),
         };
       })
       .filter((row): row is NonNullable<typeof row> => Boolean(row))
+      .map((lead) => {
+        const ageHours = (Date.now() - new Date(lead.createdAt).getTime()) / (1000 * 60 * 60);
+        const slaBreached = lead.priority >= 3 && isSlaRelevant(lead.stage) && ageHours > 24;
+        const slaDueAt = new Date(new Date(lead.createdAt).getTime() + 24 * 60 * 60 * 1000);
+
+        return {
+          ...lead,
+          slaBreached,
+          slaDueAt,
+          ageHours: Number(ageHours.toFixed(1)),
+        };
+      })
       .sort((left, right) => {
+        if (left.slaBreached !== right.slaBreached) return left.slaBreached ? -1 : 1;
         const prio = right.priority - left.priority;
         if (prio !== 0) return prio;
         return new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime();
@@ -114,6 +133,9 @@ export async function GET() {
       accumulator[lead.stage] = (accumulator[lead.stage] || 0) + 1;
       return accumulator;
     }, { total: leads.length });
+
+    counts.slaBreached = leads.filter((lead) => lead.slaBreached).length;
+    counts.consentMissing = leads.filter((lead) => !lead.consentGiven).length;
 
     return NextResponse.json({ leads, counts });
   } catch (error) {

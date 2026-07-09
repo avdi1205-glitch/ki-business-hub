@@ -15,6 +15,11 @@ type Lead = {
   source: string;
   score: string | null;
   priority: number;
+  consentGiven: boolean;
+  consentAt: string | null;
+  slaBreached: boolean;
+  slaDueAt: string;
+  ageHours: number;
 };
 
 type ApiResponse = {
@@ -112,6 +117,7 @@ export default function AgencyLeadsPage() {
   }, []);
 
   const hotLeads = useMemo(() => leads.filter((lead) => lead.priority >= 3).length, [leads]);
+  const slaCritical = useMemo(() => leads.filter((lead) => lead.slaBreached).length, [leads]);
 
   return (
     <main className="min-h-screen p-4 sm:p-6 lg:p-8" style={{ background: "var(--background)" }}>
@@ -124,7 +130,7 @@ export default function AgencyLeadsPage() {
           </p>
         </div>
 
-        <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-5">
           <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
             <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Total</p>
             <p className="mt-2 text-3xl font-bold text-white">{counts.total || 0}</p>
@@ -140,6 +146,10 @@ export default function AgencyLeadsPage() {
           <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
             <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Won</p>
             <p className="mt-2 text-3xl font-bold text-emerald-200">{counts.won || 0}</p>
+          </div>
+          <div className="rounded-2xl border border-rose-400/30 bg-rose-500/10 p-4">
+            <p className="text-xs uppercase tracking-[0.18em] text-slate-300">SLA kritisch</p>
+            <p className="mt-2 text-3xl font-bold text-rose-200">{slaCritical}</p>
           </div>
         </div>
 
@@ -181,6 +191,8 @@ export default function AgencyLeadsPage() {
                   <th className="px-4 py-3 font-semibold">E-Mail</th>
                   <th className="px-4 py-3 font-semibold">Team</th>
                   <th className="px-4 py-3 font-semibold">Prio</th>
+                  <th className="px-4 py-3 font-semibold">Consent</th>
+                  <th className="px-4 py-3 font-semibold">SLA</th>
                   <th className="px-4 py-3 font-semibold">Stage</th>
                   <th className="px-4 py-3 font-semibold">Follow-up</th>
                   <th className="px-4 py-3 font-semibold">Datum</th>
@@ -188,13 +200,28 @@ export default function AgencyLeadsPage() {
               </thead>
               <tbody className="divide-y divide-white/10">
                 {leads.map((lead) => (
-                  <tr key={lead.id}>
+                  <tr
+                    key={lead.id}
+                    className={lead.slaBreached ? "bg-rose-500/10" : undefined}
+                  >
                     <td className="px-4 py-3 text-sm text-slate-100">{lead.email}</td>
                     <td className="px-4 py-3 text-sm text-slate-300">{lead.teamSize || "-"}</td>
                     <td className="px-4 py-3">
                       <span className="rounded-full px-2 py-1 text-xs font-semibold" style={{ background: badgeColor(lead.priority), color: "#f8fafc" }}>
                         {lead.priority >= 4 ? "Hot" : lead.priority >= 3 ? "High" : lead.priority >= 2 ? "Medium" : "Normal"}
                       </span>
+                    </td>
+                    <td className="px-4 py-3 text-xs text-slate-200">
+                      <span className={`rounded-full px-2 py-1 font-semibold ${lead.consentGiven ? "bg-emerald-500/20 text-emerald-200" : "bg-rose-500/20 text-rose-200"}`}>
+                        {lead.consentGiven ? "OK" : "Missing"}
+                      </span>
+                      <div className="mt-1 text-[11px] text-slate-400">{lead.consentAt || "-"}</div>
+                    </td>
+                    <td className="px-4 py-3 text-xs text-slate-200">
+                      <span className={`rounded-full px-2 py-1 font-semibold ${lead.slaBreached ? "bg-rose-500/20 text-rose-200" : "bg-emerald-500/20 text-emerald-200"}`}>
+                        {lead.slaBreached ? "Kritisch" : "OK"}
+                      </span>
+                      <div className="mt-1 text-[11px] text-slate-400">Due: {new Date(lead.slaDueAt).toLocaleDateString("de-DE")}</div>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1">
@@ -226,7 +253,7 @@ export default function AgencyLeadsPage() {
                 ))}
                 {!loading && !leads.length && (
                   <tr>
-                    <td colSpan={6} className="px-4 py-8 text-center text-sm text-slate-400">
+                    <td colSpan={8} className="px-4 py-8 text-center text-sm text-slate-400">
                       Noch keine Agency-Leads vorhanden.
                     </td>
                   </tr>
