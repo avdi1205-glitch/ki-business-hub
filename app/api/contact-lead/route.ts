@@ -44,6 +44,27 @@ export async function POST(request: Request) {
     });
 
 
+    if (existing) {
+      const keepSubscribed = existing.status === "subscribed";
+      await prisma.newsletterSubscriber.update({
+        where: { email: normalizedEmail },
+        data: {
+          name: normalizedName,
+          source: leadSource,
+          status: keepSubscribed ? "subscribed" : "lead_new",
+        },
+      });
+    } else {
+      await prisma.newsletterSubscriber.create({
+        data: {
+          email: normalizedEmail,
+          name: normalizedName,
+          source: leadSource,
+          status: "lead_new",
+        },
+      });
+    }
+
     const adminEmail = process.env.CONTACT_LEAD_NOTIFY_EMAIL || "nexmoneta@gmail.com";
     const fromEmail = process.env.CONTACT_LEAD_FROM_EMAIL || process.env.RESEND_FROM_EMAIL;
 
@@ -71,26 +92,6 @@ export async function POST(request: Request) {
       } catch (mailError) {
         console.warn("[CONTACT-LEAD] Admin notification could not be sent", mailError);
       }
-    }
-    if (existing) {
-      const keepSubscribed = existing.status === "subscribed";
-      await prisma.newsletterSubscriber.update({
-        where: { email: normalizedEmail },
-        data: {
-          name: normalizedName,
-          source: leadSource,
-          status: keepSubscribed ? "subscribed" : "lead_new",
-        },
-      });
-    } else {
-      await prisma.newsletterSubscriber.create({
-        data: {
-          email: normalizedEmail,
-          name: normalizedName,
-          source: leadSource,
-          status: "lead_new",
-        },
-      });
     }
 
     return Response.json({ success: true });
