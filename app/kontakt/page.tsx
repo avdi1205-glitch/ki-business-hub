@@ -49,7 +49,7 @@ export default async function KontaktPage({
   }>;
 }) {
   const params = await searchParams;
-  const supportEmail = "nexmoneta@gmail.com";
+  const supportEmail = "kontakt@nexmoneta.com";
   const plan = firstValue(params.plan)?.toLowerCase();
   const source = firstValue(params.source);
   const intent = firstValue(params.intent);
