@@ -85,6 +85,14 @@ export default function AdminPage() {
       color: "#14b8a6",
       accent: "text-teal-400",
     },
+    {
+      icon: "🏢",
+      name: "Agency CRM",
+      desc: "Pipeline, Follow-up und Team-Leads",
+      href: "/admin/agency-leads",
+      color: "#f59e0b",
+      accent: "text-amber-400",
+    },
   ];
 
   return (
