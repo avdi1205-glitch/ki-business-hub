@@ -139,23 +139,6 @@ export default function Navbar({
 
           {/* Mobile Menu Trigger */}
           <div className="flex items-center gap-2 lg:hidden">
-            {!isAdminAuthenticated && !isAdminLoginPage && (
-              <Link
-                href="/admin-login"
-                prefetch={false}
-                className="inline-flex rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95"
-              >
-                {t("adminLogin")}
-              </Link>
-            )}
-
-            <Link
-              href="/content-factory"
-              className="hidden sm:inline-flex rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-2 text-sm font-bold text-slate-950 shadow-lg shadow-emerald-500/20 transition-all hover:shadow-emerald-500/40 active:scale-95"
-            >
-              {t("freeStart")}
-            </Link>
-
             <LanguageSwitcher compact />
 
             <button
