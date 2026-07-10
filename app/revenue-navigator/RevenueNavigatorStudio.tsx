@@ -1,5 +1,6 @@
 "use client";
 
+import { format, startOfWeek } from "date-fns";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import CheckoutCtaButton from "../components/CheckoutCtaButton";
@@ -407,8 +408,84 @@ export default function RevenueNavigatorStudio({
   const previousSavedScan = savedScans[1] || null;
   const liftDelta = latestSavedScan && previousSavedScan ? latestSavedScan.projectedMonthlyLift - previousSavedScan.projectedMonthlyLift : null;
   const scoreDelta = latestSavedScan && previousSavedScan ? latestSavedScan.opportunityScore - previousSavedScan.opportunityScore : null;
+  const scansByWeek = useMemo(() => {
+    return savedScans.reduce<Array<{ weekKey: string; weekLabel: string; scans: SavedScan[] }>>((groups, scan) => {
+      const date = new Date(scan.createdAt);
+      const weekStart = startOfWeek(date, { weekStartsOn: 1 });
+      const weekKey = weekStart.toISOString();
+      const weekLabel = `${isEn ? "Week of" : "Woche ab"} ${format(weekStart, "dd.MM.yyyy")}`;
+      const existing = groups.find((group) => group.weekKey === weekKey);
 
-  function exportCurrentPlaybook() {
+      if (existing) {
+        existing.scans.push(scan);
+        return groups;
+      }
+
+      groups.push({ weekKey, weekLabel, scans: [scan] });
+      return groups;
+    }, []);
+  }, [isEn, savedScans]);
+
+  async function exportCurrentPlaybook() {
+    const { jsPDF } = await import("jspdf");
+    const pdf = new jsPDF({ unit: "pt", format: "a4" });
+    const marginX = 48;
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const maxWidth = pageWidth - marginX * 2;
+    let cursorY = 56;
+
+    const writeParagraph = (text: string, fontSize = 11, color: [number, number, number] = [51, 65, 85], gap = 16) => {
+      pdf.setFont("helvetica", "normal");
+      pdf.setFontSize(fontSize);
+      pdf.setTextColor(color[0], color[1], color[2]);
+      const lines = pdf.splitTextToSize(text, maxWidth);
+
+      if (cursorY + lines.length * (fontSize + 4) > pageHeight - 48) {
+        pdf.addPage();
+        cursorY = 56;
+      }
+
+      pdf.text(lines, marginX, cursorY);
+      cursorY += lines.length * (fontSize + 4) + gap;
+    };
+
+    pdf.setFillColor(7, 11, 22);
+    pdf.rect(0, 0, pageWidth, 120, "F");
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(24);
+    pdf.setTextColor(255, 255, 255);
+    pdf.text("Revenue Navigator", marginX, 58);
+    pdf.setFontSize(12);
+    pdf.setTextColor(165, 243, 252);
+    pdf.text(isEn ? "Customer playbook export" : "Kunden-Playbook Export", marginX, 82);
+
+    cursorY = 150;
+    writeParagraph(`${isEn ? "Plan" : "Plan"}: ${normalizePlan(plan).toUpperCase()}`, 12, [8, 145, 178], 8);
+    writeParagraph(`${isEn ? "Focus" : "Fokus"}: ${focusLabel(focus, isEn)}`, 12, [8, 145, 178], 8);
+    writeParagraph(`${isEn ? "Opportunity score" : "Opportunity Score"}: ${opportunityScore}/100`, 12, [8, 145, 178], 8);
+    writeParagraph(`${isEn ? "Projected monthly lift" : "Prognostizierter Monatslift"}: ${formatCurrency(currentLift)}`, 12, [8, 145, 178], 18);
+    writeParagraph(currentSummary, 11, [51, 65, 85], 20);
+
+    renderedRecommendations.forEach((recommendation, index) => {
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(14);
+      pdf.setTextColor(15, 23, 42);
+      if (cursorY > pageHeight - 120) {
+        pdf.addPage();
+        cursorY = 56;
+      }
+      pdf.text(`${index + 1}. ${recommendation.title}`, marginX, cursorY);
+      cursorY += 22;
+      writeParagraph(`${isEn ? "Why" : "Warum"}: ${recommendation.why}`, 11, [51, 65, 85], 10);
+      writeParagraph(`${isEn ? "Action" : "Aktion"}: ${recommendation.action}`, 11, [51, 65, 85], 10);
+      writeParagraph(`${isEn ? "Potential lift" : "Potenzieller Lift"}: ${formatCurrency(recommendation.estimatedMonthlyLift)}`, 11, [5, 150, 105], 16);
+    });
+
+    pdf.save(`revenue-navigator-${plan}-${new Date().toISOString().slice(0, 10)}.pdf`);
+  }
+
+  function exportCurrentPlaybookAsText() {
     const lines = [
       isEn ? "Revenue Navigator Playbook" : "Revenue Navigator Playbook",
       `${isEn ? "Plan" : "Plan"}: ${normalizePlan(plan).toUpperCase()}`,
@@ -723,7 +800,14 @@ export default function RevenueNavigatorStudio({
                     onClick={exportCurrentPlaybook}
                     className="rounded-full border border-cyan-300/20 bg-cyan-500/10 px-4 py-2 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-500/20"
                   >
-                    {isEn ? "Export playbook" : "Playbook exportieren"}
+                    {isEn ? "Export PDF" : "PDF exportieren"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={exportCurrentPlaybookAsText}
+                    className="rounded-full border border-emerald-300/20 bg-emerald-500/10 px-4 py-2 text-sm font-semibold text-emerald-100 transition hover:bg-emerald-500/20"
+                  >
+                    {isEn ? "Export text" : "Text exportieren"}
                   </button>
                   <button
                     type="button"
@@ -782,26 +866,37 @@ export default function RevenueNavigatorStudio({
               <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">{isEn ? "Saved scans" : "Gespeicherte Scans"}</p>
-                    <h3 className="mt-2 text-2xl font-bold text-white">{isEn ? "Your recent playbooks" : "Deine letzten Playbooks"}</h3>
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">{isEn ? "Weekly history" : "Wochenhistorie"}</p>
+                    <h3 className="mt-2 text-2xl font-bold text-white">{isEn ? "Your recent playbooks by week" : "Deine letzten Playbooks nach Wochen"}</h3>
                   </div>
                   <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-slate-200">{savedScans.length}</span>
                 </div>
 
                 <div className="mt-4 space-y-3">
-                  {savedScans.length > 0 ? savedScans.map((scan) => (
-                    <article key={scan.id} className="rounded-2xl border border-white/10 bg-slate-950/30 p-4">
-                      <div className="flex flex-wrap items-center justify-between gap-3">
-                        <div>
-                          <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{scan.plan.toUpperCase()} • {scan.focus}</p>
-                          <p className="mt-1 text-sm font-semibold text-white">{scan.summary}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-sm font-black text-emerald-300">+{formatCurrency(scan.projectedMonthlyLift)}</p>
-                          <p className="text-xs text-slate-400">{new Date(scan.createdAt).toLocaleDateString("de-DE")}</p>
-                        </div>
+                  {scansByWeek.length > 0 ? scansByWeek.map((group) => (
+                    <div key={group.weekKey} className="rounded-2xl border border-white/10 bg-slate-950/20 p-4">
+                      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300">{group.weekLabel}</p>
+                        <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-slate-200">{group.scans.length}</span>
                       </div>
-                    </article>
+
+                      <div className="space-y-3">
+                        {group.scans.map((scan) => (
+                          <article key={scan.id} className="rounded-2xl border border-white/10 bg-slate-950/30 p-4">
+                            <div className="flex flex-wrap items-center justify-between gap-3">
+                              <div>
+                                <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{scan.plan.toUpperCase()} • {focusLabel(scan.focus, isEn)}</p>
+                                <p className="mt-1 text-sm font-semibold text-white">{scan.summary}</p>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-sm font-black text-emerald-300">+{formatCurrency(scan.projectedMonthlyLift)}</p>
+                                <p className="text-xs text-slate-400">{new Date(scan.createdAt).toLocaleDateString("de-DE")}</p>
+                              </div>
+                            </div>
+                          </article>
+                        ))}
+                      </div>
+                    </div>
                   )) : (
                     <p className="rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3 text-sm text-slate-300">
                       {isEn ? "Run your first customer scan to store a playbook here." : "Fuehre deinen ersten Kunden-Scan aus, um hier ein Playbook zu speichern."}
