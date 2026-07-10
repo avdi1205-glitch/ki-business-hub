@@ -33,6 +33,13 @@ type FollowUpDraft = {
   subject: string;
 };
 
+type FollowUpMeta = {
+  sendWindowOpen: boolean;
+  dailyLimit: number;
+  alreadySentToday: number;
+  remainingToday: number;
+};
+
 type ApiResponse = {
   leads: Lead[];
   counts: Record<string, number>;
@@ -54,6 +61,7 @@ export default function AgencyLeadsPage() {
   const [savingEmail, setSavingEmail] = useState<string | null>(null);
   const [message, setMessage] = useState<string>("");
   const [drafts, setDrafts] = useState<FollowUpDraft[]>([]);
+  const [followUpMeta, setFollowUpMeta] = useState<FollowUpMeta | null>(null);
 
   async function loadLeads() {
     setLoading(true);
@@ -106,6 +114,13 @@ export default function AgencyLeadsPage() {
         throw new Error(payload.error || "Follow-up failed");
       }
 
+      setFollowUpMeta({
+        sendWindowOpen: Boolean(payload.sendWindowOpen),
+        dailyLimit: Number(payload.dailyLimit || 0),
+        alreadySentToday: Number(payload.alreadySentToday || 0),
+        remainingToday: Number(payload.remainingToday || 0),
+      });
+
       setMessage(`Follow-up abgeschlossen: ${payload.sent || 0} E-Mails versendet (von ${payload.totalCandidates || 0} Kandidaten).`);
       await loadLeads();
       setDrafts([]);
@@ -124,7 +139,13 @@ export default function AgencyLeadsPage() {
       }
 
       setDrafts(payload.drafts || []);
-      setMessage(`Vorschau geladen: ${payload.totalCandidates || 0} Kandidaten.`);
+      setFollowUpMeta({
+        sendWindowOpen: Boolean(payload.sendWindowOpen),
+        dailyLimit: Number(payload.dailyLimit || 0),
+        alreadySentToday: Number(payload.alreadySentToday || 0),
+        remainingToday: Number(payload.remainingToday || 0),
+      });
+      setMessage(`Vorschau geladen: ${payload.totalCandidates || 0} Kandidaten. Verfuegbar heute: ${payload.remainingToday || 0}.`);
     } catch {
       setMessage("Vorschau konnte nicht geladen werden.");
     }
@@ -245,6 +266,29 @@ export default function AgencyLeadsPage() {
         {message && (
           <div className="mb-5 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200">
             {message}
+          </div>
+        )}
+
+        {followUpMeta && (
+          <div className="mb-5 grid grid-cols-2 gap-3 md:grid-cols-4">
+            <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-3">
+              <p className="text-[11px] uppercase tracking-[0.14em] text-slate-400">Versandfenster</p>
+              <p className={`mt-1 text-sm font-semibold ${followUpMeta.sendWindowOpen ? "text-emerald-200" : "text-rose-200"}`}>
+                {followUpMeta.sendWindowOpen ? "Offen" : "Gesperrt"}
+              </p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-3">
+              <p className="text-[11px] uppercase tracking-[0.14em] text-slate-400">Tageslimit</p>
+              <p className="mt-1 text-sm font-semibold text-slate-100">{followUpMeta.dailyLimit}</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-3">
+              <p className="text-[11px] uppercase tracking-[0.14em] text-slate-400">Bereits gesendet</p>
+              <p className="mt-1 text-sm font-semibold text-slate-100">{followUpMeta.alreadySentToday}</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-3">
+              <p className="text-[11px] uppercase tracking-[0.14em] text-slate-400">Rest heute</p>
+              <p className="mt-1 text-sm font-semibold text-cyan-200">{followUpMeta.remainingToday}</p>
+            </div>
           </div>
         )}
 
