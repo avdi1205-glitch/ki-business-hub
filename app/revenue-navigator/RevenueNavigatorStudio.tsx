@@ -71,6 +71,36 @@ const OUTREACH_DAY_3 = [
   "Follow-up: Genau dafuer habe ich eine kurze Revenue-Auswertung vorbereitet. Soll ich dir die 2-Minuten-Version schicken?",
 ];
 
+const OUTREACH_DAY_4 = [
+  "Erstnachricht: Hi [Name], ich arbeite mit Unternehmen, die bereits sichtbar sind, aber Umsatz nicht sauber planen koennen. Kommt dir das bekannt vor?",
+  "Follow-up: Wenn ja, lass uns klein starten: 2-Minuten-Scan, dann siehst du sofort, ob ein 30-Tage-Sprint fuer euch Sinn macht.",
+];
+
+const OUTREACH_DAY_5 = [
+  "Erstnachricht: Hi [Name], kurze Direktfrage: Wie schnell antwortet ihr aktuell auf neue Anfragen, im Schnitt unter 24h?",
+  "Follow-up: Falls nicht konstant: Das ist oft der schnellste Umsatzhebel. Ich kann dir einen kurzen Ablauf schicken, mit dem Teams ihre Abschlussquote spuerbar anheben.",
+];
+
+const OUTREACH_DAY_6 = [
+  "Erstnachricht: Hi [Name], was waere euch gerade wichtiger: A) mehr qualifizierte Leads oder B) mehr Abschluesse aus bestehenden Leads?",
+  "Follow-up: Top, danke. Ich habe fuer A oder B einen kurzen Massnahmenplan fuer 30 Tage. Soll ich ihn dir direkt schicken?",
+];
+
+const OUTREACH_DAY_7 = [
+  "Erstnachricht: Hi [Name], letzte kurze Nachricht von mir: Soll ich dir den kompakten Revenue-Scan senden, damit du euren Engpass in 2 Minuten klar siehst?",
+  "Follow-up: Wenn aktuell kein Fokus darauf liegt, alles gut. Wenn du willst, melde dich einfach mit Scan, dann schicke ich ihn sofort rueber.",
+];
+
+const OUTREACH_DAYS = [
+  OUTREACH_DAY_1,
+  OUTREACH_DAY_2,
+  OUTREACH_DAY_3,
+  OUTREACH_DAY_4,
+  OUTREACH_DAY_5,
+  OUTREACH_DAY_6,
+  OUTREACH_DAY_7,
+];
+
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("de-DE", {
     style: "currency",
@@ -1178,7 +1208,7 @@ export default function RevenueNavigatorStudio({
               </div>
 
               <div className="space-y-3">
-                {[OUTREACH_DAY_1, OUTREACH_DAY_2, OUTREACH_DAY_3].map((day, index) => (
+                {OUTREACH_DAYS.map((day, index) => (
                   <div key={index} className="rounded-2xl border border-white/10 bg-slate-950/35 p-4">
                     <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
                       {isEn ? `Day ${index + 1}` : `Tag ${index + 1}`}
