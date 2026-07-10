@@ -101,6 +101,10 @@ const OUTREACH_DAYS = [
   OUTREACH_DAY_7,
 ];
 
+const FULL_OUTREACH_SCRIPT = OUTREACH_DAYS
+  .map((day, index) => `Tag ${index + 1}\n${day[0]}\n${day[1]}`)
+  .join("\n\n");
+
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("de-DE", {
     style: "currency",
@@ -1189,6 +1193,14 @@ export default function RevenueNavigatorStudio({
                     ? "Not just theory: copy the quick scan and first outreach messages. Send them in DM, email or WhatsApp."
                     : "Nicht nur Theorie: kopiere den Kurz-Scan und die ersten Outreach-Nachrichten. Sende sie per DM, E-Mail oder WhatsApp."}
                 </p>
+
+                <button
+                  type="button"
+                  onClick={() => void copyKitText(FULL_OUTREACH_SCRIPT)}
+                  className="mt-4 rounded-xl border border-emerald-300/20 bg-emerald-500/15 px-4 py-2 text-sm font-semibold text-emerald-100 transition hover:bg-emerald-500/25"
+                >
+                  {isEn ? "Copy full 7-day script" : "Komplettes 7-Tage-Skript kopieren"}
+                </button>
 
                 <div className="mt-4 rounded-2xl border border-white/10 bg-slate-950/35 p-4">
                   <p className="text-sm font-semibold text-white">{isEn ? "Quick scan questions" : "Kurz-Scan Fragen"}</p>
