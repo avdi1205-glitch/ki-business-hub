@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 type BotType = "sales" | "seo" | "content-ops" | "support";
@@ -508,6 +509,27 @@ export default function InternalBotsPage() {
           <p style={{ color: "var(--text-light)" }}>
             Dein internes KI-Team fuer Sales, SEO, Content-Ops und Support.
           </p>
+        </div>
+
+        <div className="mb-6 flex flex-wrap gap-3">
+          <Link
+            href="/admin/agency-leads"
+            className="rounded-full border border-amber-300/30 bg-amber-500/12 px-4 py-2 text-sm font-bold text-amber-100 transition hover:bg-amber-500/20"
+          >
+            Zu Agency Leads (Kontakte)
+          </Link>
+          <Link
+            href="/admin/revenue-navigator"
+            className="rounded-full border border-cyan-300/30 bg-cyan-500/12 px-4 py-2 text-sm font-bold text-cyan-100 transition hover:bg-cyan-500/20"
+          >
+            Zu Revenue Navigator Admin
+          </Link>
+          <Link
+            href="/admin"
+            className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:bg-white/10"
+          >
+            Zur Admin Uebersicht
+          </Link>
         </div>
 
         <div className="mb-6 rounded-xl border p-5" style={{ background: "rgba(16,185,129,0.08)", borderColor: "rgba(16,185,129,0.25)" }}>

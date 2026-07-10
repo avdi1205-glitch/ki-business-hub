@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 type Lead = {
@@ -203,6 +204,27 @@ export default function AgencyLeadsPage() {
           <p className="mt-2 text-sm sm:text-base" style={{ color: "var(--text-light)" }}>
             Hot/High Leads priorisieren, Stages verwalten und Follow-up Automationen ausloesen.
           </p>
+        </div>
+
+        <div className="mb-6 flex flex-wrap gap-3">
+          <Link
+            href="/admin/internal-bots"
+            className="rounded-full border border-cyan-300/30 bg-cyan-500/12 px-4 py-2 text-sm font-bold text-cyan-100 transition hover:bg-cyan-500/20"
+          >
+            Zu Internal Bots
+          </Link>
+          <Link
+            href="/admin/revenue-navigator"
+            className="rounded-full border border-emerald-300/30 bg-emerald-500/12 px-4 py-2 text-sm font-bold text-emerald-100 transition hover:bg-emerald-500/20"
+          >
+            Zu Revenue Navigator Admin
+          </Link>
+          <Link
+            href="/admin"
+            className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:bg-white/10"
+          >
+            Zur Admin Uebersicht
+          </Link>
         </div>
 
         <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-6">
