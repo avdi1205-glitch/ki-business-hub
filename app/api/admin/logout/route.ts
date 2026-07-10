@@ -29,9 +29,7 @@ function buildCookieDomains() {
   return Array.from(new Set(domains));
 }
 
-export async function POST() {
-  const response = NextResponse.json({ ok: true });
-
+function clearAdminSessionCookie(response: NextResponse) {
   // Clear host-only cookie variant.
   response.cookies.set(ADMIN_SESSION_COOKIE, "", {
     httpOnly: true,
@@ -54,4 +52,18 @@ export async function POST() {
   }
 
   return response;
+}
+
+export async function POST() {
+  const response = NextResponse.json({ ok: true });
+
+  return clearAdminSessionCookie(response);
+}
+
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const redirectUrl = new URL("/admin-login", url.origin);
+  redirectUrl.searchParams.set("logout", "1");
+  const response = NextResponse.redirect(redirectUrl);
+  return clearAdminSessionCookie(response);
 }
