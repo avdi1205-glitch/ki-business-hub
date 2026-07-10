@@ -168,6 +168,7 @@ export default function AgencyLeadsPage() {
   const [message, setMessage] = useState<string>("");
   const [drafts, setDrafts] = useState<FollowUpDraft[]>([]);
   const [followUpMeta, setFollowUpMeta] = useState<FollowUpMeta | null>(null);
+  const [reviewPreparedAt, setReviewPreparedAt] = useState<string | null>(null);
   const csvInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -213,6 +214,11 @@ export default function AgencyLeadsPage() {
   }
 
   async function runFollowUp() {
+    if (!drafts.length) {
+      setMessage("Bitte erst Autopilot/Vorschau laufen lassen und Entwuerfe pruefen.");
+      return;
+    }
+
     setMessage("Follow-up wird mit Freigabe gestartet...");
     try {
       const response = await fetch("/api/agency-leads/follow-up", {
@@ -235,6 +241,7 @@ export default function AgencyLeadsPage() {
       setMessage(`Follow-up abgeschlossen: ${payload.sent || 0} E-Mails versendet (von ${payload.totalCandidates || 0} Kandidaten).`);
       await loadLeads();
       setDrafts([]);
+      setReviewPreparedAt(null);
     } catch {
       setMessage("Follow-up konnte nicht ausgefuehrt werden.");
     }
@@ -256,10 +263,17 @@ export default function AgencyLeadsPage() {
         alreadySentToday: Number(payload.alreadySentToday || 0),
         remainingToday: Number(payload.remainingToday || 0),
       });
+      setReviewPreparedAt(new Date().toISOString());
       setMessage(`Vorschau geladen: ${payload.totalCandidates || 0} Kandidaten. Verfuegbar heute: ${payload.remainingToday || 0}.`);
     } catch {
       setMessage("Vorschau konnte nicht geladen werden.");
     }
+  }
+
+  async function runAutopilotReview() {
+    setMessage("Autopilot analysiert Leads und erstellt Entwuerfe zur Pruefung...");
+    await loadLeads();
+    await previewFollowUp();
   }
 
   async function toggleOptOut(email: string, current: boolean) {
@@ -438,6 +452,13 @@ export default function AgencyLeadsPage() {
           </button>
           <button
             type="button"
+            onClick={() => void runAutopilotReview()}
+            className="rounded-full border border-indigo-300/30 bg-indigo-500/12 px-4 py-2 text-sm font-bold text-indigo-100 transition hover:bg-indigo-500/20"
+          >
+            Autopilot vorbereiten (nur Review)
+          </button>
+          <button
+            type="button"
             onClick={() => void previewFollowUp()}
             className="rounded-full border border-cyan-300/30 bg-cyan-500/12 px-4 py-2 text-sm font-bold text-cyan-100 transition hover:bg-cyan-500/20"
           >
@@ -470,6 +491,12 @@ export default function AgencyLeadsPage() {
           <div className="mb-5 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200">
             {message}
             <p className="mt-2 text-xs text-slate-400">CSV Header: email,name,teamSize,score,stage,consent,optOut</p>
+            <p className="mt-1 text-xs text-slate-400">
+              Versand bleibt blockiert, bis Entwuerfe in der Vorschau geladen wurden.
+            </p>
+            {reviewPreparedAt && (
+              <p className="mt-1 text-xs text-indigo-200">Autopilot-Review bereit seit: {new Date(reviewPreparedAt).toLocaleString("de-DE")}</p>
+            )}
           </div>
         )}
 
