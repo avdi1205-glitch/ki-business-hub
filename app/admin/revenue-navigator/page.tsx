@@ -47,8 +47,10 @@ export default function RevenueNavigatorPage() {
   const searchParams = useSearchParams();
   const plan = normalizePlan(searchParams.get("plan"));
   const [loading, setLoading] = useState(false);
+  const [weeklySending, setWeeklySending] = useState(false);
   const [data, setData] = useState<PlaybookResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -59,6 +61,7 @@ export default function RevenueNavigatorPage() {
   const loadPlaybook = async (nextPlan = plan) => {
     setLoading(true);
     setError(null);
+    setMessage(null);
     try {
       const res = await fetch(`/api/revenue-playbook?plan=${nextPlan}`, { cache: "no-store" });
       const json = (await res.json()) as PlaybookResponse;
@@ -70,6 +73,24 @@ export default function RevenueNavigatorPage() {
       setError("Playbook konnte nicht geladen werden.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const sendWeeklySummary = async () => {
+    setWeeklySending(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const response = await fetch("/api/admin/revenue-navigator/weekly-summary", { method: "POST" });
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.error || "Wochenupdate konnte nicht versendet werden.");
+      }
+      setMessage(`Wochenupdate versendet: ${payload.sent || 0} Kunden erreicht.`);
+    } catch (nextError) {
+      setError(nextError instanceof Error ? nextError.message : "Wochenupdate konnte nicht versendet werden.");
+    } finally {
+      setWeeklySending(false);
     }
   };
 
@@ -117,9 +138,17 @@ export default function RevenueNavigatorPage() {
             >
               {loading ? "Generiere..." : "Playbook generieren"}
             </button>
+            <button
+              onClick={() => void sendWeeklySummary()}
+              className="rounded-lg bg-cyan-600 px-4 py-2 font-semibold text-white hover:bg-cyan-500"
+              disabled={weeklySending}
+            >
+              {weeklySending ? "Versende..." : "Wochenupdate senden"}
+            </button>
           </div>
 
           {error && <p className="text-red-300">{error}</p>}
+          {message && <p className="text-emerald-300">{message}</p>}
 
           {data?.locked && (
             <div className="rounded-lg border border-yellow-500/40 bg-yellow-500/10 p-4 text-yellow-100">

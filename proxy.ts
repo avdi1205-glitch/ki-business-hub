@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getExpectedAdminCredentials, hasValidAdminSession } from "./lib/admin-auth";
 
-const PROTECTED_PREFIXES = ["/admin", "/api/internal-bots", "/api/contact-lead/status", "/api/newsletter-subscribers", "/api/agency-leads", "/create-article", "/editor"];
+const PROTECTED_PREFIXES = ["/admin", "/api/internal-bots", "/api/admin/revenue-navigator", "/api/contact-lead/status", "/api/newsletter-subscribers", "/api/agency-leads", "/create-article", "/editor"];
 const ADMIN_LOGIN_PATH = "/admin-login";
 
 function isProtectedPath(pathname: string) {
@@ -42,5 +42,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/internal-bots/:path*", "/api/contact-lead/status/:path*", "/api/newsletter-subscribers/:path*", "/api/agency-leads/:path*", "/create-article/:path*", "/editor/:path*"],
+  matcher: ["/admin/:path*", "/api/internal-bots/:path*", "/api/admin/revenue-navigator/:path*", "/api/contact-lead/status/:path*", "/api/newsletter-subscribers/:path*", "/api/agency-leads/:path*", "/create-article/:path*", "/editor/:path*"],
 };
