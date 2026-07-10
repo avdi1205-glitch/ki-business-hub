@@ -3,18 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import CheckoutCtaButton from "../components/CheckoutCtaButton";
-
-type Plan = "starter" | "pro" | "agency";
-type Focus = "affiliate" | "leadgen" | "ads" | "membership";
-
-type Recommendation = {
-  id: string;
-  priority: "high" | "medium" | "low";
-  title: string;
-  why: string;
-  action: string;
-  estimatedMonthlyLift: number;
-};
+import { computeOpportunityScore, type Focus, normalizePlan, planRank, starterRecommendations, type Plan, type Recommendation } from "@/lib/revenue-navigator";
 
 type PlaybookResponse = {
   success: boolean;
@@ -34,6 +23,25 @@ type PlaybookResponse = {
     completedTests: number;
   };
   cached?: boolean;
+  savedScan?: SavedScan | null;
+};
+
+type SavedScan = {
+  id: number;
+  plan: string;
+  focus: string;
+  opportunityScore: number;
+  projectedMonthlyLift: number;
+  summary: string;
+  createdAt: string;
+};
+
+type RevenueNavigatorStudioProps = {
+  locale: string;
+  mode?: "public" | "customer";
+  customerPlan?: Plan;
+  customerEmail?: string;
+  initialSavedScans?: SavedScan[];
 };
 
 function formatCurrency(value: number) {
@@ -49,70 +57,16 @@ function priorityBorder(priority: Recommendation["priority"]) {
   if (priority === "medium") return "border-amber-400/30 bg-amber-500/10 text-amber-100";
   return "border-emerald-400/30 bg-emerald-500/10 text-emerald-100";
 }
-
-function starterRecommendations(focus: Focus, monthlyVisitors: number, newsletterSignups: number) {
-  const baseLift = Math.max(18, Math.round(monthlyVisitors / 250) + newsletterSignups * 2);
-
-  const focusMap: Record<Focus, { title: string; why: string; action: string }> = {
-    affiliate: {
-      title: "Affiliate-Cluster fuer Money Pages bauen",
-      why: "Dein Fokus liegt auf Empfehlungen und Kaufabsicht.",
-      action: "3 Vergleichsseiten, 1 Testbericht und 1 Alternatives-Guide priorisieren.",
-    },
-    leadgen: {
-      title: "Lead-Magnet direkt vor den CTA setzen",
-      why: "Du willst Kontaktanfragen und Anfragen statt nur Traffic.",
-      action: "Ein kurzes PDF oder Checkliste als Upsell vor dem Haupt-CTA testen.",
-    },
-    ads: {
-      title: "Evergreen-Content fuer hoehere Reichweite",
-      why: "Ads funktionieren erst gut, wenn Sessions stabil wachsen.",
-      action: "Artikel mit Suchintention und hoher Verweildauer nach oben ziehen.",
-    },
-    membership: {
-      title: "Premium-Werkzeug als Wiederkehr-Modell aufbauen",
-      why: "Wiederkehrende Einnahmen sind fuer die Zukunft am wertvollsten.",
-      action: "Kostenlose Basis plus Premium-Reports, Vorlagen oder Alerts planen.",
-    },
-  };
-
-  return {
-    success: true,
-    plan: "starter" as Plan,
-    summary: `Starter-Scan: Du hast ein erstes Potenzial von bis zu ${formatCurrency(baseLift)} pro Monat, wenn du den naechsten Hebel sauber umsetzt.`,
-    projectedMonthlyLift: baseLift,
-    recommendations: [
-      {
-        id: `${focus}-starter-1`,
-        priority: "high" as const,
-        title: focusMap[focus].title,
-        why: focusMap[focus].why,
-        action: focusMap[focus].action,
-        estimatedMonthlyLift: baseLift,
-      },
-      {
-        id: `${focus}-starter-2`,
-        priority: "medium" as const,
-        title: "Messbaren CTA auf jede Geld-Seite setzen",
-        why: "Ohne klare Handlungsaufforderung verlierst du Klicks und Leads.",
-        action: "Pro Seite nur eine dominante Aktion: lesen, klicken oder anfragen.",
-        estimatedMonthlyLift: Math.max(12, Math.round(baseLift * 0.55)),
-      },
-      {
-        id: `${focus}-starter-3`,
-        priority: "low" as const,
-        title: "Newsletter als Wiederkehr-Kanal aktivieren",
-        why: "E-Mail ist der guenstigste wiederholbare Umsatzhebel.",
-        action: "An jedem relevanten Inhalt einen simplen Opt-in mit Nutzenversprechen platzieren.",
-        estimatedMonthlyLift: Math.max(8, Math.round(baseLift * 0.4)),
-      },
-    ],
-  };
-}
-
-export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
+export default function RevenueNavigatorStudio({
+  locale,
+  mode = "public",
+  customerPlan = "pro",
+  customerEmail,
+  initialSavedScans = [],
+}: RevenueNavigatorStudioProps) {
   const isEn = locale === "en";
-  const [plan, setPlan] = useState<Plan>("starter");
+  const isCustomerMode = mode === "customer";
+  const [plan, setPlan] = useState<Plan>(isCustomerMode ? customerPlan : "starter");
   const [focus, setFocus] = useState<Focus>("affiliate");
   const [monthlyVisitors, setMonthlyVisitors] = useState(8000);
   const [affiliateClicks, setAffiliateClicks] = useState(120);
@@ -133,17 +87,23 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
   const [agencyConsent, setAgencyConsent] = useState(false);
   const [agencyStatus, setAgencyStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [agencyMessage, setAgencyMessage] = useState("");
+  const [savedScans, setSavedScans] = useState<SavedScan[]>(initialSavedScans);
 
-  const opportunityScore = useMemo(() => {
-    const trafficScore = Math.min(monthlyVisitors / 150, 30);
-    const clickScore = Math.min(affiliateClicks / 8, 25);
-    const newsletterScore = Math.min(newsletterSignups * 1.8, 20);
-    const contentScore = Math.min(contentPieces * 1.6, 15);
-    const teamScore = teamSize >= 4 ? 10 : teamSize >= 2 ? 6 : 4;
-    return Math.round(Math.min(100, trafficScore + clickScore + newsletterScore + contentScore + teamScore));
-  }, [affiliateClicks, contentPieces, monthlyVisitors, newsletterSignups, teamSize]);
+  const opportunityScore = useMemo(() => computeOpportunityScore({
+    plan,
+    focus,
+    monthlyVisitors,
+    affiliateClicks,
+    newsletterSignups,
+    contentPieces,
+    teamSize,
+  }), [affiliateClicks, contentPieces, focus, monthlyVisitors, newsletterSignups, plan, teamSize]);
 
   const starterPreview = useMemo(() => starterRecommendations(focus, monthlyVisitors, newsletterSignups), [focus, monthlyVisitors, newsletterSignups]);
+  const availablePlans = useMemo(() => {
+    if (!isCustomerMode) return ["starter", "pro", "agency"] as Plan[];
+    return (["pro", "agency"] as Plan[]).filter((nextPlan) => planRank(nextPlan) <= planRank(customerPlan));
+  }, [customerPlan, isCustomerMode]);
 
   const planCards = [
     {
@@ -243,14 +203,26 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
     setLoading(true);
     setError(null);
 
-    if (nextPlan === "starter") {
+    if (nextPlan === "starter" && !isCustomerMode) {
       setData(starterPreview);
       setLoading(false);
       return;
     }
 
     try {
-      const res = await fetch(`/api/revenue-playbook?plan=${nextPlan}`, { cache: "no-store" });
+      const res = await fetch("/api/revenue-playbook", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          plan: nextPlan,
+          focus,
+          monthlyVisitors,
+          affiliateClicks,
+          newsletterSignups,
+          contentPieces,
+          teamSize,
+        }),
+      });
       const json = (await res.json()) as PlaybookResponse;
 
       if (!res.ok && !json.locked) {
@@ -262,6 +234,9 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
         setData(json);
       } else {
         setData(json);
+        if (json.savedScan) {
+          setSavedScans((current) => [json.savedScan!, ...current.filter((scan) => scan.id !== json.savedScan!.id)].slice(0, 8));
+        }
       }
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : isEn ? "Could not load playbook." : "Playbook konnte nicht geladen werden.");
@@ -425,7 +400,7 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
           <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
             <div>
               <p className="mb-4 inline-flex rounded-full border border-cyan-400/30 bg-cyan-500/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.24em] text-cyan-200">
-                {isEn ? "Free scan first" : "Erst kostenlos scannen"}
+                {isCustomerMode ? (isEn ? "Customer workspace" : "Kunden-Workspace") : (isEn ? "Free scan first" : "Erst kostenlos scannen")}
               </p>
               <h1 className="max-w-4xl text-4xl font-black leading-[1.02] sm:text-5xl lg:text-7xl">
                 {isEn
@@ -433,7 +408,11 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
                   : "Revenue Navigator macht aus Content ein echtes Monetarisierungs-System."}
               </h1>
               <p className="mt-5 max-w-3xl text-base leading-8 text-slate-300 sm:text-lg">
-                {isEn
+                {isCustomerMode
+                  ? (isEn
+                    ? "Run customer-specific scans, keep your history, and come back every week without touching the admin area."
+                    : "Fuehre kundenspezifische Scans aus, behalte deine Historie und komme jede Woche wieder, ohne den Admin zu beruehren.")
+                  : isEn
                   ? "Start with a free scan, see the strongest revenue lever, and upgrade to a weekly playbook when you want the next step automated."
                   : "Starte mit einem kostenlosen Scan, sieh den staerksten Umsatzhebel und upgrade auf einen Wochenplan, wenn du den naechsten Schritt automatisieren willst."}
               </p>
@@ -443,6 +422,21 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
                 <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5">{isEn ? "Leads" : "Leads"}</span>
                 <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5">{isEn ? "Abo" : "Abo"}</span>
                 <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5">{isEn ? "Newsletter" : "Newsletter"}</span>
+              </div>
+
+              <div className="mt-5 flex flex-wrap gap-3 text-sm">
+                {isCustomerMode ? (
+                  <>
+                    <span className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1.5 text-emerald-100">{customerEmail}</span>
+                    <Link href="/konto" className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-slate-100 transition hover:bg-white/10">
+                      {isEn ? "Back to account" : "Zurueck zum Konto"}
+                    </Link>
+                  </>
+                ) : (
+                  <Link href="/konto/revenue-navigator" className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-slate-100 transition hover:bg-white/10">
+                    {isEn ? "Already a customer? Open workspace" : "Schon Kunde? Workspace oeffnen"}
+                  </Link>
+                )}
               </div>
             </div>
 
@@ -515,9 +509,11 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
                   onChange={(event) => setPlan(event.target.value as Plan)}
                   className="w-full rounded-xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-slate-100 outline-none"
                 >
-                  <option value="starter">Starter (free)</option>
-                  <option value="pro">Pro</option>
-                  <option value="agency">Agency</option>
+                  {availablePlans.map((option) => (
+                    <option key={option} value={option}>
+                      {option === "starter" ? "Starter (free)" : option === "pro" ? "Pro" : "Agency"}
+                    </option>
+                  ))}
                 </select>
               </label>
 
@@ -681,11 +677,44 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
                 <p>{isEn ? "That combination is what gives it long-term value." : "Genau diese Kombination macht es langfristig wertvoll."}</p>
               </div>
             </div>
+
+            {isCustomerMode && (
+              <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">{isEn ? "Saved scans" : "Gespeicherte Scans"}</p>
+                    <h3 className="mt-2 text-2xl font-bold text-white">{isEn ? "Your recent playbooks" : "Deine letzten Playbooks"}</h3>
+                  </div>
+                  <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-slate-200">{savedScans.length}</span>
+                </div>
+
+                <div className="mt-4 space-y-3">
+                  {savedScans.length > 0 ? savedScans.map((scan) => (
+                    <article key={scan.id} className="rounded-2xl border border-white/10 bg-slate-950/30 p-4">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                          <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{scan.plan.toUpperCase()} • {scan.focus}</p>
+                          <p className="mt-1 text-sm font-semibold text-white">{scan.summary}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-black text-emerald-300">+{formatCurrency(scan.projectedMonthlyLift)}</p>
+                          <p className="text-xs text-slate-400">{new Date(scan.createdAt).toLocaleDateString("de-DE")}</p>
+                        </div>
+                      </div>
+                    </article>
+                  )) : (
+                    <p className="rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3 text-sm text-slate-300">
+                      {isEn ? "Run your first customer scan to store a playbook here." : "Fuehre deinen ersten Kunden-Scan aus, um hier ein Playbook zu speichern."}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
 
-      <section id="pricing" className="px-5 pb-16 sm:px-6 lg:px-8">
+      {!isCustomerMode && <section id="pricing" className="px-5 pb-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="mb-8 rounded-[2rem] border border-emerald-400/20 bg-gradient-to-br from-emerald-500/12 via-slate-950/40 to-cyan-500/10 p-6 shadow-2xl shadow-emerald-950/20">
             <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
@@ -972,7 +1001,22 @@ export default function RevenueNavigatorStudio({ locale }: { locale: string }) {
             </Link>
           </div>
         </div>
-      </section>
+      </section>}
+
+      {isCustomerMode && (
+        <section className="px-5 pb-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <div className="flex flex-wrap gap-3 text-sm text-slate-400">
+              <Link href="/konto" className="rounded-full border border-white/10 bg-white/5 px-4 py-2 transition hover:bg-white/10">
+                {isEn ? "Back to account" : "Zurueck zum Konto"}
+              </Link>
+              <Link href="/kontakt?source=revenue-navigator-workspace&intent=support" className="rounded-full border border-white/10 bg-white/5 px-4 py-2 transition hover:bg-white/10">
+                {isEn ? "Need help with setup?" : "Hilfe beim Setup?"}
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
     </main>
   );
 }

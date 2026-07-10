@@ -127,6 +127,26 @@ model RevenuePlaybook {
   @@unique([weekStart, plan])
 }
 
+model RevenueNavigatorScan {
+  id                   Int      @id @default(autoincrement())
+  email                String
+  plan                 String
+  focus                String
+  monthlyVisitors      Int
+  affiliateClicks      Int
+  newsletterSignups    Int
+  contentPieces        Int
+  teamSize             Int
+  opportunityScore     Int
+  projectedMonthlyLift Int
+  summary              String
+  recommendations      Json
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@index([email, createdAt(sort: Desc)])
+}
+
 model InternalBotRun {
   id               Int      @id @default(autoincrement())
   bot              String

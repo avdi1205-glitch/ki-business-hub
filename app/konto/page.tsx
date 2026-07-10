@@ -60,6 +60,9 @@ export default async function CustomerAccountPage() {
           )}
 
           <div className="mt-6 flex flex-wrap gap-3">
+            <Link href="/konto/revenue-navigator" className="rounded-lg bg-cyan-500 px-4 py-2 font-bold text-slate-950">
+              Revenue Navigator Workspace
+            </Link>
             <Link href="/content-factory" className="rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-2 font-bold text-slate-950">
               Content Factory öffnen
             </Link>

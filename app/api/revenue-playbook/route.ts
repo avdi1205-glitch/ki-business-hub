@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { parseCustomerSessionToken, CUSTOMER_SESSION_COOKIE } from "@/lib/customer-auth";
+import { hasCustomerAccess } from "@/lib/customer-entitlement";
+import { buildCustomerPlaybook, normalizeFocus, normalizePlan as normalizeWorkspacePlan, planRank, sanitizeInputs } from "@/lib/revenue-navigator";
 
 type UserPlan = "starter" | "pro" | "agency";
 
@@ -16,6 +19,10 @@ function normalizePlan(value: string | null): UserPlan {
   if (value === "agency") return "agency";
   if (value === "pro") return "pro";
   return "starter";
+}
+
+function normalizeCustomerPlan(value: string | null | undefined): UserPlan {
+  return normalizeWorkspacePlan(value);
 }
 
 function getWeekStart(date: Date): Date {
@@ -265,6 +272,111 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     console.error("[revenue-playbook]", error);
+    return NextResponse.json({ success: false, error: "Revenue playbook could not be generated." }, { status: 500 });
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const body = (await req.json()) as Record<string, unknown>;
+    const requestedPlan = normalizeCustomerPlan(typeof body.plan === "string" ? body.plan : null);
+    const inputs = sanitizeInputs({
+      plan: requestedPlan,
+      focus: normalizeFocus(typeof body.focus === "string" ? body.focus : null),
+      monthlyVisitors: typeof body.monthlyVisitors === "number" ? body.monthlyVisitors : undefined,
+      affiliateClicks: typeof body.affiliateClicks === "number" ? body.affiliateClicks : undefined,
+      newsletterSignups: typeof body.newsletterSignups === "number" ? body.newsletterSignups : undefined,
+      contentPieces: typeof body.contentPieces === "number" ? body.contentPieces : undefined,
+      teamSize: typeof body.teamSize === "number" ? body.teamSize : undefined,
+    });
+
+    if (requestedPlan === "starter") {
+      return NextResponse.json(buildCustomerPlaybook({ ...inputs, plan: "starter" }));
+    }
+
+    const sessionToken = req.cookies.get(CUSTOMER_SESSION_COOKIE)?.value;
+    const sessionEmail = sessionToken ? parseCustomerSessionToken(sessionToken) : null;
+
+    if (!sessionEmail) {
+      return NextResponse.json({
+        success: false,
+        locked: true,
+        message: "Bitte melde dich mit deinem Kundenkonto an, um Pro oder Agency zu nutzen.",
+      }, { status: 403 });
+    }
+
+    const entitlement = await prisma.customerEntitlement.findFirst({
+      where: {
+        email: sessionEmail,
+        status: { in: ["active", "trialing", "past_due"] },
+      },
+      orderBy: { updatedAt: "desc" },
+    });
+
+    if (!hasCustomerAccess(entitlement)) {
+      return NextResponse.json({
+        success: false,
+        locked: true,
+        message: "Dein Kundenkonto hat aktuell keinen aktiven Revenue-Navigator-Zugang.",
+      }, { status: 403 });
+    }
+
+    const activeEntitlement = entitlement!;
+    const customerPlan = normalizeCustomerPlan(activeEntitlement.plan);
+    if (planRank(requestedPlan) > planRank(customerPlan)) {
+      return NextResponse.json({
+        success: false,
+        locked: true,
+        message: requestedPlan === "agency"
+          ? "Agency ist in deinem aktuellen Paket noch nicht freigeschaltet."
+          : "Dieses Playbook liegt ueber deinem aktuellen Paket.",
+      }, { status: 403 });
+    }
+
+    const result = buildCustomerPlaybook({ ...inputs, plan: requestedPlan });
+    let savedScan: { id: number; plan: string; focus: string; opportunityScore: number; projectedMonthlyLift: number; summary: string; createdAt: string } | null = null;
+
+    try {
+      const scan = await prisma.revenueNavigatorScan.create({
+        data: {
+          email: sessionEmail,
+          plan: requestedPlan,
+          focus: inputs.focus,
+          monthlyVisitors: inputs.monthlyVisitors,
+          affiliateClicks: inputs.affiliateClicks,
+          newsletterSignups: inputs.newsletterSignups,
+          contentPieces: inputs.contentPieces,
+          teamSize: inputs.teamSize,
+          opportunityScore: result.opportunityScore,
+          projectedMonthlyLift: result.projectedMonthlyLift,
+          summary: result.summary,
+          recommendations: result.recommendations,
+        },
+        select: {
+          id: true,
+          plan: true,
+          focus: true,
+          opportunityScore: true,
+          projectedMonthlyLift: true,
+          summary: true,
+          createdAt: true,
+        },
+      });
+
+      savedScan = {
+        ...scan,
+        createdAt: scan.createdAt.toISOString(),
+      };
+    } catch {
+      // Keep customer flow working even if the scan table is not migrated yet.
+    }
+
+    return NextResponse.json({
+      ...result,
+      savedScan,
+    });
+  } catch (error) {
+    console.error("[revenue-playbook-post]", error);
     return NextResponse.json({ success: false, error: "Revenue playbook could not be generated." }, { status: 500 });
   }
 }
