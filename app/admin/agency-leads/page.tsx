@@ -271,9 +271,33 @@ export default function AgencyLeadsPage() {
   }
 
   async function runAutopilotReview() {
-    setMessage("Autopilot analysiert Leads und erstellt Entwuerfe zur Pruefung...");
-    await loadLeads();
-    await previewFollowUp();
+    setMessage("Autopilot analysiert Leads, erstellt Entwuerfe und plant ein Review-Memo...");
+    try {
+      const response = await fetch("/api/agency-leads/autopilot-review", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ delayMinutes: 10 }),
+      });
+      const payload = await response.json();
+
+      if (!response.ok) {
+        throw new Error(payload.error || "Autopilot review failed");
+      }
+
+      setDrafts(payload.drafts || []);
+      setFollowUpMeta({
+        sendWindowOpen: Boolean(payload.sendWindowOpen),
+        dailyLimit: Number(payload.dailyLimit || 0),
+        alreadySentToday: Number(payload.alreadySentToday || 0),
+        remainingToday: Number(payload.remainingToday || 0),
+      });
+      setReviewPreparedAt(new Date().toISOString());
+      setMessage(`Autopilot fertig. Entwuerfe: ${payload.totalCandidates || 0}. Review-Memo geplant fuer ${new Date(payload.executeAt).toLocaleTimeString("de-DE")}.`);
+      await loadLeads();
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : "Autopilot Review konnte nicht gestartet werden.";
+      setMessage(detail);
+    }
   }
 
   async function toggleOptOut(email: string, current: boolean) {
