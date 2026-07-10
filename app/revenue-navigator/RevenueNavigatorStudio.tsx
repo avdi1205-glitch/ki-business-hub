@@ -42,6 +42,7 @@ type RevenueNavigatorStudioProps = {
   mode?: "public" | "customer";
   customerPlan?: Plan;
   customerEmail?: string;
+  adminOverride?: boolean;
   initialSavedScans?: SavedScan[];
 };
 
@@ -154,6 +155,7 @@ export default function RevenueNavigatorStudio({
   mode = "public",
   customerPlan = "pro",
   customerEmail,
+  adminOverride = false,
   initialSavedScans = [],
 }: RevenueNavigatorStudioProps) {
   const isEn = locale === "en";
@@ -658,6 +660,11 @@ export default function RevenueNavigatorStudio({
                 {isCustomerMode ? (
                   <>
                     <span className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1.5 text-emerald-100">{customerEmail}</span>
+                    {adminOverride && (
+                      <span className="rounded-full border border-amber-300/30 bg-amber-500/15 px-3 py-1.5 text-amber-100">
+                        {isEn ? "Admin test mode" : "Admin-Testmodus"}
+                      </span>
+                    )}
                     <Link href="/konto" className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-slate-100 transition hover:bg-white/10">
                       {isEn ? "Back to account" : "Zurueck zum Konto"}
                     </Link>

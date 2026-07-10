@@ -40,6 +40,7 @@ export default async function CustomerRevenueNavigatorPage() {
         mode="customer"
         customerPlan="agency"
         customerEmail={email}
+        adminOverride={true}
         initialSavedScans={scans.map((scan) => ({
           ...scan,
           createdAt: scan.createdAt.toISOString(),
