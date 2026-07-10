@@ -93,6 +93,14 @@ export default function AdminPage() {
       color: "#f59e0b",
       accent: "text-amber-400",
     },
+    {
+      icon: "💳",
+      name: "Billing Control",
+      desc: "Aktive, faellige und gesperrte Kunden-Zugaenge",
+      href: "/admin/billing",
+      color: "#14b8a6",
+      accent: "text-teal-400",
+    },
   ];
 
   return (

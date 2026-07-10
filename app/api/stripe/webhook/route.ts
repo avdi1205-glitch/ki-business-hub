@@ -61,6 +61,54 @@ async function sendBillingFailedNotice(email: string, plan: string, graceUntil: 
   });
 }
 
+async function sendBillingRestoredNotice(email: string, plan: string) {
+  const fromEmail = process.env.CONTACT_LEAD_FROM_EMAIL || process.env.RESEND_FROM_EMAIL;
+  if (!process.env.RESEND_API_KEY || !fromEmail) {
+    return;
+  }
+
+  const resend = await getResend();
+  await resend.emails.send({
+    from: fromEmail,
+    to: email,
+    subject: "Dein Nexmoneta-Zugang ist wieder aktiv",
+    html: `
+      <div style="font-family:Arial,sans-serif;line-height:1.6;color:#0f172a;max-width:600px;margin:0 auto;padding:24px;">
+        <h1 style="margin-bottom:12px;">Zugang wieder freigeschaltet</h1>
+        <p>Hallo,</p>
+        <p>deine Zahlung fuer das <strong>${plan.toUpperCase()}</strong>-Paket ist wieder erfolgreich eingegangen.</p>
+        <p>Dein Nexmoneta-Zugang ist jetzt wieder aktiv.</p>
+        <p style="margin-top:14px;color:#475569;font-size:12px;">Diese Nachricht bestaetigt die erfolgreiche Reaktivierung.</p>
+      </div>
+    `,
+  });
+}
+
+async function loadEntitlementMatch(input: { customerId?: string | null; subscriptionId?: string | null; email?: string | null }) {
+  const conditions: Array<Record<string, string>> = [];
+
+  if (input.customerId) {
+    conditions.push({ stripeCustomerId: input.customerId });
+  }
+
+  if (input.subscriptionId) {
+    conditions.push({ stripeSubscriptionId: input.subscriptionId });
+  }
+
+  if (input.email) {
+    conditions.push({ email: normalizeEmail(input.email) });
+  }
+
+  if (!conditions.length) {
+    return null;
+  }
+
+  return prisma.customerEntitlement.findFirst({
+    where: { OR: conditions },
+    orderBy: { updatedAt: "desc" },
+  });
+}
+
 function planFromAmount(amountTotal: number | null) {
   if (typeof amountTotal !== "number") return null;
   if (amountTotal >= 12000) return "agency";
@@ -229,29 +277,32 @@ export async function POST(req: NextRequest) {
       }
       case "customer.subscription.updated": {
         const subscription = event.data.object as Stripe.Subscription;
+        const match = await loadEntitlementMatch({
+          customerId: typeof subscription.customer === "string" ? subscription.customer : null,
+          subscriptionId: subscription.id,
+        });
+
         await syncEntitlementStatus({
           customerId: typeof subscription.customer === "string" ? subscription.customer : null,
           subscriptionId: subscription.id,
           status: subscription.status,
           graceUntil: subscription.status === "past_due" || subscription.status === "unpaid" ? getGraceUntil() : null,
         });
+
+        if (match?.status === "past_due" && subscription.status === "active") {
+          try {
+            await sendBillingRestoredNotice(match.email, match.plan);
+          } catch (error) {
+            console.warn("[Stripe webhook] Restored notice could not be sent", error);
+          }
+        }
         break;
       }
       case "invoice.payment_failed": {
         const invoice = event.data.object as Stripe.Invoice & { subscription?: string | null };
-        const matchConditions: Array<Record<string, string>> = [];
-
-        if (typeof invoice.customer === "string") {
-          matchConditions.push({ stripeCustomerId: invoice.customer });
-        }
-
-        if (typeof invoice.subscription === "string") {
-          matchConditions.push({ stripeSubscriptionId: invoice.subscription });
-        }
-
-        const match = await prisma.customerEntitlement.findFirst({
-          where: matchConditions.length ? { OR: matchConditions } : undefined,
-          orderBy: { updatedAt: "desc" },
+        const match = await loadEntitlementMatch({
+          customerId: typeof invoice.customer === "string" ? invoice.customer : null,
+          subscriptionId: typeof invoice.subscription === "string" ? invoice.subscription : null,
         });
 
         await syncEntitlementStatus({
@@ -272,12 +323,25 @@ export async function POST(req: NextRequest) {
       }
       case "invoice.payment_succeeded": {
         const invoice = event.data.object as Stripe.Invoice & { subscription?: string | null };
+        const match = await loadEntitlementMatch({
+          customerId: typeof invoice.customer === "string" ? invoice.customer : null,
+          subscriptionId: typeof invoice.subscription === "string" ? invoice.subscription : null,
+        });
+
         await syncEntitlementStatus({
           customerId: typeof invoice.customer === "string" ? invoice.customer : null,
           subscriptionId: typeof invoice.subscription === "string" ? invoice.subscription : null,
           status: "active",
           graceUntil: null,
         });
+
+        if (match?.status === "past_due") {
+          try {
+            await sendBillingRestoredNotice(match.email, match.plan);
+          } catch (error) {
+            console.warn("[Stripe webhook] Restored notice could not be sent", error);
+          }
+        }
         break;
       }
       case "customer.subscription.deleted": {
