@@ -17,17 +17,41 @@ function resolveCookieDomain() {
   }
 }
 
+function buildCookieDomains() {
+  const baseDomain = resolveCookieDomain();
+  const domains: string[] = [];
+
+  if (baseDomain) {
+    domains.push(baseDomain);
+    domains.push(`www.${baseDomain}`);
+  }
+
+  return Array.from(new Set(domains));
+}
+
 export async function POST() {
   const response = NextResponse.json({ ok: true });
-  const cookieDomain = resolveCookieDomain();
+
+  // Clear host-only cookie variant.
   response.cookies.set(ADMIN_SESSION_COOKIE, "", {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
     maxAge: 0,
-    ...(cookieDomain ? { domain: cookieDomain } : {}),
   });
+
+  // Also clear domain-scoped variants to cover old/new deployments and www/apex hosts.
+  for (const domain of buildCookieDomains()) {
+    response.cookies.set(ADMIN_SESSION_COOKIE, "", {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 0,
+      domain,
+    });
+  }
 
   return response;
 }
