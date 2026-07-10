@@ -104,6 +104,8 @@ export async function GET() {
           lastFollowUpAt: parsed.metadata.lastFollowUp || null,
           consentGiven: parsed.metadata.consent === "yes",
           consentAt: parsed.metadata.consentAt || null,
+          optOut: parsed.metadata.optOut === "yes",
+          optOutAt: parsed.metadata.optOutAt || null,
           source: parsed.flowSource,
           score: parsed.flowSource.split(":").find((part) => part.startsWith("score-"))?.replace("score-", "") || null,
           priority: priority(parsed.teamSize),
@@ -136,6 +138,7 @@ export async function GET() {
 
     counts.slaBreached = leads.filter((lead) => lead.slaBreached).length;
     counts.consentMissing = leads.filter((lead) => !lead.consentGiven).length;
+    counts.optedOut = leads.filter((lead) => lead.optOut).length;
 
     return NextResponse.json({ leads, counts });
   } catch (error) {
@@ -149,12 +152,13 @@ export async function PATCH(request: NextRequest) {
     const body = await request.json();
     const email = String(body.email || "").trim().toLowerCase();
     const stage = String(body.stage || "").trim().toLowerCase();
+    const hasOptOutUpdate = typeof body.optOut === "boolean";
 
     if (!email || !email.includes("@")) {
       return NextResponse.json({ error: "Invalid email" }, { status: 400 });
     }
 
-    if (!ALLOWED_STAGES.has(stage)) {
+    if (!hasOptOutUpdate && !ALLOWED_STAGES.has(stage)) {
       return NextResponse.json({ error: "Invalid stage" }, { status: 400 });
     }
 
@@ -172,18 +176,34 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: "Lead is not an agency lead" }, { status: 400 });
     }
 
-    const updatedSource = buildSource(parsed.baseSource, {
+    const updatedMetadata = {
       ...parsed.metadata,
-      stage,
-      stageUpdatedAt: new Date().toISOString().slice(0, 10),
-    });
+      ...(ALLOWED_STAGES.has(stage)
+        ? {
+            stage,
+            stageUpdatedAt: new Date().toISOString().slice(0, 10),
+          }
+        : {}),
+      ...(hasOptOutUpdate
+        ? {
+            optOut: body.optOut ? "yes" : "no",
+            optOutAt: body.optOut ? new Date().toISOString().slice(0, 10) : "",
+          }
+        : {}),
+    };
+
+    const updatedSource = buildSource(parsed.baseSource, updatedMetadata);
 
     await prisma.newsletterSubscriber.update({
       where: { email },
       data: { source: updatedSource },
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      success: true,
+      stage: ALLOWED_STAGES.has(stage) ? stage : parsed.metadata.stage || "new",
+      optOut: hasOptOutUpdate ? Boolean(body.optOut) : parsed.metadata.optOut === "yes",
+    });
   } catch (error) {
     console.error("[AGENCY-LEADS]", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

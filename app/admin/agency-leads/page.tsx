@@ -17,9 +17,20 @@ type Lead = {
   priority: number;
   consentGiven: boolean;
   consentAt: string | null;
+  optOut: boolean;
+  optOutAt: string | null;
   slaBreached: boolean;
   slaDueAt: string;
   ageHours: number;
+};
+
+type FollowUpDraft = {
+  email: string;
+  name: string | null;
+  teamSize: string | null;
+  stage: string;
+  followUpCount: number;
+  subject: string;
 };
 
 type ApiResponse = {
@@ -42,6 +53,7 @@ export default function AgencyLeadsPage() {
   const [loading, setLoading] = useState(true);
   const [savingEmail, setSavingEmail] = useState<string | null>(null);
   const [message, setMessage] = useState<string>("");
+  const [drafts, setDrafts] = useState<FollowUpDraft[]>([]);
 
   async function loadLeads() {
     setLoading(true);
@@ -82,18 +94,60 @@ export default function AgencyLeadsPage() {
   }
 
   async function runFollowUp() {
-    setMessage("Follow-up wird gestartet...");
+    setMessage("Follow-up wird mit Freigabe gestartet...");
     try {
-      const response = await fetch("/api/agency-leads/follow-up", { method: "POST" });
+      const response = await fetch("/api/agency-leads/follow-up", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirmSend: true, maxSend: 20 }),
+      });
       const payload = await response.json();
       if (!response.ok) {
         throw new Error(payload.error || "Follow-up failed");
       }
 
-      setMessage(`Follow-up abgeschlossen: ${payload.sent || 0} E-Mails versendet.`);
+      setMessage(`Follow-up abgeschlossen: ${payload.sent || 0} E-Mails versendet (von ${payload.totalCandidates || 0} Kandidaten).`);
       await loadLeads();
+      setDrafts([]);
     } catch {
       setMessage("Follow-up konnte nicht ausgefuehrt werden.");
+    }
+  }
+
+  async function previewFollowUp() {
+    setMessage("Follow-up Vorschau wird geladen...");
+    try {
+      const response = await fetch("/api/agency-leads/follow-up", { cache: "no-store" });
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.error || "Preview failed");
+      }
+
+      setDrafts(payload.drafts || []);
+      setMessage(`Vorschau geladen: ${payload.totalCandidates || 0} Kandidaten.`);
+    } catch {
+      setMessage("Vorschau konnte nicht geladen werden.");
+    }
+  }
+
+  async function toggleOptOut(email: string, current: boolean) {
+    setSavingEmail(email);
+    try {
+      const response = await fetch("/api/agency-leads", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, optOut: !current }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Opt-out update failed");
+      }
+
+      await loadLeads();
+    } catch {
+      setMessage("Opt-out konnte nicht aktualisiert werden.");
+    } finally {
+      setSavingEmail(null);
     }
   }
 
@@ -130,7 +184,7 @@ export default function AgencyLeadsPage() {
           </p>
         </div>
 
-        <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-5">
+        <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-6">
           <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
             <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Total</p>
             <p className="mt-2 text-3xl font-bold text-white">{counts.total || 0}</p>
@@ -151,15 +205,26 @@ export default function AgencyLeadsPage() {
             <p className="text-xs uppercase tracking-[0.18em] text-slate-300">SLA kritisch</p>
             <p className="mt-2 text-3xl font-bold text-rose-200">{slaCritical}</p>
           </div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Opt-out</p>
+            <p className="mt-2 text-3xl font-bold text-slate-200">{counts.optedOut || 0}</p>
+          </div>
         </div>
 
         <div className="mb-5 flex flex-wrap gap-3">
           <button
             type="button"
+            onClick={() => void previewFollowUp()}
+            className="rounded-full border border-cyan-300/30 bg-cyan-500/12 px-4 py-2 text-sm font-bold text-cyan-100 transition hover:bg-cyan-500/20"
+          >
+            Follow-up Vorschau laden
+          </button>
+          <button
+            type="button"
             onClick={() => void runFollowUp()}
             className="rounded-full border border-amber-300/30 bg-amber-500/12 px-4 py-2 text-sm font-bold text-amber-100 transition hover:bg-amber-500/20"
           >
-            Hot/High Follow-up starten
+            Freigegebenes Follow-up senden
           </button>
           <button
             type="button"
@@ -183,6 +248,21 @@ export default function AgencyLeadsPage() {
           </div>
         )}
 
+        {!!drafts.length && (
+          <div className="mb-5 rounded-2xl border border-cyan-400/20 bg-cyan-500/10 p-4">
+            <p className="text-xs uppercase tracking-[0.18em] text-cyan-200">Vorschau Entwuerfe</p>
+            <div className="mt-3 grid gap-3 md:grid-cols-2">
+              {drafts.slice(0, 10).map((draft) => (
+                <article key={draft.email} className="rounded-xl border border-white/10 bg-slate-950/30 p-3">
+                  <p className="text-sm font-semibold text-white break-all">{draft.email}</p>
+                  <p className="mt-1 text-xs text-slate-300">{draft.subject}</p>
+                  <p className="mt-1 text-xs text-slate-400">Stage: {draft.stage} | Follow-up: {draft.followUpCount}x</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/5 sm:rounded-[2rem]">
           <div className="hidden overflow-x-auto md:block">
             <table className="min-w-full divide-y divide-white/10 text-left">
@@ -192,6 +272,7 @@ export default function AgencyLeadsPage() {
                   <th className="px-4 py-3 font-semibold">Team</th>
                   <th className="px-4 py-3 font-semibold">Prio</th>
                   <th className="px-4 py-3 font-semibold">Consent</th>
+                  <th className="px-4 py-3 font-semibold">Opt-out</th>
                   <th className="px-4 py-3 font-semibold">SLA</th>
                   <th className="px-4 py-3 font-semibold">Stage</th>
                   <th className="px-4 py-3 font-semibold">Follow-up</th>
@@ -216,6 +297,17 @@ export default function AgencyLeadsPage() {
                         {lead.consentGiven ? "OK" : "Missing"}
                       </span>
                       <div className="mt-1 text-[11px] text-slate-400">{lead.consentAt || "-"}</div>
+                    </td>
+                    <td className="px-4 py-3 text-xs text-slate-200">
+                      <button
+                        type="button"
+                        onClick={() => void toggleOptOut(lead.email, lead.optOut)}
+                        disabled={savingEmail === lead.email}
+                        className={`rounded-full px-2 py-1 font-semibold disabled:opacity-50 ${lead.optOut ? "bg-rose-500/20 text-rose-200" : "bg-emerald-500/20 text-emerald-200"}`}
+                      >
+                        {lead.optOut ? "Opt-out" : "Active"}
+                      </button>
+                      <div className="mt-1 text-[11px] text-slate-400">{lead.optOutAt || "-"}</div>
                     </td>
                     <td className="px-4 py-3 text-xs text-slate-200">
                       <span className={`rounded-full px-2 py-1 font-semibold ${lead.slaBreached ? "bg-rose-500/20 text-rose-200" : "bg-emerald-500/20 text-emerald-200"}`}>
@@ -253,7 +345,7 @@ export default function AgencyLeadsPage() {
                 ))}
                 {!loading && !leads.length && (
                   <tr>
-                    <td colSpan={8} className="px-4 py-8 text-center text-sm text-slate-400">
+                    <td colSpan={9} className="px-4 py-8 text-center text-sm text-slate-400">
                       Noch keine Agency-Leads vorhanden.
                     </td>
                   </tr>
@@ -269,6 +361,7 @@ export default function AgencyLeadsPage() {
                 <p className="mt-1 text-xs text-slate-400">Team: {lead.teamSize || "-"}</p>
                 <p className="mt-1 text-xs text-slate-400">Stage: {lead.stage}</p>
                 <p className="mt-1 text-xs text-slate-400">Follow-up: {lead.followUpCount}x</p>
+                <p className="mt-1 text-xs text-slate-400">Opt-out: {lead.optOut ? "ja" : "nein"}</p>
               </article>
             ))}
           </div>
