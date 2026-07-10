@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { type ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 
 type Lead = {
   id: number;
@@ -46,7 +46,111 @@ type ApiResponse = {
   counts: Record<string, number>;
 };
 
+type CsvLeadRow = {
+  email: string;
+  name?: string;
+  teamSize?: string;
+  score?: number;
+  stage?: string;
+  consent?: boolean;
+  optOut?: boolean;
+};
+
 const STAGES = ["new", "qualified", "contacted", "proposal", "won", "lost"] as const;
+
+function parseDelimitedLine(line: string, delimiter: string) {
+  const fields: string[] = [];
+  let current = "";
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i += 1) {
+    const char = line[i];
+
+    if (char === '"') {
+      if (inQuotes && line[i + 1] === '"') {
+        current += '"';
+        i += 1;
+      } else {
+        inQuotes = !inQuotes;
+      }
+      continue;
+    }
+
+    if (!inQuotes && char === delimiter) {
+      fields.push(current.trim());
+      current = "";
+      continue;
+    }
+
+    current += char;
+  }
+
+  fields.push(current.trim());
+  return fields;
+}
+
+function normalizeHeader(value: string) {
+  return value.trim().toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+function toBoolean(value: string) {
+  const normalized = value.trim().toLowerCase();
+  return ["1", "yes", "ja", "true", "y"].includes(normalized);
+}
+
+function parseCsvLeads(raw: string): CsvLeadRow[] {
+  const lines = raw
+    .replace(/\r/g, "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  if (lines.length < 2) {
+    throw new Error("CSV braucht mindestens Header + eine Zeile.");
+  }
+
+  const headerLine = lines[0];
+  const delimiterCandidates = [",", ";", "\t"];
+  const delimiter = delimiterCandidates.reduce((winner, candidate) => {
+    const winnerCount = winner ? headerLine.split(winner).length : 0;
+    const candidateCount = headerLine.split(candidate).length;
+    return candidateCount > winnerCount ? candidate : winner;
+  }, ",");
+
+  const headerColumns = parseDelimitedLine(headerLine, delimiter).map(normalizeHeader);
+  const requiredEmailIndex = headerColumns.indexOf("email");
+
+  if (requiredEmailIndex === -1) {
+    throw new Error("CSV Header braucht mindestens die Spalte email.");
+  }
+
+  const rows: CsvLeadRow[] = [];
+
+  for (const line of lines.slice(1)) {
+    const columns = parseDelimitedLine(line, delimiter);
+    const row: Record<string, string> = {};
+
+    for (let i = 0; i < headerColumns.length; i += 1) {
+      const key = headerColumns[i];
+      row[key] = columns[i] || "";
+    }
+
+    const email = String(row.email || "").trim().toLowerCase();
+    if (!email || !email.includes("@")) continue;
+
+    rows.push({
+      email,
+      name: String(row.name || "").trim() || undefined,
+      teamSize: String(row.teamsize || row.team || "").trim() || undefined,
+      score: Number(row.score || "") || undefined,
+      stage: String(row.stage || "").trim() || undefined,
+      consent: toBoolean(String(row.consent || "")),
+      optOut: toBoolean(String(row.optout || "")),
+    });
+  }
+
+  return rows;
+}
 
 function badgeColor(priority: number) {
   if (priority >= 4) return "rgba(239, 68, 68, 0.2)";
@@ -59,10 +163,12 @@ export default function AgencyLeadsPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [counts, setCounts] = useState<Record<string, number>>({ total: 0 });
   const [loading, setLoading] = useState(true);
+  const [importing, setImporting] = useState(false);
   const [savingEmail, setSavingEmail] = useState<string | null>(null);
   const [message, setMessage] = useState<string>("");
   const [drafts, setDrafts] = useState<FollowUpDraft[]>([]);
   const [followUpMeta, setFollowUpMeta] = useState<FollowUpMeta | null>(null);
+  const csvInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     void loadLeads();
@@ -208,6 +314,43 @@ export default function AgencyLeadsPage() {
     }
   }
 
+  async function importCsvFile(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setImporting(true);
+    setMessage("CSV wird importiert...");
+
+    try {
+      const text = await file.text();
+      const rows = parseCsvLeads(text);
+
+      if (!rows.length) {
+        throw new Error("Keine gueltigen E-Mails in der CSV gefunden.");
+      }
+
+      const response = await fetch("/api/agency-leads/import", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ rows }),
+      });
+
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.error || "CSV import failed");
+      }
+
+      setMessage(`CSV importiert: ${payload.imported || 0} Leads, uebersprungen: ${payload.skipped || 0}.`);
+      await loadLeads();
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : "CSV konnte nicht importiert werden.";
+      setMessage(detail);
+    } finally {
+      setImporting(false);
+      if (event.target) event.target.value = "";
+    }
+  }
+
   const hotLeads = useMemo(() => leads.filter((lead) => lead.priority >= 3).length, [leads]);
   const slaCritical = useMemo(() => leads.filter((lead) => lead.slaBreached).length, [leads]);
 
@@ -271,6 +414,21 @@ export default function AgencyLeadsPage() {
         </div>
 
         <div className="mb-5 flex flex-wrap gap-3">
+          <input
+            ref={csvInputRef}
+            type="file"
+            accept=".csv,text/csv"
+            className="hidden"
+            onChange={(event) => void importCsvFile(event)}
+          />
+          <button
+            type="button"
+            onClick={() => csvInputRef.current?.click()}
+            disabled={importing}
+            className="rounded-full border border-emerald-300/30 bg-emerald-500/12 px-4 py-2 text-sm font-bold text-emerald-100 transition hover:bg-emerald-500/20 disabled:opacity-60"
+          >
+            {importing ? "CSV wird importiert..." : "CSV Leads importieren"}
+          </button>
           <button
             type="button"
             onClick={() => void seedDemoLeads()}
@@ -311,6 +469,7 @@ export default function AgencyLeadsPage() {
         {message && (
           <div className="mb-5 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200">
             {message}
+            <p className="mt-2 text-xs text-slate-400">CSV Header: email,name,teamSize,score,stage,consent,optOut</p>
           </div>
         )}
 
@@ -437,6 +596,13 @@ export default function AgencyLeadsPage() {
                     <td colSpan={9} className="px-4 py-8 text-center text-sm text-slate-400">
                       <p>Noch keine Agency-Leads vorhanden.</p>
                       <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => csvInputRef.current?.click()}
+                          className="rounded-full border border-emerald-300/30 bg-emerald-500/12 px-3 py-1.5 text-xs font-bold text-emerald-100 transition hover:bg-emerald-500/20"
+                        >
+                          CSV importieren
+                        </button>
                         <button
                           type="button"
                           onClick={() => void seedDemoLeads()}
