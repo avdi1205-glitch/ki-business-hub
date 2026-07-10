@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requireCustomerSession } from "@/lib/customer-auth";
+import { hasCustomerAccess } from "@/lib/customer-entitlement";
 
 export default async function CustomerAccountPage() {
   const email = await requireCustomerSession("/konto");
@@ -9,16 +10,18 @@ export default async function CustomerAccountPage() {
   const entitlement = await prisma.customerEntitlement.findFirst({
     where: {
       email,
-      status: { in: ["active", "trialing"] },
+      status: { in: ["active", "trialing", "past_due"] },
     },
     orderBy: {
       updatedAt: "desc",
     },
   });
 
-  if (!entitlement) {
+  if (!hasCustomerAccess(entitlement)) {
     redirect("/konto/login?error=no_active_plan");
   }
+
+  const activeEntitlement = entitlement!;
 
   return (
     <main className="min-h-screen px-4 py-14 sm:px-6">
@@ -42,13 +45,19 @@ export default async function CustomerAccountPage() {
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <div className="rounded-xl border border-white/10 bg-slate-950/40 p-4">
               <p className="text-xs uppercase tracking-wider text-slate-400">Plan</p>
-              <p className="mt-1 text-2xl font-black text-emerald-300">{entitlement.plan.toUpperCase()}</p>
+              <p className="mt-1 text-2xl font-black text-emerald-300">{activeEntitlement.plan.toUpperCase()}</p>
             </div>
             <div className="rounded-xl border border-white/10 bg-slate-950/40 p-4">
               <p className="text-xs uppercase tracking-wider text-slate-400">Status</p>
-              <p className="mt-1 text-2xl font-black text-white">{entitlement.status}</p>
+              <p className="mt-1 text-2xl font-black text-white">{activeEntitlement.status}</p>
             </div>
           </div>
+
+          {activeEntitlement.status === "past_due" && activeEntitlement.graceUntil && (
+            <p className="mt-4 rounded-xl border border-amber-400/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+              Deine Zahlung ist faellig. Du hast noch Zugriff bis {new Date(activeEntitlement.graceUntil).toLocaleDateString("de-DE")}. Danach wird der Zugang automatisch gesperrt, wenn keine Zahlung eingeht.
+            </p>
+          )}
 
           <div className="mt-6 flex flex-wrap gap-3">
             <Link href="/content-factory" className="rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 px-4 py-2 font-bold text-slate-950">

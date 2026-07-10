@@ -2,6 +2,7 @@ import { createHash, randomBytes } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getResend } from "@/lib/resend";
+import { hasCustomerAccess } from "@/lib/customer-entitlement";
 
 function hashToken(token: string) {
   return createHash("sha256").update(token).digest("hex");
@@ -9,10 +10,6 @@ function hashToken(token: string) {
 
 function normalizeEmail(email: string) {
   return email.trim().toLowerCase();
-}
-
-function hasActiveAccess(status: string | null | undefined) {
-  return status === "active" || status === "trialing";
 }
 
 export async function POST(req: NextRequest) {
@@ -28,7 +25,7 @@ export async function POST(req: NextRequest) {
     const entitlement = await prisma.customerEntitlement.findFirst({
       where: {
         email: normalizedEmail,
-        status: { in: ["active", "trialing"] },
+        status: { in: ["active", "trialing", "past_due"] },
       },
       orderBy: {
         updatedAt: "desc",
@@ -36,7 +33,7 @@ export async function POST(req: NextRequest) {
     });
 
     // Do not reveal account existence.
-    if (!entitlement || !hasActiveAccess(entitlement.status)) {
+    if (!hasCustomerAccess(entitlement)) {
       return NextResponse.json({ ok: true });
     }
 

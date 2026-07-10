@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { prisma } from "@/lib/prisma";
+import { getResend } from "@/lib/resend";
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 const stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -30,6 +31,34 @@ function normalizeEntitlementStatus(status: string | null | undefined) {
   }
 
   return "active";
+}
+
+function getGraceUntil() {
+  return new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
+}
+
+async function sendBillingFailedNotice(email: string, plan: string, graceUntil: Date) {
+  const fromEmail = process.env.CONTACT_LEAD_FROM_EMAIL || process.env.RESEND_FROM_EMAIL;
+  if (!process.env.RESEND_API_KEY || !fromEmail) {
+    return;
+  }
+
+  const resend = await getResend();
+  await resend.emails.send({
+    from: fromEmail,
+    to: email,
+    subject: "Dein Nexmoneta-Zugang: Zahlung braucht deine Aufmerksamkeit",
+    html: `
+      <div style="font-family:Arial,sans-serif;line-height:1.6;color:#0f172a;max-width:600px;margin:0 auto;padding:24px;">
+        <h1 style="margin-bottom:12px;">Zahlung ausstehend</h1>
+        <p>Hallo,</p>
+        <p>wir konnten die letzte Zahlung fuer dein <strong>${plan.toUpperCase()}</strong>-Paket nicht einziehen.</p>
+        <p>Dein Zugang bleibt noch bis <strong>${graceUntil.toLocaleDateString("de-DE")}</strong> aktiv. Danach wird er automatisch gesperrt, falls keine Zahlung erfolgt.</p>
+        <p style="margin-top:18px;">Bitte pruefe deine Zahlungsmethode oder buche den Plan erneut, damit dein Zugang aktiv bleibt.</p>
+        <p style="margin-top:14px;color:#475569;font-size:12px;">Diese Nachricht ist Teil der automatischen Billing-Kommunikation.</p>
+      </div>
+    `,
+  });
 }
 
 function planFromAmount(amountTotal: number | null) {
@@ -139,6 +168,7 @@ async function syncEntitlementStatus(input: {
   subscriptionId?: string | null;
   email?: string | null;
   status: string;
+  graceUntil?: Date | null;
 }) {
   const conditions: Array<Record<string, string>> = [];
 
@@ -164,6 +194,7 @@ async function syncEntitlementStatus(input: {
     },
     data: {
       status: normalizeEntitlementStatus(input.status),
+      graceUntil: input.status === "past_due" ? input.graceUntil || getGraceUntil() : null,
     },
   });
 }
@@ -202,16 +233,41 @@ export async function POST(req: NextRequest) {
           customerId: typeof subscription.customer === "string" ? subscription.customer : null,
           subscriptionId: subscription.id,
           status: subscription.status,
+          graceUntil: subscription.status === "past_due" || subscription.status === "unpaid" ? getGraceUntil() : null,
         });
         break;
       }
       case "invoice.payment_failed": {
         const invoice = event.data.object as Stripe.Invoice & { subscription?: string | null };
+        const matchConditions: Array<Record<string, string>> = [];
+
+        if (typeof invoice.customer === "string") {
+          matchConditions.push({ stripeCustomerId: invoice.customer });
+        }
+
+        if (typeof invoice.subscription === "string") {
+          matchConditions.push({ stripeSubscriptionId: invoice.subscription });
+        }
+
+        const match = await prisma.customerEntitlement.findFirst({
+          where: matchConditions.length ? { OR: matchConditions } : undefined,
+          orderBy: { updatedAt: "desc" },
+        });
+
         await syncEntitlementStatus({
           customerId: typeof invoice.customer === "string" ? invoice.customer : null,
           subscriptionId: typeof invoice.subscription === "string" ? invoice.subscription : null,
           status: "past_due",
+          graceUntil: getGraceUntil(),
         });
+
+        if (match) {
+          try {
+            await sendBillingFailedNotice(match.email, match.plan, getGraceUntil());
+          } catch (error) {
+            console.warn("[Stripe webhook] Billing notice could not be sent", error);
+          }
+        }
         break;
       }
       case "invoice.payment_succeeded": {
@@ -220,6 +276,7 @@ export async function POST(req: NextRequest) {
           customerId: typeof invoice.customer === "string" ? invoice.customer : null,
           subscriptionId: typeof invoice.subscription === "string" ? invoice.subscription : null,
           status: "active",
+          graceUntil: null,
         });
         break;
       }
@@ -229,6 +286,7 @@ export async function POST(req: NextRequest) {
           customerId: typeof subscription.customer === "string" ? subscription.customer : null,
           subscriptionId: subscription.id,
           status: "canceled",
+          graceUntil: null,
         });
         break;
       }

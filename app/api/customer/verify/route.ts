@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createCustomerSessionToken, CUSTOMER_SESSION_COOKIE } from "@/lib/customer-auth";
+import { hasCustomerAccess } from "@/lib/customer-entitlement";
 
 function hashToken(token: string) {
   return createHash("sha256").update(token).digest("hex");
@@ -9,10 +10,6 @@ function hashToken(token: string) {
 
 function normalizeEmail(email: string) {
   return email.trim().toLowerCase();
-}
-
-function hasActiveAccess(status: string | null | undefined) {
-  return status === "active" || status === "trialing";
 }
 
 export async function GET(req: NextRequest) {
@@ -44,14 +41,14 @@ export async function GET(req: NextRequest) {
   const entitlement = await prisma.customerEntitlement.findFirst({
     where: {
       email: normalizedEmail,
-      status: { in: ["active", "trialing"] },
+      status: { in: ["active", "trialing", "past_due"] },
     },
     orderBy: {
       updatedAt: "desc",
     },
   });
 
-  if (!entitlement || !hasActiveAccess(entitlement.status)) {
+  if (!hasCustomerAccess(entitlement)) {
     return NextResponse.redirect(new URL("/konto/login?error=no_active_plan", req.url));
   }
 
