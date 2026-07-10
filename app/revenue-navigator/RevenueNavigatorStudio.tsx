@@ -57,6 +57,18 @@ function priorityBorder(priority: Recommendation["priority"]) {
   if (priority === "medium") return "border-amber-400/30 bg-amber-500/10 text-amber-100";
   return "border-emerald-400/30 bg-emerald-500/10 text-emerald-100";
 }
+
+function focusLabel(focus: string, isEn: boolean) {
+  if (focus === "leadgen") return isEn ? "Lead generation" : "Leadgen";
+  if (focus === "ads") return "Ads";
+  if (focus === "membership") return isEn ? "Membership" : "Mitgliedschaft";
+  return "Affiliate";
+}
+
+function formatDelta(value: number) {
+  if (value === 0) return "0";
+  return value > 0 ? `+${value}` : String(value);
+}
 export default function RevenueNavigatorStudio({
   locale,
   mode = "public",
@@ -391,6 +403,42 @@ export default function RevenueNavigatorStudio({
   const primaryRecommendation = renderedRecommendations[0];
   const currentLift = data?.projectedMonthlyLift ?? starterPreview.projectedMonthlyLift ?? 0;
   const currentSummary = data?.summary || starterPreview.summary;
+  const latestSavedScan = savedScans[0] || null;
+  const previousSavedScan = savedScans[1] || null;
+  const liftDelta = latestSavedScan && previousSavedScan ? latestSavedScan.projectedMonthlyLift - previousSavedScan.projectedMonthlyLift : null;
+  const scoreDelta = latestSavedScan && previousSavedScan ? latestSavedScan.opportunityScore - previousSavedScan.opportunityScore : null;
+
+  function exportCurrentPlaybook() {
+    const lines = [
+      isEn ? "Revenue Navigator Playbook" : "Revenue Navigator Playbook",
+      `${isEn ? "Plan" : "Plan"}: ${normalizePlan(plan).toUpperCase()}`,
+      `${isEn ? "Focus" : "Fokus"}: ${focusLabel(focus, isEn)}`,
+      `${isEn ? "Opportunity score" : "Opportunity Score"}: ${opportunityScore}/100`,
+      `${isEn ? "Projected monthly lift" : "Prognostizierter Monatslift"}: ${formatCurrency(currentLift)}`,
+      "",
+      currentSummary,
+      "",
+      ...(renderedRecommendations.length > 0
+        ? renderedRecommendations.flatMap((recommendation, index) => [
+            `${index + 1}. ${recommendation.title}`,
+            `${isEn ? "Why" : "Warum"}: ${recommendation.why}`,
+            `${isEn ? "Action" : "Aktion"}: ${recommendation.action}`,
+            `${isEn ? "Lift" : "Lift"}: ${formatCurrency(recommendation.estimatedMonthlyLift)}`,
+            "",
+          ])
+        : []),
+    ];
+
+    const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `revenue-navigator-${plan}-${new Date().toISOString().slice(0, 10)}.txt`;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
+  }
 
   return (
     <main className="min-h-screen bg-[#070b16] text-slate-100">
@@ -667,6 +715,25 @@ export default function RevenueNavigatorStudio({
                   </article>
                 ))}
               </div>
+
+              {isCustomerMode && (
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <button
+                    type="button"
+                    onClick={exportCurrentPlaybook}
+                    className="rounded-full border border-cyan-300/20 bg-cyan-500/10 px-4 py-2 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-500/20"
+                  >
+                    {isEn ? "Export playbook" : "Playbook exportieren"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => window.print()}
+                    className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:bg-white/10"
+                  >
+                    {isEn ? "Print / PDF" : "Drucken / PDF"}
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
@@ -677,6 +744,39 @@ export default function RevenueNavigatorStudio({
                 <p>{isEn ? "That combination is what gives it long-term value." : "Genau diese Kombination macht es langfristig wertvoll."}</p>
               </div>
             </div>
+
+            {isCustomerMode && latestSavedScan && (
+              <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">{isEn ? "Trend" : "Verlauf"}</p>
+                <h3 className="mt-2 text-2xl font-bold text-white">{isEn ? "How your latest scan changed" : "So hat sich dein letzter Scan veraendert"}</h3>
+
+                <div className="mt-4 grid gap-4 sm:grid-cols-3">
+                  <div className="rounded-2xl border border-white/10 bg-slate-950/30 p-4">
+                    <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{isEn ? "Latest lift" : "Aktueller Lift"}</p>
+                    <p className="mt-2 text-2xl font-black text-emerald-300">{formatCurrency(latestSavedScan.projectedMonthlyLift)}</p>
+                    {liftDelta !== null && (
+                      <p className={`mt-2 text-sm ${liftDelta >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                        {isEn ? "vs previous" : "vs. vorher"}: {formatDelta(liftDelta)}
+                      </p>
+                    )}
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-slate-950/30 p-4">
+                    <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{isEn ? "Latest score" : "Aktueller Score"}</p>
+                    <p className="mt-2 text-2xl font-black text-cyan-300">{latestSavedScan.opportunityScore}/100</p>
+                    {scoreDelta !== null && (
+                      <p className={`mt-2 text-sm ${scoreDelta >= 0 ? "text-emerald-300" : "text-rose-300"}`}>
+                        {isEn ? "vs previous" : "vs. vorher"}: {formatDelta(scoreDelta)}
+                      </p>
+                    )}
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-slate-950/30 p-4">
+                    <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{isEn ? "Latest focus" : "Letzter Fokus"}</p>
+                    <p className="mt-2 text-2xl font-black text-white">{focusLabel(latestSavedScan.focus, isEn)}</p>
+                    <p className="mt-2 text-sm text-slate-400">{new Date(latestSavedScan.createdAt).toLocaleDateString("de-DE")}</p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {isCustomerMode && (
               <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
@@ -707,6 +807,39 @@ export default function RevenueNavigatorStudio({
                       {isEn ? "Run your first customer scan to store a playbook here." : "Fuehre deinen ersten Kunden-Scan aus, um hier ein Playbook zu speichern."}
                     </p>
                   )}
+                </div>
+              </div>
+            )}
+
+            {isCustomerMode && customerPlan === "pro" && (
+              <div className="rounded-[2rem] border border-amber-400/20 bg-gradient-to-br from-amber-500/12 via-slate-950/40 to-rose-500/10 p-5 sm:p-6 shadow-2xl shadow-amber-950/20">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-200/70">{isEn ? "Upgrade path" : "Upgrade-Pfad"}</p>
+                <h3 className="mt-2 text-2xl font-black text-white">{isEn ? "Agency unlocks team depth and more playbooks" : "Agency schaltet Team-Tiefe und mehr Playbooks frei"}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-300">
+                  {isEn
+                    ? "If you want multiple projects, shared priorities, and team-scale monetization workflows, move from Pro to Agency."
+                    : "Wenn du mehrere Projekte, gemeinsame Prioritaeten und Monetarisierungs-Workflows fuer Teams willst, geh von Pro auf Agency."}
+                </p>
+
+                <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                  <div className="rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3 text-sm text-slate-200">{isEn ? "More recommendations per scan" : "Mehr Empfehlungen pro Scan"}</div>
+                  <div className="rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3 text-sm text-slate-200">{isEn ? "Team-level growth ops" : "Team-Level Growth Ops"}</div>
+                  <div className="rounded-2xl border border-white/10 bg-slate-950/30 px-4 py-3 text-sm text-slate-200">{isEn ? "Multi-project coordination" : "Multi-Projekt-Steuerung"}</div>
+                </div>
+
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <Link
+                    href="/api/checkout?plan=agency&source=revenue-navigator-workspace-upsell"
+                    className="rounded-xl bg-amber-500 px-4 py-3 text-sm font-bold text-slate-950 transition hover:bg-amber-400"
+                  >
+                    {isEn ? "Upgrade to Agency" : "Auf Agency upgraden"}
+                  </Link>
+                  <Link
+                    href="/kontakt?plan=agency&intent=upgrade&source=revenue-navigator-workspace"
+                    className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-100 transition hover:bg-white/10"
+                  >
+                    {isEn ? "Talk about setup" : "Setup besprechen"}
+                  </Link>
                 </div>
               </div>
             )}
