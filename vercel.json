@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/revenue-navigator/weekly-summary",
+      "schedule": "0 8 * * 1"
+    }
+  ]
+}
