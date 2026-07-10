@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
     const rows = await prisma.newsletterSubscriber.findMany({
       where: {
         source: { contains: "checkout-rescue:agency:upgrade:agency_onboarding_team_" },
-        status: "lead_new",
+        status: { in: ["lead_new", "subscribed"] },
       },
       select: {
         email: true,
