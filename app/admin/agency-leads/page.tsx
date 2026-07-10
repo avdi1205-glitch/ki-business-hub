@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { type ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
+import { type ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type Lead = {
   id: number;
@@ -44,6 +44,15 @@ type FollowUpMeta = {
 type ApiResponse = {
   leads: Lead[];
   counts: Record<string, number>;
+};
+
+type AutopilotStats = {
+  windowDays: number;
+  reviewMemosQueued: number;
+  reviewMemosDelivered: number;
+  reviewedCandidates: number;
+  sentFollowUps: number;
+  reviewToSendRate: number;
 };
 
 type CsvLeadRow = {
@@ -169,13 +178,32 @@ export default function AgencyLeadsPage() {
   const [drafts, setDrafts] = useState<FollowUpDraft[]>([]);
   const [followUpMeta, setFollowUpMeta] = useState<FollowUpMeta | null>(null);
   const [reviewPreparedAt, setReviewPreparedAt] = useState<string | null>(null);
+  const [reviewDelayMinutes, setReviewDelayMinutes] = useState<number>(10);
+  const [autopilotStats, setAutopilotStats] = useState<AutopilotStats | null>(null);
   const csvInputRef = useRef<HTMLInputElement | null>(null);
 
-  useEffect(() => {
-    void loadLeads();
+  const loadAutopilotStats = useCallback(async () => {
+    try {
+      const response = await fetch("/api/agency-leads/autopilot-stats", { cache: "no-store" });
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.error || "Stats failed");
+      }
+
+      setAutopilotStats({
+        windowDays: Number(payload.windowDays || 7),
+        reviewMemosQueued: Number(payload.reviewMemosQueued || 0),
+        reviewMemosDelivered: Number(payload.reviewMemosDelivered || 0),
+        reviewedCandidates: Number(payload.reviewedCandidates || 0),
+        sentFollowUps: Number(payload.sentFollowUps || 0),
+        reviewToSendRate: Number(payload.reviewToSendRate || 0),
+      });
+    } catch {
+      setAutopilotStats(null);
+    }
   }, []);
 
-  async function loadLeads() {
+  const loadLeads = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch("/api/agency-leads", { cache: "no-store" });
@@ -185,12 +213,21 @@ export default function AgencyLeadsPage() {
       }
       setLeads(payload.leads || []);
       setCounts(payload.counts || { total: 0 });
+      await loadAutopilotStats();
     } catch {
       setMessage("Agency-Leads konnten nicht geladen werden.");
     } finally {
       setLoading(false);
     }
-  }
+  }, [loadAutopilotStats]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      void loadLeads();
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, [loadLeads]);
 
   async function setStage(email: string, stage: string) {
     setSavingEmail(email);
@@ -240,6 +277,7 @@ export default function AgencyLeadsPage() {
 
       setMessage(`Follow-up abgeschlossen: ${payload.sent || 0} E-Mails versendet (von ${payload.totalCandidates || 0} Kandidaten).`);
       await loadLeads();
+      await loadAutopilotStats();
       setDrafts([]);
       setReviewPreparedAt(null);
     } catch {
@@ -276,7 +314,7 @@ export default function AgencyLeadsPage() {
       const response = await fetch("/api/agency-leads/autopilot-review", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ delayMinutes: 10 }),
+        body: JSON.stringify({ delayMinutes: reviewDelayMinutes }),
       });
       const payload = await response.json();
 
@@ -294,6 +332,7 @@ export default function AgencyLeadsPage() {
       setReviewPreparedAt(new Date().toISOString());
       setMessage(`Autopilot fertig. Entwuerfe: ${payload.totalCandidates || 0}. Review-Memo geplant fuer ${new Date(payload.executeAt).toLocaleTimeString("de-DE")}.`);
       await loadLeads();
+      await loadAutopilotStats();
     } catch (error) {
       const detail = error instanceof Error ? error.message : "Autopilot Review konnte nicht gestartet werden.";
       setMessage(detail);
@@ -380,6 +419,7 @@ export default function AgencyLeadsPage() {
 
       setMessage(`CSV importiert: ${payload.imported || 0} Leads, uebersprungen: ${payload.skipped || 0}.`);
       await loadLeads();
+      await loadAutopilotStats();
     } catch (error) {
       const detail = error instanceof Error ? error.message : "CSV konnte nicht importiert werden.";
       setMessage(detail);
@@ -474,6 +514,19 @@ export default function AgencyLeadsPage() {
           >
             Demo-Leads erzeugen
           </button>
+          <label className="inline-flex items-center gap-2 rounded-full border border-indigo-300/30 bg-indigo-500/10 px-3 py-2 text-xs font-semibold text-indigo-100">
+            Memo in
+            <select
+              value={reviewDelayMinutes}
+              onChange={(event) => setReviewDelayMinutes(Number(event.target.value))}
+              className="rounded-md border border-indigo-300/30 bg-slate-900 px-2 py-1 text-xs text-indigo-100"
+            >
+              <option value={5}>5 min</option>
+              <option value={10}>10 min</option>
+              <option value={30}>30 min</option>
+              <option value={60}>60 min</option>
+            </select>
+          </label>
           <button
             type="button"
             onClick={() => void runAutopilotReview()}
@@ -521,6 +574,31 @@ export default function AgencyLeadsPage() {
             {reviewPreparedAt && (
               <p className="mt-1 text-xs text-indigo-200">Autopilot-Review bereit seit: {new Date(reviewPreparedAt).toLocaleString("de-DE")}</p>
             )}
+          </div>
+        )}
+
+        {autopilotStats && (
+          <div className="mb-5 grid grid-cols-2 gap-3 md:grid-cols-5">
+            <div className="rounded-xl border border-indigo-300/20 bg-indigo-500/10 px-3 py-3">
+              <p className="text-[11px] uppercase tracking-[0.14em] text-indigo-100/80">Review-Memos Queue ({autopilotStats.windowDays}d)</p>
+              <p className="mt-1 text-sm font-semibold text-indigo-100">{autopilotStats.reviewMemosQueued}</p>
+            </div>
+            <div className="rounded-xl border border-indigo-300/20 bg-indigo-500/10 px-3 py-3">
+              <p className="text-[11px] uppercase tracking-[0.14em] text-indigo-100/80">Review-Memos geliefert</p>
+              <p className="mt-1 text-sm font-semibold text-indigo-100">{autopilotStats.reviewMemosDelivered}</p>
+            </div>
+            <div className="rounded-xl border border-cyan-300/20 bg-cyan-500/10 px-3 py-3">
+              <p className="text-[11px] uppercase tracking-[0.14em] text-cyan-100/80">Reviewte Kandidaten</p>
+              <p className="mt-1 text-sm font-semibold text-cyan-100">{autopilotStats.reviewedCandidates}</p>
+            </div>
+            <div className="rounded-xl border border-amber-300/20 bg-amber-500/10 px-3 py-3">
+              <p className="text-[11px] uppercase tracking-[0.14em] text-amber-100/80">Gesendete Follow-ups</p>
+              <p className="mt-1 text-sm font-semibold text-amber-100">{autopilotStats.sentFollowUps}</p>
+            </div>
+            <div className="rounded-xl border border-emerald-300/20 bg-emerald-500/10 px-3 py-3">
+              <p className="text-[11px] uppercase tracking-[0.14em] text-emerald-100/80">Review zu Send</p>
+              <p className="mt-1 text-sm font-semibold text-emerald-100">{autopilotStats.reviewToSendRate}%</p>
+            </div>
           </div>
         )}
 
