@@ -70,6 +70,23 @@ function formatDelta(value: number) {
   if (value === 0) return "0";
   return value > 0 ? `+${value}` : String(value);
 }
+
+function buildSparklinePoints(values: number[]) {
+  if (values.length === 0) return "";
+  if (values.length === 1) return "0,48 100,48";
+
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const spread = max - min || 1;
+
+  return values
+    .map((value, index) => {
+      const x = (index / (values.length - 1)) * 100;
+      const y = 88 - ((value - min) / spread) * 64;
+      return `${x},${y}`;
+    })
+    .join(" ");
+}
 export default function RevenueNavigatorStudio({
   locale,
   mode = "public",
@@ -425,6 +442,22 @@ export default function RevenueNavigatorStudio({
       return groups;
     }, []);
   }, [isEn, savedScans]);
+  const weeklyMetrics = useMemo(() => {
+    return scansByWeek.map((group) => {
+      const totalLift = group.scans.reduce((sum, scan) => sum + scan.projectedMonthlyLift, 0);
+      const avgLift = Math.round(totalLift / group.scans.length);
+      const avgScore = Math.round(group.scans.reduce((sum, scan) => sum + scan.opportunityScore, 0) / group.scans.length);
+      return {
+        weekKey: group.weekKey,
+        weekLabel: group.weekLabel,
+        scanCount: group.scans.length,
+        avgLift,
+        avgScore,
+      };
+    }).reverse();
+  }, [scansByWeek]);
+  const liftSparkline = useMemo(() => buildSparklinePoints(weeklyMetrics.map((week) => week.avgLift)), [weeklyMetrics]);
+  const scoreSparkline = useMemo(() => buildSparklinePoints(weeklyMetrics.map((week) => week.avgScore)), [weeklyMetrics]);
 
   async function exportCurrentPlaybook() {
     const { jsPDF } = await import("jspdf");
@@ -858,6 +891,54 @@ export default function RevenueNavigatorStudio({
                     <p className="mt-2 text-2xl font-black text-white">{focusLabel(latestSavedScan.focus, isEn)}</p>
                     <p className="mt-2 text-sm text-slate-400">{new Date(latestSavedScan.createdAt).toLocaleDateString("de-DE")}</p>
                   </div>
+                </div>
+              </div>
+            )}
+
+            {isCustomerMode && weeklyMetrics.length > 0 && (
+              <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">{isEn ? "Weekly pulse" : "Wochen-Puls"}</p>
+                <h3 className="mt-2 text-2xl font-bold text-white">{isEn ? "Your monetization trend by week" : "Dein Monetarisierungs-Trend pro Woche"}</h3>
+
+                <div className="mt-4 grid gap-4 lg:grid-cols-2">
+                  <div className="rounded-2xl border border-white/10 bg-slate-950/30 p-4">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{isEn ? "Average lift" : "Durchschnittlicher Lift"}</p>
+                        <p className="mt-2 text-2xl font-black text-emerald-300">{formatCurrency(weeklyMetrics[weeklyMetrics.length - 1]?.avgLift || 0)}</p>
+                      </div>
+                      <span className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-100">{weeklyMetrics.length} {isEn ? "weeks" : "Wochen"}</span>
+                    </div>
+                    <svg viewBox="0 0 100 100" className="mt-4 h-28 w-full overflow-visible">
+                      <polyline fill="none" stroke="rgba(16,185,129,0.25)" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" points={liftSparkline} />
+                      <polyline fill="none" stroke="#34d399" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" points={liftSparkline} />
+                    </svg>
+                  </div>
+
+                  <div className="rounded-2xl border border-white/10 bg-slate-950/30 p-4">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{isEn ? "Average score" : "Durchschnittlicher Score"}</p>
+                        <p className="mt-2 text-2xl font-black text-cyan-300">{weeklyMetrics[weeklyMetrics.length - 1]?.avgScore || 0}/100</p>
+                      </div>
+                      <span className="rounded-full border border-cyan-400/20 bg-cyan-500/10 px-3 py-1 text-xs font-semibold text-cyan-100">{isEn ? "Weekly trend" : "Wochentrend"}</span>
+                    </div>
+                    <svg viewBox="0 0 100 100" className="mt-4 h-28 w-full overflow-visible">
+                      <polyline fill="none" stroke="rgba(34,211,238,0.25)" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" points={scoreSparkline} />
+                      <polyline fill="none" stroke="#22d3ee" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" points={scoreSparkline} />
+                    </svg>
+                  </div>
+                </div>
+
+                <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                  {weeklyMetrics.map((week) => (
+                    <div key={week.weekKey} className="rounded-2xl border border-white/10 bg-slate-950/30 p-4">
+                      <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{week.weekLabel}</p>
+                      <p className="mt-2 text-lg font-bold text-white">{formatCurrency(week.avgLift)}</p>
+                      <p className="mt-1 text-sm text-slate-300">Score {week.avgScore}/100</p>
+                      <p className="mt-1 text-xs text-slate-400">{week.scanCount} {isEn ? "scan(s)" : "Scan(s)"}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
