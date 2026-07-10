@@ -192,6 +192,22 @@ export default function AgencyLeadsPage() {
     }
   }
 
+  async function seedDemoLeads() {
+    setMessage("Demo-Leads werden erzeugt...");
+    try {
+      const response = await fetch("/api/agency-leads/bootstrap", { method: "POST" });
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.error || "Bootstrap failed");
+      }
+
+      setMessage(`Demo-Leads bereit: ${payload.createdOrUpdated || 0} Datensaetze.`);
+      await loadLeads();
+    } catch {
+      setMessage("Demo-Leads konnten nicht erzeugt werden.");
+    }
+  }
+
   const hotLeads = useMemo(() => leads.filter((lead) => lead.priority >= 3).length, [leads]);
   const slaCritical = useMemo(() => leads.filter((lead) => lead.slaBreached).length, [leads]);
 
@@ -255,6 +271,13 @@ export default function AgencyLeadsPage() {
         </div>
 
         <div className="mb-5 flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={() => void seedDemoLeads()}
+            className="rounded-full border border-fuchsia-300/30 bg-fuchsia-500/12 px-4 py-2 text-sm font-bold text-fuchsia-100 transition hover:bg-fuchsia-500/20"
+          >
+            Demo-Leads erzeugen
+          </button>
           <button
             type="button"
             onClick={() => void previewFollowUp()}
@@ -412,7 +435,22 @@ export default function AgencyLeadsPage() {
                 {!loading && !leads.length && (
                   <tr>
                     <td colSpan={9} className="px-4 py-8 text-center text-sm text-slate-400">
-                      Noch keine Agency-Leads vorhanden.
+                      <p>Noch keine Agency-Leads vorhanden.</p>
+                      <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => void seedDemoLeads()}
+                          className="rounded-full border border-fuchsia-300/30 bg-fuchsia-500/12 px-3 py-1.5 text-xs font-bold text-fuchsia-100 transition hover:bg-fuchsia-500/20"
+                        >
+                          Demo-Leads erzeugen
+                        </button>
+                        <Link
+                          href="/revenue-navigator"
+                          className="rounded-full border border-cyan-300/30 bg-cyan-500/12 px-3 py-1.5 text-xs font-bold text-cyan-100 transition hover:bg-cyan-500/20"
+                        >
+                          Lead-Flow starten
+                        </Link>
+                      </div>
                     </td>
                   </tr>
                 )}
