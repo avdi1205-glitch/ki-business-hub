@@ -1,15 +1,11 @@
 "use client";
 
 import Script from "next/script";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { hasConsent } from "../../lib/cookie-consent";
 
 export default function AnalyticsScripts({ gaId }: { gaId: string }) {
-  const [consentGiven, setConsentGiven] = useState(false);
-
-  useEffect(() => {
-    setConsentGiven(hasConsent("analytics"));
-  }, []);
+  const [consentGiven] = useState(() => hasConsent("analytics"));
 
   if (!consentGiven) return null;
 

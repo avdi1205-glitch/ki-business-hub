@@ -69,7 +69,7 @@ export function TestimonialsSection() {
             <h2 className="text-4xl font-black text-white sm:text-5xl">{t("testimonialsTitle")}</h2>
 
             <div className="mt-10 rounded-2xl border border-white/[0.08] p-8" style={{ background: "rgba(255,255,255,0.02)" }}>
-              <p className="text-lg leading-8 text-slate-200">"{isEn ? active.quoteEn : active.quote}"</p>
+              <p className="text-lg leading-8 text-slate-200">&quot;{isEn ? active.quoteEn : active.quote}&quot;</p>
               <div className="mt-6 flex items-center gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-sm font-bold text-white" style={{ background: "rgba(255,255,255,0.06)" }}>
                   {active.initial}

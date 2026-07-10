@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { prisma } from "../../../lib/prisma";
 import DeleteAffiliateButton from "./DeleteAffiliateButton";
@@ -79,10 +80,12 @@ export default async function AffiliateAdminPage() {
             style={{ background: "var(--background-elevated)", border: "1px solid rgba(255,255,255,0.1)" }}
           >
             {link.logo && (
-              <img
+              <Image
                 src={link.logo}
                 alt={link.name}
                 className="mb-4 h-12 rounded p-1"
+                width={180}
+                height={48}
                 style={{ background: "rgba(255,255,255,0.9)" }}
               />
             )}

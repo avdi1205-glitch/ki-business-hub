@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { StatCard, ActionButton } from "@/app/components/ProUIComponents";
 
 type AffiliateOption = {
@@ -45,7 +45,7 @@ export default function ABTestingPage() {
     ? (activeTests.reduce((sum, test) => sum + Math.max(test.rateA, test.rateB), 0) / activeTests.length).toFixed(2)
     : "0.00";
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     const response = await fetch("/api/ab-testing");
     const data = await response.json();
 
@@ -61,7 +61,7 @@ export default function ABTestingPage() {
       setVariantA(data.affiliates[0].buttonText || "Kostenlos testen");
       setVariantB("Jetzt starten");
     }
-  };
+  }, [selectedAffiliate]);
 
   useEffect(() => {
     const init = async () => {
@@ -74,16 +74,8 @@ export default function ABTestingPage() {
       }
     };
 
-    init();
-  }, []);
-
-  const selectedAffiliateData = affiliates.find((affiliate) => String(affiliate.id) === selectedAffiliate);
-
-  useEffect(() => {
-    if (selectedAffiliateData?.buttonText) {
-      setVariantA(selectedAffiliateData.buttonText);
-    }
-  }, [selectedAffiliateData?.buttonText]);
+    void init();
+  }, [loadData]);
 
   const createTest = async () => {
     if (!selectedAffiliate) {
@@ -165,7 +157,14 @@ export default function ABTestingPage() {
               <label className="mb-2 block text-sm font-medium" style={{ color: "var(--text-light)" }}>Affiliate-Link</label>
               <select
                 value={selectedAffiliate}
-                onChange={(event) => setSelectedAffiliate(event.target.value)}
+                onChange={(event) => {
+                  const nextId = event.target.value;
+                  setSelectedAffiliate(nextId);
+                  const nextAffiliate = affiliates.find((affiliate) => String(affiliate.id) === nextId);
+                  if (nextAffiliate?.buttonText) {
+                    setVariantA(nextAffiliate.buttonText);
+                  }
+                }}
                 className="w-full rounded-lg px-4 py-2"
                 style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--text-dark)" }}
               >
@@ -228,7 +227,7 @@ export default function ABTestingPage() {
                   <div className="rounded-lg p-4" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)" }}>
                     <h3 className="mb-3 font-semibold" style={{ color: "var(--text-dark)" }}>Variante A</h3>
                     <div className="mb-4 rounded-lg px-3 py-2 font-medium" style={{ background: "rgba(59, 130, 246, 0.18)", color: "#bfdbfe" }}>
-                      "{test.variantA}"
+                      &quot;{test.variantA}&quot;
                     </div>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between"><span style={{ color: "var(--text-light)" }}>Impressions</span><span style={{ color: "var(--text-dark)" }}>{test.impressionsA}</span></div>
@@ -247,7 +246,7 @@ export default function ABTestingPage() {
                       )}
                     </div>
                     <div className="mb-4 rounded-lg px-3 py-2 font-medium" style={{ background: "rgba(16, 185, 129, 0.18)", color: "#bbf7d0" }}>
-                      "{test.variantB}"
+                      &quot;{test.variantB}&quot;
                     </div>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between"><span style={{ color: "var(--text-light)" }}>Impressions</span><span style={{ color: "var(--text-dark)" }}>{test.impressionsB}</span></div>
@@ -289,7 +288,7 @@ export default function ABTestingPage() {
                   <div>
                     <p className="font-medium" style={{ color: "var(--text-dark)" }}>{test.affiliateName}</p>
                     <p className="text-sm" style={{ color: "var(--text-light)" }}>
-                      Gewinner: "{test.winner === "A" ? test.variantA : test.variantB}" • Live seit {test.appliedAt ? new Date(test.appliedAt).toLocaleString("de-DE") : "unbekannt"}
+                      Gewinner: &quot;{test.winner === "A" ? test.variantA : test.variantB}&quot; • Live seit {test.appliedAt ? new Date(test.appliedAt).toLocaleString("de-DE") : "unbekannt"}
                     </p>
                   </div>
                   <div className="text-right">

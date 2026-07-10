@@ -19,11 +19,7 @@ export default function GoogleAd({
 }: GoogleAdProps) {
   const adClientId = toAdClientId(process.env.NEXT_PUBLIC_ADSENSE_ID);
   const adsEnabled = isAdSenseEnabled(process.env.NEXT_PUBLIC_ADSENSE_ENABLED);
-  const [advertisingConsent, setAdvertisingConsent] = useState(false);
-
-  useEffect(() => {
-    setAdvertisingConsent(hasConsent("advertising"));
-  }, []);
+  const [advertisingConsent] = useState(() => hasConsent("advertising"));
 
   useEffect(() => {
     if (!adsEnabled || !adClientId || !advertisingConsent) return;

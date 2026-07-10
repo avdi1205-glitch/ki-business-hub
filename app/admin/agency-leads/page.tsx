@@ -63,6 +63,10 @@ export default function AgencyLeadsPage() {
   const [drafts, setDrafts] = useState<FollowUpDraft[]>([]);
   const [followUpMeta, setFollowUpMeta] = useState<FollowUpMeta | null>(null);
 
+  useEffect(() => {
+    void loadLeads();
+  }, []);
+
   async function loadLeads() {
     setLoading(true);
     try {
@@ -186,10 +190,6 @@ export default function AgencyLeadsPage() {
       setMessage("Weekly Report konnte nicht gesendet werden.");
     }
   }
-
-  useEffect(() => {
-    void loadLeads();
-  }, []);
 
   const hotLeads = useMemo(() => leads.filter((lead) => lead.priority >= 3).length, [leads]);
   const slaCritical = useMemo(() => leads.filter((lead) => lead.slaBreached).length, [leads]);
