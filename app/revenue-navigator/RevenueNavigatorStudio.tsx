@@ -571,8 +571,8 @@ export default function RevenueNavigatorStudio({
                     ? "Run customer-specific scans, keep your history, and come back every week without touching the admin area."
                     : "Fuehre kundenspezifische Scans aus, behalte deine Historie und komme jede Woche wieder, ohne den Admin zu beruehren.")
                   : isEn
-                  ? "Start with a free scan, see the strongest revenue lever, and upgrade to a weekly playbook when you want the next step automated."
-                  : "Starte mit einem kostenlosen Scan, sieh den staerksten Umsatzhebel und upgrade auf einen Wochenplan, wenn du den naechsten Schritt automatisieren willst."}
+                  ? "Start with a free scan, uncover the single revenue lever with the highest upside, and upgrade when you want weekly guidance that turns ideas into repeatable money."
+                  : "Starte mit einem kostenlosen Scan, finde den einen Umsatzhebel mit dem grössten Potenzial und upgrade, wenn du aus Ideen einen wiederholbaren Geldprozess machen willst."}
               </p>
 
               <div className="mt-6 flex flex-wrap gap-3 text-sm text-slate-200">
@@ -591,9 +591,14 @@ export default function RevenueNavigatorStudio({
                     </Link>
                   </>
                 ) : (
-                  <Link href="/konto/revenue-navigator" className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-slate-100 transition hover:bg-white/10">
-                    {isEn ? "Already a customer? Open workspace" : "Schon Kunde? Workspace oeffnen"}
-                  </Link>
+                  <>
+                    <Link href="/konto/revenue-navigator" className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-slate-100 transition hover:bg-white/10">
+                      {isEn ? "Already a customer? Open workspace" : "Schon Kunde? Workspace oeffnen"}
+                    </Link>
+                    <span className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1.5 text-emerald-100">
+                      {isEn ? "Best used weekly, not once" : "Der Hebel entsteht wöchentlich, nicht einmalig"}
+                    </span>
+                  </>
                 )}
               </div>
             </div>
@@ -783,6 +788,14 @@ export default function RevenueNavigatorStudio({
                   ? "This free scan is enough to understand your first lever. Upgrade later only if you want weekly direction and deeper tracking."
                   : "Dieser kostenlose Scan reicht, um deinen ersten Hebel zu verstehen. Upgrade spaeter nur, wenn du woechentliche Richtung und tieferes Tracking willst."}
               </div>
+
+              {!isCustomerMode && (
+                <div className="mt-4 rounded-2xl border border-emerald-400/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">
+                  {isEn
+                    ? "Most users do not need more information. They need one weekly decision. That is what Pro and Agency are for."
+                    : "Die meisten brauchen nicht mehr Informationen, sondern jede Woche genau eine gute Entscheidung. Genau dafuer sind Pro und Agency da."}
+                </div>
+              )}
 
               <div className="mt-6 rounded-[1.75rem] border border-cyan-400/20 bg-gradient-to-br from-cyan-500/12 via-slate-950/40 to-emerald-500/10 p-5">
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-200/70">
@@ -1104,6 +1117,11 @@ export default function RevenueNavigatorStudio({
                 ? "You can keep the free scan as the entry point. Pro and Agency unlock the recurring revenue engine."
                 : "Du kannst den kostenlosen Scan als Einstieg behalten. Pro und Agency schalten die wiederkehrende Umsatzmaschine frei."}
             </p>
+            <div className="mt-4 flex flex-wrap gap-3 text-sm text-slate-200">
+              <span className="rounded-full border border-cyan-400/20 bg-cyan-500/10 px-3 py-1.5">{isEn ? "Free = first direction" : "Free = erste Richtung"}</span>
+              <span className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1.5">{isEn ? "Pro = weekly operating system" : "Pro = wöchentliches Betriebssystem"}</span>
+              <span className="rounded-full border border-amber-400/20 bg-amber-500/10 px-3 py-1.5">{isEn ? "Agency = team monetization cockpit" : "Agency = Monetarisierungs-Cockpit fürs Team"}</span>
+            </div>
           </div>
 
           <div className="grid gap-5 lg:grid-cols-3">
@@ -1140,6 +1158,14 @@ export default function RevenueNavigatorStudio({
                 </ul>
 
                 <div className="mt-6">{card.action}</div>
+
+                {card.key !== "starter" && (
+                  <p className="mt-4 text-xs leading-6 text-slate-400">
+                    {card.key === "pro"
+                      ? (isEn ? "Best for solo operators and small sites that need one clear weekly revenue decision." : "Am stärksten für Solo-Betreiber und kleinere Seiten, die jede Woche genau eine klare Umsatzentscheidung brauchen.")
+                      : (isEn ? "Best for teams, client work, and multiple monetization tracks running in parallel." : "Am stärksten für Teams, Kundenprojekte und mehrere Umsatzpfade gleichzeitig.")}
+                  </p>
+                )}
               </article>
             ))}
           </div>
