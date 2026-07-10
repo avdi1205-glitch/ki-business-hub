@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { parseCustomerSessionToken, CUSTOMER_SESSION_COOKIE } from "@/lib/customer-auth";
 import { hasCustomerAccess } from "@/lib/customer-entitlement";
 import { buildCustomerPlaybook, normalizeFocus, normalizePlan as normalizeWorkspacePlan, planRank, sanitizeInputs } from "@/lib/revenue-navigator";
+import { getResend } from "@/lib/resend";
+import { getSiteUrl } from "@/lib/site-url";
 
 type UserPlan = "starter" | "pro" | "agency";
 
@@ -32,6 +34,70 @@ function getWeekStart(date: Date): Date {
   d.setDate(d.getDate() + diff);
   d.setHours(0, 0, 0, 0);
   return d;
+}
+
+function formatCurrency(value: number) {
+  return new Intl.NumberFormat("de-DE", {
+    style: "currency",
+    currency: "EUR",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+async function sendCustomerPlaybookEmail(input: {
+  email: string;
+  plan: UserPlan;
+  focus: string;
+  opportunityScore: number;
+  projectedMonthlyLift: number;
+  summary: string;
+  recommendations: Recommendation[];
+}) {
+  const fromEmail = process.env.CONTACT_LEAD_FROM_EMAIL || process.env.RESEND_FROM_EMAIL;
+  if (!process.env.RESEND_API_KEY || !fromEmail) {
+    return;
+  }
+
+  const workspaceUrl = `${getSiteUrl()}/konto/revenue-navigator`;
+  const resend = await getResend();
+  const recommendationMarkup = input.recommendations.slice(0, 3).map((recommendation, index) => `
+    <div style="margin-top:16px;padding:16px;border:1px solid rgba(15,23,42,0.08);border-radius:16px;background:#f8fafc;">
+      <p style="margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0891b2;">Schritt ${index + 1}</p>
+      <h3 style="margin:0 0 8px;font-size:18px;color:#0f172a;">${recommendation.title}</h3>
+      <p style="margin:0 0 8px;color:#334155;"><strong>Warum:</strong> ${recommendation.why}</p>
+      <p style="margin:0 0 8px;color:#334155;"><strong>Aktion:</strong> ${recommendation.action}</p>
+      <p style="margin:0;color:#059669;font-weight:700;">Potenzial: ${formatCurrency(recommendation.estimatedMonthlyLift)}</p>
+    </div>
+  `).join("");
+
+  await resend.emails.send({
+    from: fromEmail,
+    to: input.email,
+    subject: `Dein Revenue Navigator Playbook (${input.plan.toUpperCase()})`,
+    html: `
+      <div style="font-family:Arial,sans-serif;line-height:1.6;color:#0f172a;max-width:640px;margin:0 auto;padding:24px;">
+        <div style="padding:24px;border-radius:24px;background:linear-gradient(135deg,#082f49 0%,#0f766e 100%);color:#f8fafc;">
+          <p style="margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#a5f3fc;">Revenue Navigator</p>
+          <h1 style="margin:0 0 12px;font-size:30px;line-height:1.1;">Dein neues Playbook ist fertig</h1>
+          <p style="margin:0;color:#d1fae5;">Plan: <strong>${input.plan.toUpperCase()}</strong> • Fokus: <strong>${input.focus}</strong> • Score: <strong>${input.opportunityScore}/100</strong></p>
+        </div>
+
+        <div style="margin-top:20px;padding:20px;border:1px solid rgba(15,23,42,0.08);border-radius:20px;background:#ffffff;">
+          <p style="margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#0f766e;">Monatspotenzial</p>
+          <p style="margin:0 0 12px;font-size:28px;font-weight:800;color:#059669;">${formatCurrency(input.projectedMonthlyLift)}</p>
+          <p style="margin:0;color:#334155;">${input.summary}</p>
+        </div>
+
+        ${recommendationMarkup}
+
+        <div style="margin-top:24px;text-align:center;">
+          <a href="${workspaceUrl}" style="display:inline-block;padding:14px 20px;border-radius:14px;background:#0891b2;color:#ffffff;text-decoration:none;font-weight:700;">Workspace oeffnen</a>
+        </div>
+
+        <p style="margin-top:18px;color:#64748b;font-size:12px;">Transparenz: Teile der Analysen und Empfehlungen koennen mit KI-Unterstuetzung erstellt und anschliessend menschlich strukturiert worden sein.</p>
+      </div>
+    `,
+  });
 }
 
 export async function GET(req: NextRequest) {
@@ -369,6 +435,20 @@ export async function POST(req: NextRequest) {
       };
     } catch {
       // Keep customer flow working even if the scan table is not migrated yet.
+    }
+
+    try {
+      await sendCustomerPlaybookEmail({
+        email: sessionEmail,
+        plan: requestedPlan,
+        focus: inputs.focus,
+        opportunityScore: result.opportunityScore,
+        projectedMonthlyLift: result.projectedMonthlyLift,
+        summary: result.summary,
+        recommendations: result.recommendations,
+      });
+    } catch (mailError) {
+      console.warn("[revenue-playbook-post] Playbook email could not be sent", mailError);
     }
 
     return NextResponse.json({
