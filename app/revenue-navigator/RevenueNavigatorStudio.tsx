@@ -150,6 +150,92 @@ function buildSparklinePoints(values: number[]) {
     })
     .join(" ");
 }
+
+type GuidedStep = {
+  id: string;
+  title: string;
+  detail: string;
+  priority: "high" | "medium" | "low";
+};
+
+function buildGuidedSteps(input: {
+  focus: Focus;
+  monthlyVisitors: number;
+  affiliateClicks: number;
+  newsletterSignups: number;
+  contentPieces: number;
+  teamSize: number;
+  primaryAction?: string;
+}): GuidedStep[] {
+  const steps: GuidedStep[] = [];
+  const clickRate = input.monthlyVisitors > 0 ? input.affiliateClicks / input.monthlyVisitors : 0;
+  const leadRate = input.monthlyVisitors > 0 ? input.newsletterSignups / input.monthlyVisitors : 0;
+
+  if (input.monthlyVisitors < 3000) {
+    steps.push({
+      id: "traffic",
+      title: "Mehr qualifizierten Traffic auf 1 Fokus-Thema",
+      detail: "Waehle 1 Money-Thema fuer 14 Tage und publiziere 2 fokussierte Seiten mit klarem CTA.",
+      priority: "high",
+    });
+  }
+
+  if (clickRate < 0.02) {
+    steps.push({
+      id: "ctr",
+      title: "Klickrate auf den naechsten Schritt erhoehen",
+      detail: "Platziere einen klaren Haupt-CTA ueber dem ersten Scrollbereich und wiederhole ihn 2x im Inhalt.",
+      priority: "high",
+    });
+  }
+
+  if (leadRate < 0.01) {
+    steps.push({
+      id: "lead-capture",
+      title: "Lead-Capture vereinfachen",
+      detail: "Nutze nur 1 Formularziel und max. 4 Fragen. Entferne konkurrierende CTAs auf derselben Seite.",
+      priority: "high",
+    });
+  }
+
+  if (input.contentPieces < 6) {
+    steps.push({
+      id: "consistency",
+      title: "Wochenrhythmus fuer Content festlegen",
+      detail: "Plane mindestens 2 umsatznahe Inhalte pro Woche und verknuepfe jeden mit dem gleichen Conversion-Ziel.",
+      priority: "medium",
+    });
+  }
+
+  if (input.teamSize <= 2) {
+    steps.push({
+      id: "execution",
+      title: "Nur ein Hebel pro Woche umsetzen",
+      detail: "Kein Multitasking: ein Hebel, ein KPI-Ziel, ein Review nach 7 Tagen.",
+      priority: "medium",
+    });
+  }
+
+  if (input.primaryAction) {
+    steps.push({
+      id: "primary",
+      title: "Primäre Empfehlung direkt umsetzen",
+      detail: input.primaryAction,
+      priority: "high",
+    });
+  }
+
+  if (!steps.length) {
+    steps.push({
+      id: "default",
+      title: "Naechsten Hebel aus dem Playbook testen",
+      detail: "Setze die oberste Empfehlung um und pruefe den Effekt nach 7 Tagen.",
+      priority: "medium",
+    });
+  }
+
+  return steps.slice(0, 4);
+}
 export default function RevenueNavigatorStudio({
   locale,
   mode = "public",
@@ -523,6 +609,44 @@ export default function RevenueNavigatorStudio({
   }, [scansByWeek]);
   const liftSparkline = useMemo(() => buildSparklinePoints(weeklyMetrics.map((week) => week.avgLift)), [weeklyMetrics]);
   const scoreSparkline = useMemo(() => buildSparklinePoints(weeklyMetrics.map((week) => week.avgScore)), [weeklyMetrics]);
+  const guidedSteps = useMemo(() => buildGuidedSteps({
+    focus,
+    monthlyVisitors,
+    affiliateClicks,
+    newsletterSignups,
+    contentPieces,
+    teamSize,
+    primaryAction: primaryRecommendation?.action,
+  }), [affiliateClicks, contentPieces, focus, monthlyVisitors, newsletterSignups, primaryRecommendation?.action, teamSize]);
+
+  function applyPreset(preset: "leadgen" | "conversion" | "scale") {
+    if (preset === "leadgen") {
+      setFocus("leadgen");
+      setMonthlyVisitors(4500);
+      setAffiliateClicks(70);
+      setNewsletterSignups(22);
+      setContentPieces(8);
+      setTeamSize(2);
+      return;
+    }
+
+    if (preset === "conversion") {
+      setFocus("affiliate");
+      setMonthlyVisitors(9000);
+      setAffiliateClicks(90);
+      setNewsletterSignups(28);
+      setContentPieces(10);
+      setTeamSize(2);
+      return;
+    }
+
+    setFocus("ads");
+    setMonthlyVisitors(18000);
+    setAffiliateClicks(260);
+    setNewsletterSignups(70);
+    setContentPieces(16);
+    setTeamSize(4);
+  }
 
   async function exportCurrentPlaybook() {
     const { jsPDF } = await import("jspdf");
@@ -733,6 +857,38 @@ export default function RevenueNavigatorStudio({
             </div>
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <div className="sm:col-span-2 rounded-2xl border border-cyan-400/20 bg-cyan-500/10 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-100">{isEn ? "Guided start" : "Gefuehrter Start"}</p>
+                <p className="mt-2 text-sm text-slate-200">
+                  {isEn
+                    ? "Pick one scenario and the inputs are prefilled. Then run Generate for your next steps."
+                    : "Waehle ein Szenario und die Werte werden vorausgefuellt. Danach auf Generieren klicken fuer konkrete naechste Schritte."}
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => applyPreset("leadgen")}
+                    className="rounded-full border border-cyan-300/20 bg-cyan-500/15 px-3 py-1.5 text-xs font-semibold text-cyan-100 transition hover:bg-cyan-500/25"
+                  >
+                    {isEn ? "Need more leads" : "Mehr Leads"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => applyPreset("conversion")}
+                    className="rounded-full border border-emerald-300/20 bg-emerald-500/15 px-3 py-1.5 text-xs font-semibold text-emerald-100 transition hover:bg-emerald-500/25"
+                  >
+                    {isEn ? "Need better conversion" : "Bessere Conversion"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => applyPreset("scale")}
+                    className="rounded-full border border-amber-300/20 bg-amber-500/15 px-3 py-1.5 text-xs font-semibold text-amber-100 transition hover:bg-amber-500/25"
+                  >
+                    {isEn ? "Ready to scale" : "Jetzt skalieren"}
+                  </button>
+                </div>
+              </div>
+
               <label className="space-y-2 rounded-2xl border border-white/10 bg-slate-950/30 p-4">
                 <span className="text-sm font-semibold text-slate-200">{isEn ? "Main focus" : "Hauptfokus"}</span>
                 <select
@@ -848,6 +1004,20 @@ export default function RevenueNavigatorStudio({
                 {error}
               </div>
             )}
+
+            <div className="mt-5 rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-100">
+                {isEn ? "What to do next" : "Was du als naechstes tun solltest"}
+              </p>
+              <div className="mt-3 space-y-2">
+                {guidedSteps.map((step) => (
+                  <article key={step.id} className="rounded-xl border border-white/10 bg-slate-950/30 p-3">
+                    <p className="text-sm font-semibold text-white">{step.title}</p>
+                    <p className="mt-1 text-xs text-slate-300">{step.detail}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className="grid gap-5">
