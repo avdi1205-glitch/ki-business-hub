@@ -11,6 +11,10 @@ function normalizeEmail(email: string) {
   return email.trim().toLowerCase();
 }
 
+function hasActiveAccess(status: string | null | undefined) {
+  return status === "active" || status === "trialing";
+}
+
 export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token");
   const email = req.nextUrl.searchParams.get("email");
@@ -40,14 +44,14 @@ export async function GET(req: NextRequest) {
   const entitlement = await prisma.customerEntitlement.findFirst({
     where: {
       email: normalizedEmail,
-      status: "active",
+      status: { in: ["active", "trialing"] },
     },
     orderBy: {
       updatedAt: "desc",
     },
   });
 
-  if (!entitlement) {
+  if (!entitlement || !hasActiveAccess(entitlement.status)) {
     return NextResponse.redirect(new URL("/konto/login?error=no_active_plan", req.url));
   }
 

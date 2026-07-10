@@ -18,6 +18,20 @@ function getPriceMapping() {
   };
 }
 
+function normalizeEntitlementStatus(status: string | null | undefined) {
+  if (
+    status === "active" ||
+    status === "trialing" ||
+    status === "past_due" ||
+    status === "unpaid" ||
+    status === "canceled"
+  ) {
+    return status;
+  }
+
+  return "active";
+}
+
 function planFromAmount(amountTotal: number | null) {
   if (typeof amountTotal !== "number") return null;
   if (amountTotal >= 12000) return "agency";
@@ -54,6 +68,8 @@ async function upsertEntitlementFromCheckout(session: Stripe.Checkout.Session) {
 
   const normalizedEmail = normalizeEmail(email);
   const plan = await resolvePlanFromCheckoutSession(session);
+  const stripeSubscriptionId = typeof session.subscription === "string" ? session.subscription : null;
+  const status = session.payment_status === "paid" ? "active" : "trialing";
 
   if (!plan) {
     console.warn("[Stripe webhook] could not determine plan for checkout session", session.id);
@@ -72,8 +88,9 @@ async function upsertEntitlementFromCheckout(session: Stripe.Checkout.Session) {
       data: {
         email: normalizedEmail,
         plan,
-        status: "active",
+        status,
         stripeCustomerId: typeof session.customer === "string" ? session.customer : null,
+        stripeSubscriptionId,
         source: session.metadata?.source || "stripe_webhook",
       },
     });
@@ -94,8 +111,9 @@ async function upsertEntitlementFromCheckout(session: Stripe.Checkout.Session) {
     await prisma.customerEntitlement.update({
       where: { id: existingByEmailPlan.id },
       data: {
-        status: "active",
+        status,
         stripeCustomerId: typeof session.customer === "string" ? session.customer : null,
+        stripeSubscriptionId,
         stripeSessionId: session.id,
         source: session.metadata?.source || "stripe_webhook",
       },
@@ -107,22 +125,45 @@ async function upsertEntitlementFromCheckout(session: Stripe.Checkout.Session) {
     data: {
       email: normalizedEmail,
       plan,
-      status: "active",
+      status,
       stripeCustomerId: typeof session.customer === "string" ? session.customer : null,
+      stripeSubscriptionId,
       stripeSessionId: session.id,
       source: session.metadata?.source || "stripe_webhook",
     },
   });
 }
 
-async function deactivateEntitlementForCustomer(customerId: string) {
+async function syncEntitlementStatus(input: {
+  customerId?: string | null;
+  subscriptionId?: string | null;
+  email?: string | null;
+  status: string;
+}) {
+  const conditions: Array<Record<string, string>> = [];
+
+  if (input.customerId) {
+    conditions.push({ stripeCustomerId: input.customerId });
+  }
+
+  if (input.subscriptionId) {
+    conditions.push({ stripeSubscriptionId: input.subscriptionId });
+  }
+
+  if (input.email) {
+    conditions.push({ email: normalizeEmail(input.email) });
+  }
+
+  if (!conditions.length) {
+    return;
+  }
+
   await prisma.customerEntitlement.updateMany({
     where: {
-      stripeCustomerId: customerId,
-      status: "active",
+      OR: conditions,
     },
     data: {
-      status: "canceled",
+      status: normalizeEntitlementStatus(input.status),
     },
   });
 }
@@ -155,11 +196,40 @@ export async function POST(req: NextRequest) {
         await upsertEntitlementFromCheckout(session);
         break;
       }
+      case "customer.subscription.updated": {
+        const subscription = event.data.object as Stripe.Subscription;
+        await syncEntitlementStatus({
+          customerId: typeof subscription.customer === "string" ? subscription.customer : null,
+          subscriptionId: subscription.id,
+          status: subscription.status,
+        });
+        break;
+      }
+      case "invoice.payment_failed": {
+        const invoice = event.data.object as Stripe.Invoice & { subscription?: string | null };
+        await syncEntitlementStatus({
+          customerId: typeof invoice.customer === "string" ? invoice.customer : null,
+          subscriptionId: typeof invoice.subscription === "string" ? invoice.subscription : null,
+          status: "past_due",
+        });
+        break;
+      }
+      case "invoice.payment_succeeded": {
+        const invoice = event.data.object as Stripe.Invoice & { subscription?: string | null };
+        await syncEntitlementStatus({
+          customerId: typeof invoice.customer === "string" ? invoice.customer : null,
+          subscriptionId: typeof invoice.subscription === "string" ? invoice.subscription : null,
+          status: "active",
+        });
+        break;
+      }
       case "customer.subscription.deleted": {
         const subscription = event.data.object as Stripe.Subscription;
-        if (typeof subscription.customer === "string") {
-          await deactivateEntitlementForCustomer(subscription.customer);
-        }
+        await syncEntitlementStatus({
+          customerId: typeof subscription.customer === "string" ? subscription.customer : null,
+          subscriptionId: subscription.id,
+          status: "canceled",
+        });
         break;
       }
       default:

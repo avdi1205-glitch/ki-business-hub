@@ -7,6 +7,14 @@ export default async function CustomerLoginPage({
   searchParams: Promise<{ error?: string }>;
 }) {
   const params = await searchParams;
+  const errorCopy =
+    params.error === "no_active_plan"
+      ? "Dein Zugang ist aktuell pausiert oder abgelaufen. Bitte pruefe deine Zahlung oder buche den Plan erneut."
+      : params.error === "expired_or_invalid"
+        ? "Der Link war ungültig oder abgelaufen. Bitte fordere einen neuen Zugangslink an."
+        : params.error === "invalid_link"
+          ? "Der Link war ungültig. Bitte fordere einen neuen Zugangslink an."
+          : null;
 
   return (
     <main className="min-h-screen px-4 py-14 sm:px-6">
@@ -21,9 +29,9 @@ export default async function CustomerLoginPage({
             Die Kauf-E-Mail ist Pflicht, damit dein Zugang automatisch zugeordnet werden kann.
           </p>
 
-          {params.error && (
+          {errorCopy && (
             <p className="mt-4 rounded-lg border border-amber-400/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
-              Der Link war ungültig oder abgelaufen. Bitte fordere einen neuen Zugangslink an.
+              {errorCopy}
             </p>
           )}
         </div>

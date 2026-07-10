@@ -11,6 +11,10 @@ function normalizeEmail(email: string) {
   return email.trim().toLowerCase();
 }
 
+function hasActiveAccess(status: string | null | undefined) {
+  return status === "active" || status === "trialing";
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { email } = (await req.json()) as { email?: string };
@@ -24,7 +28,7 @@ export async function POST(req: NextRequest) {
     const entitlement = await prisma.customerEntitlement.findFirst({
       where: {
         email: normalizedEmail,
-        status: "active",
+        status: { in: ["active", "trialing"] },
       },
       orderBy: {
         updatedAt: "desc",
@@ -32,7 +36,7 @@ export async function POST(req: NextRequest) {
     });
 
     // Do not reveal account existence.
-    if (!entitlement) {
+    if (!entitlement || !hasActiveAccess(entitlement.status)) {
       return NextResponse.json({ ok: true });
     }
 

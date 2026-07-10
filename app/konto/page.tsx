@@ -9,7 +9,7 @@ export default async function CustomerAccountPage() {
   const entitlement = await prisma.customerEntitlement.findFirst({
     where: {
       email,
-      status: "active",
+      status: { in: ["active", "trialing"] },
     },
     orderBy: {
       updatedAt: "desc",
@@ -31,6 +31,9 @@ export default async function CustomerAccountPage() {
           </p>
           <p className="mt-2 text-sm text-slate-400">
             Wenn du dich mit einer anderen E-Mail anmeldest, kann der Zugang nicht automatisch zugeordnet werden.
+          </p>
+          <p className="mt-2 text-sm text-emerald-300">
+            Der Zugriff bleibt nur aktiv, solange dein Plan bei Stripe nicht auf pausiert, faellig oder gekuendigt steht.
           </p>
         </section>
 
