@@ -5,6 +5,7 @@ import { hasCustomerAccess } from "@/lib/customer-entitlement";
 import { buildCustomerPlaybook, normalizeFocus, normalizePlan as normalizeWorkspacePlan, planRank, sanitizeInputs } from "@/lib/revenue-navigator";
 import { getResend } from "@/lib/resend";
 import { getSiteUrl } from "@/lib/site-url";
+import { ADMIN_SESSION_COOKIE, createAdminSessionToken, getExpectedAdminCredentials } from "@/lib/admin-auth";
 
 type UserPlan = "starter" | "pro" | "agency";
 
@@ -42,6 +43,16 @@ function formatCurrency(value: number) {
     currency: "EUR",
     maximumFractionDigits: 0,
   }).format(value);
+}
+
+function hasAdminOverride(request: NextRequest) {
+  const credentials = getExpectedAdminCredentials();
+  if (!credentials) return false;
+
+  const adminCookie = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+  if (!adminCookie) return false;
+
+  return adminCookie === createAdminSessionToken(credentials.user, credentials.password);
 }
 
 async function sendCustomerPlaybookEmail(input: {
@@ -362,8 +373,11 @@ export async function POST(req: NextRequest) {
 
     const sessionToken = req.cookies.get(CUSTOMER_SESSION_COOKIE)?.value;
     const sessionEmail = sessionToken ? parseCustomerSessionToken(sessionToken) : null;
+    const isAdminOverride = hasAdminOverride(req);
+    const overrideEmail = process.env.ADMIN_OVERRIDE_EMAIL || "admin@nexmoneta.local";
+    const effectiveEmail = sessionEmail || (isAdminOverride ? overrideEmail : null);
 
-    if (!sessionEmail) {
+    if (!effectiveEmail) {
       return NextResponse.json({
         success: false,
         locked: true,
@@ -371,9 +385,17 @@ export async function POST(req: NextRequest) {
       }, { status: 403 });
     }
 
+    if (isAdminOverride) {
+      const result = buildCustomerPlaybook({ ...inputs, plan: requestedPlan });
+      return NextResponse.json({
+        ...result,
+        savedScan: null,
+      });
+    }
+
     const entitlement = await prisma.customerEntitlement.findFirst({
       where: {
-        email: sessionEmail,
+        email: effectiveEmail,
         status: { in: ["active", "trialing", "past_due"] },
       },
       orderBy: { updatedAt: "desc" },
@@ -405,7 +427,7 @@ export async function POST(req: NextRequest) {
     try {
       const scan = await prisma.revenueNavigatorScan.create({
         data: {
-          email: sessionEmail,
+          email: effectiveEmail,
           plan: requestedPlan,
           focus: inputs.focus,
           monthlyVisitors: inputs.monthlyVisitors,
@@ -439,7 +461,7 @@ export async function POST(req: NextRequest) {
 
     try {
       await sendCustomerPlaybookEmail({
-        email: sessionEmail,
+        email: effectiveEmail,
         plan: requestedPlan,
         focus: inputs.focus,
         opportunityScore: result.opportunityScore,
