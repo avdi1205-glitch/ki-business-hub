@@ -674,6 +674,9 @@ export default function RevenueNavigatorStudio({
                     <Link href="/konto/revenue-navigator" className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-slate-100 transition hover:bg-white/10">
                       {isEn ? "Already a customer? Open workspace" : "Schon Kunde? Workspace oeffnen"}
                     </Link>
+                    <Link href="/admin-login?next=/konto/revenue-navigator" className="rounded-full border border-amber-300/30 bg-amber-500/15 px-3 py-1.5 text-amber-100 transition hover:bg-amber-500/25">
+                      {isEn ? "Test admin mode" : "Admin-Testmodus pruefen"}
+                    </Link>
                     <span className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1.5 text-emerald-100">
                       {isEn ? "Best used weekly, not once" : "Der Hebel entsteht wöchentlich, nicht einmalig"}
                     </span>
