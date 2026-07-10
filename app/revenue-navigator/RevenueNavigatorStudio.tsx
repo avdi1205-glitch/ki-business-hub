@@ -45,6 +45,32 @@ type RevenueNavigatorStudioProps = {
   initialSavedScans?: SavedScan[];
 };
 
+const QUICK_SCAN_QUESTIONS = [
+  "1) Wie viele qualifizierte Leads habt ihr pro Monat?",
+  "2) Wie hoch ist eure aktuelle Abschlussquote?",
+  "3) Gibt es ein klares Kernangebot mit festem Preis?",
+  "4) Wie schnell erfolgt Follow-up nach einer Anfrage?",
+  "5) Habt ihr einen festen Sales-Prozess?",
+  "6) Welche Daten trackt ihr woechentlich?",
+  "7) Ist eure Pipeline fuer die naechsten 30 Tage planbar?",
+  "8) Wo liegt aktuell euer groesstes Problem?",
+];
+
+const OUTREACH_DAY_1 = [
+  "Erstnachricht: Hi [Name], kurze Frage: Habt ihr in [Branche] aktuell genug Anfragen, aber zu wenig planbare Abschluesse?",
+  "Follow-up: Falls relevant fuer euch: Ich habe einen 2-Minuten-Scan, der sofort zeigt, wo euer groesster Umsatzhebel liegt. Soll ich ihn dir senden?",
+];
+
+const OUTREACH_DAY_2 = [
+  "Erstnachricht: Hi [Name], ich sehe bei vielen Teams: nicht zu wenig Leads, sondern zu wenig klare Priorisierung im Funnel. Wie ist das bei euch gerade?",
+  "Follow-up: Wenn du willst, schicke ich dir den kurzen Scan. Danach hast du 3 klare Massnahmen fuer die naechsten 30 Tage.",
+];
+
+const OUTREACH_DAY_3 = [
+  "Erstnachricht: Hi [Name], wenn ich eure Pipeline in 30 Tagen stabiler machen sollte: Was ist gerade der groesste Engpass bei euch?",
+  "Follow-up: Genau dafuer habe ich eine kurze Revenue-Auswertung vorbereitet. Soll ich dir die 2-Minuten-Version schicken?",
+];
+
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("de-DE", {
     style: "currency",
@@ -117,6 +143,7 @@ export default function RevenueNavigatorStudio({
   const [agencyConsent, setAgencyConsent] = useState(false);
   const [agencyStatus, setAgencyStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [agencyMessage, setAgencyMessage] = useState("");
+  const [kitMessage, setKitMessage] = useState<string | null>(null);
   const [savedScans, setSavedScans] = useState<SavedScan[]>(initialSavedScans);
 
   const opportunityScore = useMemo(() => computeOpportunityScore({
@@ -548,6 +575,15 @@ export default function RevenueNavigatorStudio({
     anchor.click();
     anchor.remove();
     URL.revokeObjectURL(url);
+  }
+
+  async function copyKitText(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      setKitMessage(isEn ? "Copied to clipboard." : "In die Zwischenablage kopiert.");
+    } catch {
+      setKitMessage(isEn ? "Could not copy automatically." : "Konnte nicht automatisch kopieren.");
+    }
   }
 
   return (
@@ -1105,6 +1141,61 @@ export default function RevenueNavigatorStudio({
                     </p>
                   )}
                 </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-8 rounded-[2rem] border border-cyan-400/20 bg-gradient-to-br from-cyan-500/12 via-slate-950/40 to-sky-500/10 p-6 shadow-2xl shadow-cyan-950/20">
+            <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-200/70">
+                  {isEn ? "2-minute sales kit" : "2-Minuten Sales-Kit"}
+                </p>
+                <h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">
+                  {isEn ? "Use this directly for outreach" : "Direkt fuer Outreach nutzen"}
+                </h2>
+                <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-300 sm:text-base">
+                  {isEn
+                    ? "Not just theory: copy the quick scan and first outreach messages. Send them in DM, email or WhatsApp."
+                    : "Nicht nur Theorie: kopiere den Kurz-Scan und die ersten Outreach-Nachrichten. Sende sie per DM, E-Mail oder WhatsApp."}
+                </p>
+
+                <div className="mt-4 rounded-2xl border border-white/10 bg-slate-950/35 p-4">
+                  <p className="text-sm font-semibold text-white">{isEn ? "Quick scan questions" : "Kurz-Scan Fragen"}</p>
+                  <ul className="mt-3 space-y-2 text-sm text-slate-300">
+                    {QUICK_SCAN_QUESTIONS.map((question) => (
+                      <li key={question}>{question}</li>
+                    ))}
+                  </ul>
+                  <button
+                    type="button"
+                    onClick={() => void copyKitText(QUICK_SCAN_QUESTIONS.join("\n"))}
+                    className="mt-4 rounded-xl border border-cyan-300/20 bg-cyan-500/15 px-4 py-2 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-500/25"
+                  >
+                    {isEn ? "Copy quick scan" : "Kurz-Scan kopieren"}
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                {[OUTREACH_DAY_1, OUTREACH_DAY_2, OUTREACH_DAY_3].map((day, index) => (
+                  <div key={index} className="rounded-2xl border border-white/10 bg-slate-950/35 p-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                      {isEn ? `Day ${index + 1}` : `Tag ${index + 1}`}
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-slate-200">{day[0]}</p>
+                    <p className="mt-2 text-sm leading-6 text-slate-300">{day[1]}</p>
+                    <button
+                      type="button"
+                      onClick={() => void copyKitText(day.join("\n\n"))}
+                      className="mt-3 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:bg-white/10"
+                    >
+                      {isEn ? "Copy day" : "Tag kopieren"}
+                    </button>
+                  </div>
+                ))}
+
+                {kitMessage && <p className="text-sm text-emerald-300">{kitMessage}</p>}
               </div>
             </div>
           </div>
