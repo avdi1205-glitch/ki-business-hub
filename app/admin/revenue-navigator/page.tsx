@@ -48,6 +48,7 @@ export default function RevenueNavigatorPage() {
   const plan = normalizePlan(searchParams.get("plan"));
   const [loading, setLoading] = useState(false);
   const [weeklySending, setWeeklySending] = useState(false);
+  const [reminderSending, setReminderSending] = useState(false);
   const [data, setData] = useState<PlaybookResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -91,6 +92,24 @@ export default function RevenueNavigatorPage() {
       setError(nextError instanceof Error ? nextError.message : "Wochenupdate konnte nicht versendet werden.");
     } finally {
       setWeeklySending(false);
+    }
+  };
+
+  const sendInactiveReminders = async () => {
+    setReminderSending(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const response = await fetch("/api/admin/revenue-navigator/inactive-reminders", { method: "POST" });
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.error || "Reminder konnten nicht versendet werden.");
+      }
+      setMessage(`Reminder versendet: ${payload.sent || 0} Kunden erinnert.`);
+    } catch (nextError) {
+      setError(nextError instanceof Error ? nextError.message : "Reminder konnten nicht versendet werden.");
+    } finally {
+      setReminderSending(false);
     }
   };
 
@@ -144,6 +163,13 @@ export default function RevenueNavigatorPage() {
               disabled={weeklySending}
             >
               {weeklySending ? "Versende..." : "Wochenupdate senden"}
+            </button>
+            <button
+              onClick={() => void sendInactiveReminders()}
+              className="rounded-lg bg-amber-600 px-4 py-2 font-semibold text-white hover:bg-amber-500"
+              disabled={reminderSending}
+            >
+              {reminderSending ? "Erinnere..." : "Inaktive erinnern"}
             </button>
           </div>
 
