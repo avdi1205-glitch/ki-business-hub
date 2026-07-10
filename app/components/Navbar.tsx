@@ -34,6 +34,9 @@ export default function Navbar({
     { href: "/admin/dashboard", label: t("dashboard") },
     { href: "/admin", label: t("articles") },
     { href: "/admin/affiliate", label: t("affiliateManager") },
+    { href: "/admin/agency-leads", label: "Agency Leads" },
+    { href: "/admin/internal-bots", label: "Internal Bots" },
+    { href: "/admin/revenue-navigator", label: "Revenue Admin" },
     { href: "/admin/checkout-rescue", label: t("checkoutRescue") },
     { href: "/create-article", label: t("createArticle") },
   ];
