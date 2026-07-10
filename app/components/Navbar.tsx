@@ -76,19 +76,73 @@ export default function Navbar({
             </span>
           </Link>
 
-          {/* Menu Trigger (all sizes) */}
-          <div className="flex items-center gap-2">
-            <LanguageSwitcher compact />
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center gap-2">
+            <div className="flex items-center gap-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-md p-1.5">
+              {links.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="rounded-full px-4 py-2 text-sm font-semibold transition-all hover:bg-white/20 active:scale-95"
+                  style={{
+                    color: pathname === link.href ? "#fff" : "#cbd5e1",
+                    background: pathname === link.href ? "rgba(59, 130, 246, 0.25)" : "transparent",
+                  }}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+
+            {isAdminContext && (
+              <>
+                <div className="h-8 w-px bg-white/10 mx-2" />
+
+                <div className="flex items-center gap-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-md p-1.5">
+                  {adminLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      prefetch={false}
+                      className="rounded-full px-4 py-2 text-sm font-semibold transition-all hover:bg-white/20 active:scale-95"
+                      style={{
+                        color: pathname === link.href ? "#fff" : "#cbd5e1",
+                        background: pathname === link.href ? "rgba(245, 158, 11, 0.2)" : "transparent",
+                      }}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+
+                <button
+                  onClick={handleLogout}
+                  className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95"
+                  disabled={loggingOut}
+                >
+                  {loggingOut ? "..." : t("logout")}
+                </button>
+              </>
+            )}
 
             {!isAdminAuthenticated && !isAdminLoginPage && (
               <Link
                 href="/admin-login"
                 prefetch={false}
-                className="hidden sm:inline-flex rounded-xl border border-white/20 bg-white/5 px-3 py-2 text-sm font-semibold text-slate-100 transition-all hover:bg-white/10"
+                className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-200 transition-all hover:bg-white/10 active:scale-95"
               >
                 {t("adminLogin")}
               </Link>
             )}
+
+            <div className="ml-3">
+              <LanguageSwitcher />
+            </div>
+          </div>
+
+          {/* Mobile Menu Trigger */}
+          <div className="flex items-center gap-2 lg:hidden">
+            <LanguageSwitcher compact />
 
             <button
               onClick={() => setOpen(!open)}
@@ -117,23 +171,18 @@ export default function Navbar({
         </div>
       </nav>
 
-      {/* Menu Overlay */}
-      <>
-        <div
-          className={`fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity duration-200 ${open ? "opacity-100" : "pointer-events-none opacity-0"}`}
-          onClick={() => setOpen(false)}
-        />
+      {/* Mobile Menu Overlay */}
+      {open && (
+        <>
+          <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden" onClick={() => setOpen(false)} />
 
-        {/* Top-Down Menu */}
-        <div
-          id="mobile-menu-panel"
-          className={`fixed inset-x-0 z-50 px-3 sm:px-6 transition-all duration-200 ${open ? "top-[5.25rem] opacity-100" : "pointer-events-none top-[4.4rem] opacity-0"}`}
-        >
+          {/* Mobile Menu */}
           <div
-            className="mx-auto max-h-[calc(100vh-6rem)] w-full max-w-7xl overflow-y-auto rounded-2xl border border-white/10"
+            id="mobile-menu-panel"
+            className="fixed right-0 top-0 z-50 h-screen w-80 max-w-[90vw] overflow-y-auto lg:hidden"
             style={{
               background: "linear-gradient(180deg, rgba(15,23,42,0.98) 0%, rgba(15,23,42,0.94) 100%)",
-              boxShadow: "0 18px 48px rgba(2, 6, 23, 0.45)",
+              borderLeft: "1px solid rgba(148, 163, 184, 0.16)",
             }}
           >
             {/* Close Button */}
@@ -228,8 +277,8 @@ export default function Navbar({
               </Link>
             </div>
           </div>
-        </div>
-      </>
+        </>
+      )}
     </>
   );
 }
