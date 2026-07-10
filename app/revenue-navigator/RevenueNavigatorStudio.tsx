@@ -105,6 +105,8 @@ const FULL_OUTREACH_SCRIPT = OUTREACH_DAYS
   .map((day, index) => `Tag ${index + 1}\n${day[0]}\n${day[1]}`)
   .join("\n\n");
 
+const FULL_SALES_KIT = `2-Minuten Scan\n${QUICK_SCAN_QUESTIONS.join("\n")}\n\n7-Tage Outreach Skript\n${FULL_OUTREACH_SCRIPT}`;
+
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("de-DE", {
     style: "currency",
@@ -1200,6 +1202,13 @@ export default function RevenueNavigatorStudio({
                   className="mt-4 rounded-xl border border-emerald-300/20 bg-emerald-500/15 px-4 py-2 text-sm font-semibold text-emerald-100 transition hover:bg-emerald-500/25"
                 >
                   {isEn ? "Copy full 7-day script" : "Komplettes 7-Tage-Skript kopieren"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void copyKitText(FULL_SALES_KIT)}
+                  className="ml-2 mt-4 rounded-xl border border-amber-300/20 bg-amber-500/15 px-4 py-2 text-sm font-semibold text-amber-100 transition hover:bg-amber-500/25"
+                >
+                  {isEn ? "Copy full kit" : "Komplettes Kit kopieren"}
                 </button>
 
                 <div className="mt-4 rounded-2xl border border-white/10 bg-slate-950/35 p-4">
