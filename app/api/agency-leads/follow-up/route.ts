@@ -5,6 +5,7 @@ import { getResend } from "@/lib/resend";
 type FollowUpRequest = {
   confirmSend?: boolean;
   maxSend?: number;
+  allowOutsideWindow?: boolean;
 };
 
 function parseSource(input: string | null) {
@@ -64,6 +65,46 @@ function buildDraftEmail(name: string | null) {
   };
 }
 
+function getBerlinParts(date = new Date()) {
+  const formatter = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/Berlin",
+    weekday: "short",
+    hour: "2-digit",
+    hourCycle: "h23",
+  });
+
+  const parts = formatter.formatToParts(date);
+  const weekday = parts.find((part) => part.type === "weekday")?.value || "Mon";
+  const hour = Number(parts.find((part) => part.type === "hour")?.value || "0");
+
+  return { weekday, hour };
+}
+
+function isInSendWindow(date = new Date()) {
+  const { weekday, hour } = getBerlinParts(date);
+  const isWeekday = ["Mon", "Tue", "Wed", "Thu", "Fri"].includes(weekday);
+  const isBusinessHour = hour >= 8 && hour < 18;
+  return isWeekday && isBusinessHour;
+}
+
+async function countAlreadySentToday() {
+  const today = new Date().toISOString().slice(0, 10);
+  return prisma.newsletterSubscriber.count({
+    where: {
+      source: {
+        contains: "checkout-rescue:agency:upgrade:agency_onboarding_team_",
+      },
+      AND: [
+        {
+          source: {
+            contains: `lastFollowUp:${today}`,
+          },
+        },
+      ],
+    },
+  });
+}
+
 async function loadTargets() {
   const rows = await prisma.newsletterSubscriber.findMany({
     where: {
@@ -96,11 +137,17 @@ async function loadTargets() {
 export async function GET() {
   try {
     const targets = await loadTargets();
+    const dailyLimit = Math.max(1, Math.min(100, Number(process.env.AGENCY_LEADS_DAILY_SEND_LIMIT || "20")));
+    const alreadySentToday = await countAlreadySentToday();
 
     return NextResponse.json({
       success: true,
       mode: "preview",
       totalCandidates: targets.length,
+      sendWindowOpen: isInSendWindow(),
+      dailyLimit,
+      alreadySentToday,
+      remainingToday: Math.max(0, dailyLimit - alreadySentToday),
       drafts: targets.slice(0, 20).map((target) => ({
         email: target.email,
         name: target.name,
@@ -126,6 +173,10 @@ export async function POST(request: Request) {
     }
 
     const targets = (await loadTargets()).slice(0, 20);
+    const dailyLimit = Math.max(1, Math.min(100, Number(process.env.AGENCY_LEADS_DAILY_SEND_LIMIT || "20")));
+    const alreadySentToday = await countAlreadySentToday();
+    const remainingToday = Math.max(0, dailyLimit - alreadySentToday);
+    const sendWindowOpen = isInSendWindow();
 
     if (!body.confirmSend) {
       return NextResponse.json({
@@ -133,6 +184,10 @@ export async function POST(request: Request) {
         mode: "preview",
         message: "Preview only. Send is blocked until confirmSend=true.",
         totalCandidates: targets.length,
+        sendWindowOpen,
+        dailyLimit,
+        alreadySentToday,
+        remainingToday,
         drafts: targets.map((target) => ({
           email: target.email,
           name: target.name,
@@ -141,6 +196,23 @@ export async function POST(request: Request) {
           followUpCount: Number(target.parsed.metadata.followups || "0") || 0,
           subject: buildDraftEmail(target.name).subject,
         })),
+      });
+    }
+
+    if (!body.allowOutsideWindow && !sendWindowOpen) {
+      return NextResponse.json({
+        error: "Send blocked outside business window (Mon-Fri, 08:00-18:00 Europe/Berlin).",
+      }, { status: 400 });
+    }
+
+    if (remainingToday <= 0) {
+      return NextResponse.json({
+        success: true,
+        mode: "sent",
+        sent: 0,
+        message: "Daily send limit reached. Try again tomorrow or raise AGENCY_LEADS_DAILY_SEND_LIMIT.",
+        dailyLimit,
+        alreadySentToday,
       });
     }
 
@@ -156,7 +228,7 @@ export async function POST(request: Request) {
     const resend = await getResend();
     const today = new Date().toISOString().slice(0, 10);
     const maxSend = Math.max(1, Math.min(20, Number(body.maxSend || 20)));
-    const sendTargets = targets.slice(0, maxSend);
+    const sendTargets = targets.slice(0, Math.min(maxSend, remainingToday));
 
     let sent = 0;
     for (const target of sendTargets) {
@@ -183,7 +255,16 @@ export async function POST(request: Request) {
       sent += 1;
     }
 
-    return NextResponse.json({ success: true, mode: "sent", sent, requested: maxSend, totalCandidates: targets.length });
+    return NextResponse.json({
+      success: true,
+      mode: "sent",
+      sent,
+      requested: maxSend,
+      totalCandidates: targets.length,
+      dailyLimit,
+      alreadySentToday,
+      remainingToday: Math.max(0, dailyLimit - (alreadySentToday + sent)),
+    });
   } catch (error) {
     console.error("[AGENCY-LEADS-FOLLOW-UP]", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

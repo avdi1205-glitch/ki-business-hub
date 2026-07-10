@@ -1,6 +1,10 @@
 {
   "crons": [
     {
+      "path": "/api/cron/agency-leads-follow-up-preview",
+      "schedule": "30 8 * * 1-5"
+    },
+    {
       "path": "/api/revenue-navigator/weekly-summary",
       "schedule": "0 8 * * 1"
     },
