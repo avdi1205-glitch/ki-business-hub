@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/agency-autopilot-review-memo",
-      "schedule": "*/10 * * * *"
+      "schedule": "0 9 * * *"
     },
     {
       "path": "/api/cron/agency-leads-follow-up-preview",
