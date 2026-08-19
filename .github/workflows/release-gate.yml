@@ -46,6 +46,9 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: E2E
+        env:
+          ADMIN_BASIC_USER: e2e-test-admin
+          ADMIN_BASIC_PASSWORD: e2e-test-password
         run: npm run test:e2e
 
       - name: Build
