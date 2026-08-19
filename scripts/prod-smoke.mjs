@@ -21,9 +21,11 @@ const apiChecks = [
     bodyIncludes: ["locked", "ab Pro verfuegbar"],
   },
   {
+    // proxy.ts now requires an admin session for this route, so an
+    // unauthenticated smoke request must get 401, not a body payload.
     path: "/api/internal-bots/history?limit=5",
-    expectedStatus: 200,
-    bodyIncludes: ["success"],
+    expectedStatus: 401,
+    bodyIncludes: ["Authentication required."],
   },
 ];
 
